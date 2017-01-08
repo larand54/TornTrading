@@ -1,0 +1,6 @@
+2017-01-07 11:03:37 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Table "ORDERS" not found; SQL statement:
+select this_.id as id1_1_0_, this_.version as version2_1_0_, this_.customer as customer3_1_0_, this_.destination as destinat4_1_0_, this_.length as length5_1_0_, this_.order_no as order_no6_1_0_, this_.packet_size as packet_s7_1_0_, this_.period as period8_1_0_, this_.price as price9_1_0_, this_.product as product10_1_0_, this_.quantity as quantit11_1_0_, this_.saw_mill as saw_mil12_1_0_ from orders this_ [42102-192]
+2017-01-07 11:04:46 jdbc[7]: exception
+org.h2.jdbc.JdbcSQLException: Table "ORDERS" not found; SQL statement:
+select count(*) as y0_ from orders this_ [42102-192]
