@@ -44,7 +44,7 @@
     <tbody>
 				<g:each in="${prodBuffer}" status="i" var="pb">
 				<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
-				<td><g:link action="show-buffer" id="${pb.id}">${pb.sawMill?.encodeAsHTML()}</g:link></td>
+				<td><g:link action="show_prodbuffer" id="${pb.id}">${pb.sawMill?.encodeAsHTML()}</g:link></td>
 				<td>${pb.product?.encodeAsHTML()}</td>
 				<td>${pb.length?.encodeAsHTML()}</td>
 				<td>${pb.packageSize?.encodeAsHTML()}</td>
@@ -97,7 +97,7 @@
 				<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
 				<td>${order.sawMill?.encodeAsHTML()}</td>
 				<td>${order.customer?.encodeAsHTML()}</td>
-				<td><g:link action="show" id="${order.id}">${order.orderNo?.encodeAsHTML()}</g:link></td>
+				<td><g:link action="show_order" id="${order.id}">${order.orderNo?.encodeAsHTML()}</g:link></td>
 				<td>${order.destination?.encodeAsHTML()}</td>
 				<td>${order.period?.encodeAsHTML()}</td>
 				<td>${order.product?.encodeAsHTML()}</td>

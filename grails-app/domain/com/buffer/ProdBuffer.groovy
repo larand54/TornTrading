@@ -19,6 +19,7 @@ class ProdBuffer {
 	Integer availW08
 	Integer availW09
 	Integer availW10
+
 	
 	static mapping = {
 		orderNo		sqlType: varchar(20)
@@ -26,6 +27,7 @@ class ProdBuffer {
 		product		sqlType: varchar(50)
 		packageSize	sqlType: varchar(15)		
 	}
+	
     static constraints = {
 		sawMill()
 		product()
@@ -46,4 +48,5 @@ class ProdBuffer {
 		availW09()
 		availW10()
 	}
+
 }
