@@ -12,60 +12,70 @@
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
             </ul>
         </div>
-        <g:set var="entityName" value='Lager' />
+        <g:set var="entityName" value='Offert' />
 		<div id="list-prodBuffer" class="content scaffold-list" role="main">
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-<table>
-    <thead>
-         <tr>
-			<g:sortableColumn property="sawMill" title='Verk' />
-			<g:sortableColumn property="product" title='Produkt' />
-			<g:sortableColumn property="length" title='Längd' />
-			<g:sortableColumn property="packageSize" title='Paketstorlek' />
-			<g:sortableColumn property="store" title='Lager' />
-			<g:sortableColumn property="onOrder" title='På order' />
-			<g:sortableColumn property="delivered" title='Levererat' />
-			<g:sortableColumn property="rest" title='Rest' />
-			<g:sortableColumn property="availW01" title='V01' />
-			<g:sortableColumn property="availW02" title='V02' />
-			<g:sortableColumn property="availW03" title='V03' />
-			<g:sortableColumn property="availW04" title='V04' />
-			<g:sortableColumn property="availW05" title='V05' />
-			<g:sortableColumn property="availW06" title='V06' />
-			<g:sortableColumn property="availW07" title='V07' />
-			<g:sortableColumn property="availW08" title='V08' />
-			<g:sortableColumn property="availW09" title='V09' />
-			<g:sortableColumn property="availW10" title='V10' />
-        </tr>
-    </thead>
-    <tbody>
+			<table>
+				<thead>
+					<tr>
+						<g:sortableColumn property="Id" title='Id' />
+						<g:sortableColumn property="sawMill" title='Verk' />
+						<g:sortableColumn property="product" title='Produkt' />
+						<g:sortableColumn property="length" title='Längd' />
+						<g:sortableColumn property="volumeOffered" title='Offererad volym' />
+						<g:sortableColumn property="volumeBooked" title='Bokad volym' />
+						<g:sortableColumn property="volumeAvailable" title='Kvar att boka' />
+						<g:sortableColumn property="volumeUnit" title='Volymenhet' />
+						<g:sortableColumn property="currency" title='Valuta' />
+						<g:sortableColumn property="price" title='Pris' />
+						<g:sortableColumn property="weekStart" title='Vecka start' />
+						<g:sortableColumn property="weekEnd" title='Vecka slut' />
+						<g:sortableColumn property="status" title='Status' />
+						<g:sortableColumn property="availW01" title='V01' />
+						<g:sortableColumn property="availW02" title='V02' />
+						<g:sortableColumn property="availW03" title='V03' />
+						<g:sortableColumn property="availW04" title='V04' />
+						<g:sortableColumn property="availW05" title='V05' />
+						<g:sortableColumn property="availW06" title='V06' />
+						<g:sortableColumn property="availW07" title='V07' />
+						<g:sortableColumn property="availW08" title='V08' />
+						<g:sortableColumn property="availW09" title='V09' />
+						<g:sortableColumn property="availW10" title='V10' />
+					</tr>
+				</thead>
+				<tbody>
 				<g:each in="${prodBuffer}" status="i" var="pb">
-				<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
-				<td><g:link action="show_prodbuffer" id="${pb.id}">${pb.sawMill?.encodeAsHTML()}</g:link></td>
-				<td>${pb.product?.encodeAsHTML()}</td>
-				<td>${pb.length?.encodeAsHTML()}</td>
-				<td>${pb.packageSize?.encodeAsHTML()}</td>
-				<td>${pb.store?.encodeAsHTML()}</td>
-				<td>${pb.onOrder?.encodeAsHTML()}</td>
-				<td>${pb.delivered?.encodeAsHTML()}</td>
-				<td>${pb.rest?.encodeAsHTML()}</td>
-				<td>${pb.availW01?.encodeAsHTML()}</td>
-				<td>${pb.availW02?.encodeAsHTML()}</td>
-				<td>${pb.availW03?.encodeAsHTML()}</td>
-				<td>${pb.availW04?.encodeAsHTML()}</td>
-				<td>${pb.availW05?.encodeAsHTML()}</td>
-				<td>${pb.availW06?.encodeAsHTML()}</td>
-				<td>${pb.availW07?.encodeAsHTML()}</td>
-				<td>${pb.availW08?.encodeAsHTML()}</td>
-				<td>${pb.availW09?.encodeAsHTML()}</td>
-				<td>${pb.availW10?.encodeAsHTML()}</td>
+					<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
+						<td><g:link action="show_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
+						<td>${pb.sawMill}</td>
+						<td>${pb.product}</td>
+						<td>${pb.length}</td>
+						<td>${pb.volumeOffered}</td>
+						<td>${pb.volumeBooked}</td>
+						<td>${pb.volumeAvailable}</td>
+						<td>${pb.volumeUnit}</td>
+						<td>${pb.currency}</td>
+						<td>${pb.price}</td>
+						<td>${pb.weekStart}</td>
+						<td>${pb.weekEnd}</td>
+						<td>${pb.status}</td>
+						<td>${pb.availW01}</td>
+						<td>${pb.availW02}</td>
+						<td>${pb.availW03}</td>
+						<td>${pb.availW04}</td>
+						<td>${pb.availW05}</td>
+						<td>${pb.availW06}</td>
+						<td>${pb.availW07}</td>
+						<td>${pb.availW08}</td>
+						<td>${pb.availW09}</td>
+						<td>${pb.availW10}</td>
+					</tr>
 				</g:each>
-				</tr>
-    </tbody>
-</table>
+				</tbody>
+			</table>
             <div class="pagination">
                 <g:paginate total="${prodBufferCount ?: 0}" />
             </div>
@@ -85,7 +95,7 @@
 				<g:sortableColumn property="destination" title='Destination' />
 				<g:sortableColumn property="period" title='Period' />
 				<g:sortableColumn property="product" title='Produkt' />
-				<g:sortableColumn property="length" title='Längd' />
+				<g:sortableColumn property="lengthDescr" title='Längd' />
 				<g:sortableColumn property="packetSize" title='Paketstorlek' />
 				<g:sortableColumn property="quantity" title='Kvantitet' />
 				<g:sortableColumn property="price" title='Pris' />
@@ -101,7 +111,7 @@
 				<td>${order.destination?.encodeAsHTML()}</td>
 				<td>${order.period?.encodeAsHTML()}</td>
 				<td>${order.product?.encodeAsHTML()}</td>
-				<td>${order.length?.encodeAsHTML()}</td>
+				<td>${order.lengthDescr?.encodeAsHTML()}</td>
 				<td>${order.packetSize?.encodeAsHTML()}</td>
 				<td>${order.quantity?.encodeAsHTML()}</td>
 				<td>${order.price?.encodeAsHTML()}</td>

@@ -18,4 +18,7 @@ class Orders_and_StoreController {
 		redirect(controller: "orders",action: "show", id: params.id)
 	}
 	
+	def add_Offer() {
+		redirect(controller: "prodBuffer", action: "create", id: params.id)
+	}
 }

@@ -18,7 +18,61 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:table collection="${prodBufferList}" />
+			<table>
+				<thead>
+					<tr>
+						<td> ID</td>
+						<td> Verk</td>
+						<td> produkt</td>
+						<td> Längd</td>
+						<td> Offererad volym</td>
+						<td> Bokad volym</td>
+						<td> Kvar att boka</td>
+						<td> Valuta</td>
+						<td> Pris</td>
+						<td> vecka start</td>
+						<td>Vecka slut</td>
+						<td> W01</td>
+						<td> W02</td>
+						<td> W03</td>
+						<td> W04</td>
+						<td> W05</td>
+						<td> W06</td>
+						<td> W07</td>
+						<td> W08</td>
+						<td> W09</td>
+						<td> W10</td>
+					</tr>
+				</thead>
+			<tbody>				
+				<g:each in="${prodBufferList}" status="i" var="prodBuffer">
+					<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
+						<td>${prodBuffer.id}</td>
+						<td>${prodBuffer.sawMill}</td>
+						<td>${prodBuffer.product}</td>
+						<td>${prodBuffer.length}</td>
+						<td>${prodBuffer.volumeOffered}</td>
+						<td>${prodBuffer.volumeBooked}</td>
+						<td>${prodBuffer.volumeAvailable}</td>
+						<td>${prodBuffer.currency}</td>
+						<td>${prodBuffer.price}</td>
+						<td>${prodBuffer.weekStart}</td>
+						<td>${prodBuffer.weekEnd}</td>
+						<td>${prodBuffer.availW01}</td>
+						<td>${prodBuffer.availW02}</td>
+						<td>${prodBuffer.availW03}</td>
+						<td>${prodBuffer.availW04}</td>
+						<td>${prodBuffer.availW05}</td>
+						<td>${prodBuffer.availW06}</td>
+						<td>${prodBuffer.availW07}</td>
+						<td>${prodBuffer.availW08}</td>
+						<td>${prodBuffer.availW09}</td>
+						<td>${prodBuffer.availW10}</td>
+					</tr>
+				</g:each>
+			</tbody>
+		</table>
+<!--            <f:table collection="${prodBufferList}" />  -->
 
             <div class="pagination">
                 <g:paginate total="${prodBufferCount ?: 0}" />

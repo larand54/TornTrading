@@ -2,27 +2,35 @@ package com.buffer
 
 class Orders {
 	
-String orderNo
-String sawMill
-String customer
-String destination
-String period
-String product
-Integer length
-String packetSize
-Integer quantity
-double price
+	String 	orderNo
+	String 	sawMill
+	String 	customer
+	String 	destination
+	String 	period
+	String 	product
+	String 	lengthDescr
+	String 	packetSize
+	Integer quantity
+	String	currency
+	BigDecimal 	price
+	String	status
+	Date	dateCreated
 
 
-static mapping = {
-	sawMill		sqlType: varchar(50)
-	customer	sqlType: varchar(50)
-	orderNo		sqlType: varchar(20)
-	destination	sqlType: varchar(50)
-	product		sqlType: varchar(50)
-	packetSize	sqlType: varchar(15)
+	static mapping = {
+		orderNo 		column: "orderNo", 		sqltype: "char", length: 20
+		sawMill 		column: "sawMill", 		sqltype: "char", length: 80
+		period 		column: "period", 		sqltype: "char", length: 4
+		customer 		column: "customer", 		sqltype: "char", length: 50
+		destination 		column: "destination", 		sqltype: "char", length: 80
+		product 		column: "product", 		sqltype: "char", length: 100
+		lengthDescr		column: "lengthDescr", 	sqltype: "char", length: 50
+		price	 		column: "price"
+		currency 		column: "currency", 	sqltype: "char", length: 3
+		packetSize 		column: "packetSize", 		sqltype: "char", length: 15
+		dateCreated		column: "dateCreated", defaultValue: newDate()	
 	}
-	
+
     static constraints = {
 		orderNo		size: 0..20 
 		sawMill		size: 0..50
@@ -37,10 +45,13 @@ static mapping = {
 		destination()
 		period()
 		product()
-		length()
+		lengthDescr()
 		packetSize()
 		quantity()
+		currency()
 		price()
+		status(inList: ["Preliminär", "Aktiv", "Avslutad", "Cancellerad"])
+		dateCreated()
 	
     }
 }

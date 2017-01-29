@@ -9,6 +9,18 @@
 <body>
     <content tag="nav">
         <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Förfrågningar <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="request1/index">Förfrågan..</a></li>
+            </ul>
+		</li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Offerter <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="offer/index">Offerter..</a></li>
+            </ul>
+		</li>
+        <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Order & Buffert <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a href="orders/index">Ordrar..</a></li>
