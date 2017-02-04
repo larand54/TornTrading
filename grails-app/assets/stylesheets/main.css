@@ -572,3 +572,10 @@ img.grails-logo {
     height:340px;
     margin-top:-10px;
 }
+
+.even {
+	background:#e0e0e0;
+}
+.odd {
+	background:#c0c0c0;
+}

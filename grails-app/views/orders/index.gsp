@@ -18,6 +18,7 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
+
 			<table>
 			<thead>
 			<tr>
@@ -43,7 +44,7 @@
 				<td>${orders.destination?.encodeAsHTML()}</td>
 				<td>${orders.period?.encodeAsHTML()}</td>
 				<td>${orders.product?.encodeAsHTML()}</td>
-				<td>${orders.length?.encodeAsHTML()}</td>
+				<td>${orders.lengthDescr?.encodeAsHTML()}</td>
 				<td>${orders.packetSize?.encodeAsHTML()}</td>
 				<td>${orders.quantity?.encodeAsHTML()}</td>
 				<td>${orders.price?.encodeAsHTML()}</td>

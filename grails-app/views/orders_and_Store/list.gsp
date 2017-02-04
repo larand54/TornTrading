@@ -25,9 +25,10 @@
 						<g:sortableColumn property="sawMill" title='Verk' />
 						<g:sortableColumn property="product" title='Produkt' />
 						<g:sortableColumn property="length" title='Längd' />
+						<g:sortableColumn property="volumeAvailable" title='Tillgänglig volym' />
 						<g:sortableColumn property="volumeOffered" title='Offererad volym' />
 						<g:sortableColumn property="volumeBooked" title='Bokad volym' />
-						<g:sortableColumn property="volumeAvailable" title='Kvar att boka' />
+						<g:sortableColumn property="volumeRest" title='Kvar att boka' />
 						<g:sortableColumn property="volumeUnit" title='Volymenhet' />
 						<g:sortableColumn property="currency" title='Valuta' />
 						<g:sortableColumn property="price" title='Pris' />
@@ -53,9 +54,10 @@
 						<td>${pb.sawMill}</td>
 						<td>${pb.product}</td>
 						<td>${pb.length}</td>
+						<td>${pb.volumeAvailable}</td>
 						<td>${pb.volumeOffered}</td>
 						<td>${pb.volumeBooked}</td>
-						<td>${pb.volumeAvailable}</td>
+						<td>${pb.volumeRest}</td>
 						<td>${pb.volumeUnit}</td>
 						<td>${pb.currency}</td>
 						<td>${pb.price}</td>

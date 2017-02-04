@@ -4,9 +4,10 @@ class ProdBuffer {
 	String sawMill
 	String product
 	double length
+	double volumeAvailable
 	double volumeOffered
 	double volumeBooked
-	double volumeAvailable
+	double volumeRest
 	String volumeUnit
 	String currency
 	BigDecimal price
@@ -26,7 +27,6 @@ class ProdBuffer {
 
 /*
 	static mapping = {
-		orderNo		sqlType: 'char', length: '20'
 		sawMill		sqlType: 'char', length: '50'
 		product		sqlType: 'char', length: '50'
 	}
@@ -35,15 +35,16 @@ class ProdBuffer {
 		sawMill()
 		product()
 		length()
+		volumeAvailable()
 		volumeOffered()
 		volumeBooked()
-		volumeAvailable()
+		volumeRest()
 		volumeUnit()
 		currency()
 		price()
 		weekStart()
 		weekEnd()
-		status(inList:["Preliminär","Aktiv","Avslutad","Cancelerad"])
+		status(inList:["Preliminär","Aktiv","Avslutad","Annullerad"])
 		availW01()
 		availW02()
 		availW03()
