@@ -45,7 +45,7 @@
 
 
                     Tjocklek: <g:field type="number decimal" name="thickness" min="5" max="200" required="y" value="${request1?.thickness}" style="width: 5em"/>
-                    Bredd: <g:field type="number decimal" name="width" min="20" max="300" required="Y" value="${request1?.width}" style="width: 4em"/>
+                    Bredd: <g:field type="number decimal" name="width" min="20" max="300" required="Y" value="${request1?.decimal.Width}" style="width: 4em"/>
                 </fieldset>
                 </td>
                 <td>

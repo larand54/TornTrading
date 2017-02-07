@@ -19,6 +19,21 @@ class Request1 {
 	Date	dateCreated
 	String freeText
 
+/*	
+	BigDecimal getDecimalWidth() {
+		return new BigDecimal(this.width).movePointRight(2).setScale(2)
+	}
+	void setWidth(BigDecimal decimal) {
+		this.width=new BigDecimal(decimal).movePointLeft(2).setScale(2)
+	}
+//unsure but think this should work
+	Integer getWidthInteger() {
+		return this.width as Integer
+	}
+	void setWidth(Integer integer) {
+		this.width=(byte)integer
+ }
+ */
 //	static hasOne = [description:FreeText]
     static mapping = {
         length                                     sqltype: 'float'
