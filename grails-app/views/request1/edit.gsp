@@ -43,9 +43,8 @@
 <!-- <g:formatNumber number="${request1?.thickness}"  format="###,##0" /> -->
 <!--<g:formatNumber number="${request1?.thickness}" format="###,##0"  locale="sv_SE"/>  -->
 
-
-                    Tjocklek: <g:field type="number decimal" name="thickness" min="5" max="200" required="y" value="${request1?.thickness}" style="width: 5em"/>
-                    Bredd: <g:field type="number decimal" name="width" min="20" max="300" required="Y" value="${request1?.decimal.Width}" style="width: 4em"/>
+                    Tjocklek: <g:field type="number decimal" name="thickness" min="5" max="200" required="y" value="${fieldValue(bean: request1, field: 'thickness')}" style="width: 5em"/>
+                    Bredd: <g:field type="number decimal" name="width" min="20" max="300" required="Y" value="${fieldValue(bean: request1, field: 'width')}" style="width: 4em"/>
                 </fieldset>
                 </td>
                 <td>
@@ -53,8 +52,8 @@
                     <legend>Övriga produktspecifikationer</legend>
                     Kvalitet:  <g:field type="text" name="quality" required="y" value="${request1?.quality}" size="8"/>
                     KD%:       <g:field type="text" name="kd" required="Y" value="${request1?.kd}" size="4"/>
-                    Volym AM3: <g:field type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${request1?.volumeRequested}" style="width: 6em"/>
-                    Längd:     <g:field type="number decimal" name="length" min="1200" max="7200" required="Y" value="${request1?.length}" style="width: 5em"/>
+                    Volym AM3: <g:field type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${fieldValue(bean: request1, field: 'volumeRequested')}" style="width: 6em"/>
+                    Längd:     <g:field type="number decimal" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: 5em"/>
                 </fieldset>
                 </td>
                 <td>

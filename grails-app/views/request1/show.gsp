@@ -28,9 +28,9 @@
                 <td>
                 <fieldset class="form">
                     <legend>Dimensioner</legend>
-                    Tjocklek: <g:field disabled="true" type="text" name="thickness" required="y" value="${request1?.thickness}"  style="width: 4em"/>
+                    Tjocklek: <g:field disabled="true" type="text" name="thickness" required="y" value="${fieldValue(bean: request1, field: 'thickness')}"  style="width: 4em"/>
 					<span>
-                    Bredd: <g:field disabled="true" type="text" name="width" required="y" value="${request1?.width}"  style="width: 4em"/>
+                    Bredd: <g:field disabled="true" type="text" name="width" required="y" value="${fieldValue(bean: request1, field: 'width')}"  style="width: 4em"/>
 					</span>
                 </fieldset>
                 </td>
@@ -39,8 +39,8 @@
                     <legend>Övriga produktspecifikationer</legend>
                     Kvalitet:  <g:field disabled="true" type="text" name="quality" required="y" value="${request1?.quality}" size="8"/>
                     KD%:       <g:field disabled="true" type="text" name="kd" required="Y" value="${request1?.kd}" size="4"/>
-                    Volym AM3: <g:field disabled="true" type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${request1?.volumeRequested}" style="width: 4em"/>
-                    Längd:     <g:field disabled="true" type="number decimal" name="length" min="1200" max="7200" required="Y" value="${request1?.length}" style="width: 4em"/>
+                    Volym AM3: <g:field disabled="true" type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${fieldValue(bean: request1, field: 'volumeRequested')}" style="width: 4em"/>
+                    Längd:     <g:field disabled="true" type="number decimal" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: 4em"/>
                 </fieldset>
                 </td>
                 <td>
