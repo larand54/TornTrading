@@ -13,6 +13,7 @@
             </ul>
         </div>
         <g:set var="entityName" value='Offert' />
+		<div id="scroll1 class scrolls>
 		<div id="list-prodBuffer" class="content scaffold-list" role="main">
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
@@ -35,16 +36,16 @@
 						<g:sortableColumn property="weekStart" title='Vecka start' />
 						<g:sortableColumn property="weekEnd" title='Vecka slut' />
 						<g:sortableColumn property="status" title='Status' />
-						<g:sortableColumn property="availW01" title='V01' />
-						<g:sortableColumn property="availW02" title='V02' />
-						<g:sortableColumn property="availW03" title='V03' />
-						<g:sortableColumn property="availW04" title='V04' />
-						<g:sortableColumn property="availW05" title='V05' />
-						<g:sortableColumn property="availW06" title='V06' />
-						<g:sortableColumn property="availW07" title='V07' />
-						<g:sortableColumn property="availW08" title='V08' />
-						<g:sortableColumn property="availW09" title='V09' />
-						<g:sortableColumn property="availW10" title='V10' />
+						<g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "0")}" />
+						<g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "1")}" />
+						<g:sortableColumn property="availW03" title="${myTag.weekNo(offset: "2")}" />
+						<g:sortableColumn property="availW04" title="${myTag.weekNo(offset: "3")}" />
+						<g:sortableColumn property="availW05" title="${myTag.weekNo(offset: "4")}" />
+						<g:sortableColumn property="availW06" title="${myTag.weekNo(offset: "5")}" />
+						<g:sortableColumn property="availW07" title="${myTag.weekNo(offset: "6")}" />
+						<g:sortableColumn property="availW08" title="${myTag.weekNo(offset: "7")}" />
+						<g:sortableColumn property="availW09" title="${myTag.weekNo(offset: "8")}" />
+						<g:sortableColumn property="availW10" title="${myTag.weekNo(offset: "9")}" />
 					</tr>
 				</thead>
 				<tbody>
@@ -82,6 +83,7 @@
                 <g:paginate total="${prodBufferCount ?: 0}" />
             </div>
         </div>
+		</div>
 		<g:set var="entityName" value='Orders' />
         <div id="list-orders" class="content scaffold-list" role="main">
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
