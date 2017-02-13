@@ -26,15 +26,15 @@
 						<g:sortableColumn property="sawMill" title='Verk' />
 						<g:sortableColumn property="product" title='Produkt' />
 						<g:sortableColumn property="length" title='Längd' />
-						<g:sortableColumn property="volumeAvailable" title='Tillgänglig volym' />
-						<g:sortableColumn property="volumeOffered" title='Offererad volym' />
-						<g:sortableColumn property="volumeBooked" title='Bokad volym' />
-						<g:sortableColumn property="volumeRest" title='Kvar att boka' />
-						<g:sortableColumn property="volumeUnit" title='Volymenhet' />
+						<g:sortableColumn property="volumeAvailable" title='Tillg.' />
+						<g:sortableColumn property="volumeOffered" title='Offer.' />
+						<g:sortableColumn property="volumeBooked" title='Bokat' />
+						<g:sortableColumn property="volumeRest" title='Tillg' />
+						<g:sortableColumn property="volumeUnit" title='Enhet' />
 						<g:sortableColumn property="currency" title='Valuta' />
 						<g:sortableColumn property="price" title='Pris' />
-						<g:sortableColumn property="weekStart" title='Vecka start' />
-						<g:sortableColumn property="weekEnd" title='Vecka slut' />
+						<g:sortableColumn property="weekStart" title='Start' />
+						<g:sortableColumn property="weekEnd" title='Slut' />
 						<g:sortableColumn property="status" title='Status' />
 						<g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "0")}" />
 						<g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "1")}" />

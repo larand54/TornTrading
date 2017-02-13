@@ -29,6 +29,8 @@
 				<td> Volym</td>
 				<td> Kvalitet</td>
 				<td> KD</td>
+				<td> Träslag</td>
+				<td> FSC</td>
 				<td> Start</td>
 				<td> Slut</td>
 				<td> Företag</td>
@@ -51,6 +53,8 @@
 				<td>${request1.volumeRequested?.encodeAsHTML()}</td>
 				<td>${request1.quality?.encodeAsHTML()}</td>
 				<td>${request1.kd?.encodeAsHTML()}</td>
+				<td>${request1.species?.encodeAsHTML()}</td>
+				<td><g:field disabled="true" type="checkbox" name="fsc" value="${request1?.fsc}" checked="${request1?.fsc}" />
 				<td>${request1.weekStart?.encodeAsHTML()}</td>
 				<td>${request1.weekEnd?.encodeAsHTML()}</td>
 				<td>${request1.company?.encodeAsHTML()}</td>

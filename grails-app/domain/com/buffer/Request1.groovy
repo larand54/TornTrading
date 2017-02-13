@@ -5,8 +5,12 @@ class Request1 {
     double width
     double thickness
     double volumeRequested
+    boolean fsc
+    int    creditRate
     String quality
     String kd
+    String species  // träslag
+    String termsOfDelivery
     String weekStart
     String weekEnd
     String company
@@ -15,25 +19,21 @@ class Request1 {
     String contactPerson
     String contactPhone
     String contactEmail
-	String	status
-	Date	dateCreated
-	String freeText
+    String status
+    Date   dateCreated
+    String freeText
+    def String txtColorOfCreditRate() {
+        if (creditRate == 0) {
+          return '#ff0000'  
+        } 
+        else if (creditRate == 1) {
+          return '#ffff00' 
+        } 
+        else if (creditRate == 2) {
+          return '#00ff00' 
+        } 
+    }
 
-/*	
-	BigDecimal getDecimalWidth() {
-		return new BigDecimal(this.width).movePointRight(2).setScale(2)
-	}
-	void setWidth(BigDecimal decimal) {
-		this.width=new BigDecimal(decimal).movePointLeft(2).setScale(2)
-	}
-//unsure but think this should work
-	Integer getWidthInteger() {
-		return this.width as Integer
-	}
-	void setWidth(Integer integer) {
-		this.width=(byte)integer
- }
- */
 //	static hasOne = [description:FreeText]
     static mapping = {
         length                                     sqltype: 'float'
@@ -42,6 +42,7 @@ class Request1 {
         volumeRequested                            sqltype: 'float'
         quality          column: 'quality',        sqltype: 'char', length: 8
         kd               column: 'kd',             sqltype: 'char', length: 4
+        species          column: 'species',        sqltype: 'char', length: 20
         company          column: 'company',        sqltype: 'char', length: 50
         country          column: 'country',        sqltype: 'char', length: 20
         city                                       sqltype: 'char', length: 50
@@ -51,12 +52,13 @@ class Request1 {
         weekStart                                  sqltype: 'char', length: 4
         weekEnd                                    sqltype: 'char', length: 4
         freeText                                   sqltype: 'char', length: 1000
-		dateCreated		column: "dateCreated", defaultValue: newDate()
+	dateCreated	 column: "dateCreated", defaultValue: newDate()
     }
     static constraints = {
 //        description unique: true
         quality size: 0..8
         kd size: 0..4
+        species size: 0..20
         company size: 0..50
         country size: 0..50
         city size: 0..50
@@ -74,6 +76,10 @@ class Request1 {
         width()
         quality()
         kd()
+        fsc()
+        species()
+        creditRate(inList:[0,1,2])
+        termsOfDelivery(inList: ['Fritt Leverantören', 'Fritt kund'])
         volumeRequested()
         length()
         weekStart()
@@ -85,8 +91,8 @@ class Request1 {
         contactPhone()
         city()
 //		fText(new FreeText())
-		status(inList: ["Ny", "Kontrakterad", "Ej Avslut"])
-		dateCreated()
+	status(inList: ["Ny", "Kontrakterad", "Ej Avslut"])
+	dateCreated()
 
     }
 }

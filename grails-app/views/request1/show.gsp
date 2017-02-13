@@ -38,9 +38,11 @@
                 <fieldset>
                     <legend>Övriga produktspecifikationer</legend>
                     Kvalitet:  <g:field disabled="true" type="text" name="quality" required="y" value="${request1?.quality}" size="8"/>
+                    Träslag:  <g:field disabled="true" type="text" name="species" required="y" value="${request1?.species}" size="12"/>
                     KD%:       <g:field disabled="true" type="text" name="kd" required="Y" value="${request1?.kd}" size="4"/>
                     Volym AM3: <g:field disabled="true" type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${fieldValue(bean: request1, field: 'volumeRequested')}" style="width: 4em"/>
                     Längd:     <g:field disabled="true" type="number decimal" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: 4em"/>
+                    FSC:       <g:field disabled="true" type="checkbox" name="fsc" value="${request1?.fsc}" checked="${request1?.fsc}" />
                 </fieldset>
                 </td>
                 <td>
@@ -76,6 +78,13 @@
                 <td>
                     Email:  <g:field disabled="true" type="text" name="contactEmail" required="y" value="${request1?.contactEmail}" size="50"/>
                 </td>
+                </tr>
+                <tr>
+                    <td>
+                        Leveransvillkor: <g:field disabled="true" type="text" name="termsOfDelivery" value="${request1?.termsOfDelivery}"/>
+                    </td>
+                    <td>
+                        Kreditvärdighet: <g:field disabled="true" style="background-color:${request1.txtColorOfCreditRate()}; color:#000000;" type="text" name="creditRate" value="${request1?.creditRate}" size="1"/>
                 </tr>
                 </table>
                 </fieldset>
