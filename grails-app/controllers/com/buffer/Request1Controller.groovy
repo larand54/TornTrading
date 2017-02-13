@@ -2,12 +2,16 @@ package com.buffer
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+import grails.plugin.springsecurity.annotation.Secured
 
 @Transactional(readOnly = true)
+
+@Secured('ROLE_ADMIN')
 class Request1Controller {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    @Secured('ROLE_USER')
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond Request1.list(params), model:[request1Count: Request1.count()]
