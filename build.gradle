@@ -55,7 +55,21 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 	runtime 'net.sourceforge.jtds:jtds:1.3.1' 
 	compile "ca.redtoad:grails-phonenumbers:0.11"
-//    compile 'org.grails.plugins:spring-security-core:3.1.1'
+    compile 'org.grails.plugins:spring-security-core:3.1.1'
+    compile 'org.grails.plugins:spring-security-ui:3.0.0.M2'
+/*    compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
+
+
+compile 'org.grails.plugins:hibernate4:5.0.4'
+
+compile 'org.grails:grails-datastore-core:5.0.4.RELEASE'
+compile 'org.grails:grails-datastore-gorm-support:5.0.4.RELEASE'
+compile 'org.grails:grails-datastore-gorm:5.0.4.RELEASE'
+compile 'org.grails:grails-datastore-simple:5.0.4.RELEASE'
+compile 'org.grails:grails-datastore-gorm-hibernate4:5.0.4.RELEASE'
+compile 'org.grails:grails-datastore-gorm-hibernate-core:5.0.4.RELEASE'
+
+*/
 //    compile "org.grails.plugins:spring-security-rest:1.5.4"
 }
 

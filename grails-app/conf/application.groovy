@@ -1,13 +1,8 @@
 
-
 // Added by the Spring Security Core plugin:
-grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.torntrading.User'
-grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.torntrading.UserRole'
-grails.plugin.springsecurity.authority.className = 'com.torntrading.Role'
-//grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
-grails.plugin.springsecurity.useRoleGroups = true
-grails.plugin.springsecurity.logout.postOnly = false
-
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.torntrading.security.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.torntrading.security.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.torntrading.security.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/',               access: ['permitAll']],
 	[pattern: '/error',          access: ['permitAll']],
@@ -18,7 +13,12 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/js/**',       access: ['permitAll']],
 	[pattern: '/**/css/**',      access: ['permitAll']],
 	[pattern: '/**/images/**',   access: ['permitAll']],
-	[pattern: '/**/favicon.ico', access: ['permitAll']]
+	[pattern: '/**/favicon.ico', access: ['permitAll']],
+        [pattern: '/user/**',        access: 'ROLE_ADMIN'],
+        [pattern: '/role/**',        access: 'ROLE_ADMIN'],
+        [pattern: '/securityInfo/**',        access: 'ROLE_ADMIN'],
+        [pattern: '/register/**',        access: ['permitAll']],
+        [pattern: '/registrationCode/**',        access: 'ROLE_ADMIN']
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [
@@ -30,3 +30,4 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
+grails.plugin.springsecurity.logout.postOnly = false
