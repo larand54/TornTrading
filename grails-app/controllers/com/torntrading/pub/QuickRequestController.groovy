@@ -39,7 +39,7 @@ class QuickRequestController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'quickRequest.label', default: 'QuickRequest'), quickRequest.id])
+                flash.message = message(code: 'quickRequest.created.message', args: [message(code: 'quickRequest.create.label', default: 'QuickRequest'), quickRequest.id])
                 redirect quickRequest
             }
             '*' { respond quickRequest, [status: CREATED] }
@@ -68,7 +68,7 @@ class QuickRequestController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'quickRequest.label', default: 'QuickRequest'), quickRequest.id])
+                flash.message = message(code: 'quickRequest.updated.message', args: [message(code: 'quickRequest.edit.label', default: 'QuickRequest'), quickRequest.id])
                 redirect quickRequest
             }
             '*'{ respond quickRequest, [status: OK] }

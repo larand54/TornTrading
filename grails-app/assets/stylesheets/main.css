@@ -369,7 +369,7 @@ input:invalid:focus, select:invalid:focus, textarea:invalid:focus {
 /* TABLES */
 
 table {
-    border-top: 1px solid #DFDFDF;
+    border-top: #DFDFDF;
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 1em;
@@ -584,4 +584,8 @@ img.grails-logo {
     overflow-y: hidden;
     height: 80px;
     white-space:nowrap
+}
+
+.required {
+
 }

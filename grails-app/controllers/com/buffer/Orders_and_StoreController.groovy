@@ -1,5 +1,6 @@
 package com.buffer
-
+import grails.plugin.springsecurity.annotation.Secured
+@Secured(['ROLE_ADMIN','ROLE_USER'])
 class Orders_and_StoreController {
 
     def list(Integer max) { 
