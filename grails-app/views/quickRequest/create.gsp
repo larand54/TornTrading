@@ -25,58 +25,7 @@
             </ul>
             </g:hasErrors>
             <g:form action="save">
-                <fieldset class="form">
-                        <table>
-                            <tr>
-                                <div class='fieldcontain required'>
-                                    <td>      
-                                        <span class='required-indicator'>*</span>
-                                        Rubrik 
-                                    </td>
-                                    <td>
-                                        <g:textArea name="title" value="${quickRequest?.title}" required="y" rows="2" cols="50" style="width:50em; height: 4em" /> 
-                                    </td> 
-                                </div>    
-                            </tr>
-                            <tr>
-                                <div class='fieldcontain required'>
-                                    <td>                                    
-                                        <span class='required-indicator'>*</span>
-                                        Förfrågan 
-                                    </td>
-                                    <td>
-                                        <g:textArea name="specReq" value="${quickRequest?.specReq}" required="y" rows="2" cols="50" style="width:50em; height: 12em" /> 
-                                    </td>
-                                </div>
-                            </tr>
-                        </table>
-<!--                    <f:all bean="quickRequest"/> -->
-                </fieldset>
-                <fieldset>
-                    <legend>Kontaktuppgifter</legend>
-                    <table>
-                        <tr>
-                             <td>
-                                <div class='fieldcontain required'>
-                                    <span class='required-indicator'>*</span>
-                                    Kontaktperson:  <g:field type="text" name="contactPerson" required="y" value="${quickRequest?.contactPerson}" size="50"/>
-                                </div>
-                            </td>
-                            <td>
-                                <div class='fieldcontain required'>
-                                    <span class='required-indicator'>*</span>
-                                    Telefon:  <g:field type="text" name="contactPhone" required="y" value="${quickRequest?.contactPhone}" size="16"/>
-                                </div>
-                            </td>
-                            <td>
-                                <div class='fieldcontain required'>
-                                    <span class='required-indicator'>*</span>
-                                    Email:  <g:field type="text" name="contactEmail" required="y" value="${quickRequest?.contactEmail}" size="50"/>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                 </fieldset>
+                <g:render template="qi" model="[quickRequest:quickRequest]"/>
                 <fieldset class="buttons">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.send.label', default: 'Create')}" />
                 </fieldset>
