@@ -101,14 +101,14 @@ environments:
     development:
         dataSource:
             dbCreate: create-drop
-            url: jdbc:mysql://localhost:3306/tt_portal
-            username: dbuser
-            password: dbuser
-#            url: jdbc:jtds:sqlserver://localhost:49678/grailstest
-#            driverClassName: net.sourceforge.jtds.jdbc.Driver
-#            dialect: org.hibernate.dialect.SQLServer2008Dialect
-#            username: sa
-#            password: woods2011
+#            url: jdbc:mysql://localhost:3306/tt_portal
+#            username: dbuser
+#            password: dbuser
+            url: jdbc:jtds:sqlserver://localhost:49678/grailstest
+            driverClassName: net.sourceforge.jtds.jdbc.Driver
+            dialect: org.hibernate.dialect.SQLServer2008Dialect
+            username: sa
+            password: woods2011
     test:
         dataSource:
             dbCreate: update
