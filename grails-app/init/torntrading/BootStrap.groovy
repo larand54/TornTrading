@@ -10,7 +10,8 @@ class BootStrap {
 
     def init = { servletContext ->
 	if (Environment.current == Environment.DEVELOPMENT) {
-	Locale.setDefault(Locale.GERMAN);
+	Locale swedishLocale = new Locale("sv", "SE");
+        Locale.setDefault(swedishLocale);
 			def pb = new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeAvailable: 500, volumeOffered: 500, volumeBooked: 450, volumeRest: 50, currency: 'EUR', price: '25,5', weekStart: '1704', weekEnd: '1709', status: 'Preliminär', volumeUnit: 'AM3', availW01:500, availW02:500, availW03:450, availW04:450, availW05:350, availW06:350, availW07:350, availW08:350, availW09:350, availW10:350).save(failOnError: true)
 			
 				new ProdBuffer(sawMill:'Boda',product:'38x150 V, Furu', length:4200, volumeAvailable: 500, volumeOffered:500, volumeBooked:350, volumeRest: 150, currency: 'EUR', price: 24.7, weekStart: '1704', weekEnd: '1715', status: 'Preliminär', volumeUnit: 'AM3', availW01:500, availW02:500, availW03:450, availW04:450, availW05:350, availW06:350, availW07:350, availW08:350, availW09:350, availW10:350).save(failOnError: true)
@@ -27,21 +28,28 @@ class BootStrap {
 
       def adminRole = new Role(authority: 'ROLE_ADMIN').save()
       def userRole = new Role(authority: 'ROLE_USER').save()
+      def salesRole = new Role(authority: 'ROLE_SALES').save()
 
       def testUser = new User(username: 'me', password: 'me').save()
       def guestUser = new User(username: 'he', password: 'he').save()
+      def salesUser = new User(username: 'seller', password: 'sales2017').save()
+      def larandUser = new User(username: 'larand', password: 'mulan2010').save()
+      def lmUser = new User(username: 'lars', password: 'woods2011!').save()
 
       UserRole.create testUser, adminRole
       UserRole.create guestUser, userRole
+      UserRole.create larandUser, adminRole
+      UserRole.create lmUser, adminRole
+      UserRole.create salesUser, salesRole
 
       UserRole.withSession {
          it.flush()
          it.clear()
       }
 
-      assert User.count() == 2
-      assert Role.count() == 2
-      assert UserRole.count() == 2
+      assert User.count() == 5
+      assert Role.count() == 3
+      assert UserRole.count() == 5
 
     }
 	if (Environment.current == Environment.PRODUCTION) {
@@ -62,21 +70,29 @@ class BootStrap {
 
       def adminRole = new Role(authority: 'ROLE_ADMIN').save()
       def userRole = new Role(authority: 'ROLE_USER').save()
+      def salesRole = new Role(authority: 'ROLE_SALES').save()
 
       def testUser = new User(username: 'me', password: 'me').save()
       def guestUser = new User(username: 'he', password: 'he').save()
+      def salesUser = new User(username: 'seller', password: 'sales2017').save()
+      def larandUser = new User(username: 'larand', password: 'mulan2010').save()
+      def lmUser = new User(username: 'lars', password: 'woods2011!').save()
 
       UserRole.create testUser, adminRole
       UserRole.create guestUser, userRole
+      UserRole.create larandUser, adminRole
+      UserRole.create lmUser, adminRole
+      UserRole.create salesUser, salesRole
+      
 
       UserRole.withSession {
          it.flush()
          it.clear()
       }
 
-      assert User.count() == 2
-      assert Role.count() == 2
-      assert UserRole.count() == 2
+      assert User.count() == 5
+      assert Role.count() == 3
+      assert UserRole.count() == 5
 
     }
     def destroy = {

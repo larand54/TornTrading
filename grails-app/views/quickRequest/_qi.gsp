@@ -32,21 +32,21 @@
                                 <div class='fieldcontain required'>
                                     <span class='required-indicator'>*</span>
                                     <g:message code="com.torntrading.pub.quickRequest.contactPerson.label"/>  
-									<g:field type="text" name="contactPerson" required="y" value="${quickRequest?.contactPerson}" size="50"/>
+                                    <g:field type="text" name="contactPerson" required="y" value="${quickRequest?.contactPerson}" size="50"/>
                                 </div>
                             </td>
                             <td>
-                                <div class='fieldcontain required'>
-                                    <span class='required-indicator'>*</span>
+                                <div class='fieldcontain required'> 
+                    <!--                <span class='required-indicator'>*</span>   -->
                                     <g:message code="com.torntrading.pub.quickRequest.contactPhone.label"/>  
-									<g:field type="text" name="contactPhone" required="y" value="${quickRequest?.contactPhone}" size="16"/>
-                                </div>
+                                    <g:field type="text" name="contactPhone"  value="${quickRequest?.contactPhone}" size="16"/>
+                               </div>  
                             </td>
                             <td>
                                 <div class='fieldcontain required'>
                                     <span class='required-indicator'>*</span>
                                     <g:message code="com.torntrading.pub.quickRequest.contactEmail.label"/>  
-									<g:field type="text" name="contactEmail" required="y" value="${quickRequest?.contactEmail}" size="50"/>
+                                    <g:field type="text" name="contactEmail" required="y" value="${quickRequest?.contactEmail}" size="50"/>
                                 </div>
                             </td>
                         </tr>

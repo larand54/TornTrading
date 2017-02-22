@@ -25,7 +25,7 @@ class QuickRequest {
 
         title()
         contactPerson()
-        contactPhone()
+        contactPhone(nullable: true, blank: true)
         contactEmail()
         specReq()
         

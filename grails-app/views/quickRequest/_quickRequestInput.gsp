@@ -36,11 +36,11 @@
                                 </div>
                             </td>
                             <td>
-                                <div class='fieldcontain required'>
-                                    <span class='required-indicator'>*</span>
+                    <!--            <div class='fieldcontain required'> 
+                                    <span class='required-indicator'>*</span> -->
                                     <g:message code="com.torntrading.pub.quickRequest.contactPhone.label"/>  
-									<g:field type="text" name="contactPhone" required="y" value="${quickRequest?.contactPhone}" size="16"/>
-                                </div>
+									<g:field type="text" name="contactPhone" required="n" value="${quickRequest?.contactPhone}" size="16"/>
+                    <!--            </div> -->
                             </td>
                             <td>
                                 <div class='fieldcontain required'>

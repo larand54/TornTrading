@@ -8,6 +8,13 @@
 </head>
 <body>
     <content tag="nav">
+        <li class="dropdown"> 
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><g:message code="quickRequest.label"/>..<span class="caret"></span> </a>
+            <ul class="dropdown-menu">
+                <li><a href="quickRequest/create"><g:message code="quickRequest.create.label"/></a></li>
+                <li><a href="quickRequest/index"><g:message code="quickRequest.list.label"/></a></li>
+            </ul>
+        </li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Förfrågningar <span class="caret"></span></a>
             <ul class="dropdown-menu">
@@ -28,6 +35,7 @@
                 <li><a href="orders_and_Store/list">Ordrar & Buffert..</a></li>
             </ul>
         </li>
+        <li><a href="login">Login</a></li>
     </content>
 
     <div class="svg" role="presentation">
@@ -35,12 +43,8 @@
             <asset:image src="grails-cupsonly-logo-white.svg" class="grails-logo"/>
         </div>
         <div class="title">
-            <h2>Välkommen till TörnTrading!</h2>
-            <h2>Här kan du handla trävaror online.</h2>
         </div
         <div class="summary">
-           
-            <a href="login"> Logga in</a> eller vill du göra en <a href="quickRequest/create">snabbförfrågan?</a>
         </div>
        
     </div>

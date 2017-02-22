@@ -41,7 +41,7 @@
                     Träslag:  <g:field disabled="true" type="text" name="species" required="y" value="${request1?.species}" size="12"/>
                     KD%:       <g:field disabled="true" type="text" name="kd" required="Y" value="${request1?.kd}" size="4"/>
                     Volym AM3: <g:field disabled="true" type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${fieldValue(bean: request1, field: 'volumeRequested')}" style="width: 4em"/>
-                    Längd:     <g:field disabled="true" type="number decimal" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: 4em"/>
+                    Längd:     <g:field disabled="true" type="text" size="60" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: auto"/>
                     FSC:       <g:field disabled="true" type="checkbox" name="fsc" value="${request1?.fsc}" checked="${request1?.fsc}" />
                 </fieldset>
                 </td>

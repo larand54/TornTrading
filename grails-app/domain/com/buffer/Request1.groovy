@@ -1,12 +1,12 @@
 package com.buffer
 
 class Request1 {
-    double length
     double width
     double thickness
     double volumeRequested
     boolean fsc
     int    creditRate
+    String length
     String quality
     String kd
     String species  // träslag
@@ -36,7 +36,7 @@ class Request1 {
 
 //	static hasOne = [description:FreeText]
     static mapping = {
-        length                                     sqltype: 'float'
+        length                                     sqltype: 'char', length: 80
         thickness                                  sqltype: 'float'
         width                                      sqltype: 'float'
         volumeRequested                            sqltype: 'float'
@@ -58,6 +58,7 @@ class Request1 {
 //        description unique: true
         quality size: 0..8
         kd size: 0..4
+        length size:  0..80
         species size: 0..20
         company size: 0..50
         country size: 0..50
