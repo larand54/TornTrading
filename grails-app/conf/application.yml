@@ -104,7 +104,7 @@ environments:
 #            url: jdbc:mysql://localhost:3306/tt_portal
 #            username: dbuser
 #            password: dbuser
-            url: jdbc:jtds:sqlserver://localhost:49678/grailstest
+            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
             driverClassName: net.sourceforge.jtds.jdbc.Driver
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
@@ -116,7 +116,7 @@ environments:
     production:
         dataSource:
             dbCreate: create
-            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
+            url: jdbc:jtds:sqlserver://192.168.225.11:1433/tt_portal
             driverClassName: net.sourceforge.jtds.jdbc.Driver
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa

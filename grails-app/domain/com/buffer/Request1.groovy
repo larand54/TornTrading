@@ -1,6 +1,6 @@
 package com.buffer
 
-class Request {
+class Request1 {
     double width
     double thickness
     double volumeRequested
