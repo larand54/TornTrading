@@ -1,11 +1,12 @@
 package com.buffer
 
-class Request1 {
+class Request {
     double width
     double thickness
     double volumeRequested
     boolean fsc
     int    creditRate
+    int     offerID     // Om inte null så anger det id på en upplaggd offert med denna förfrågan som grund.
     String length
     String quality
     String kd
@@ -68,6 +69,9 @@ class Request1 {
         contactEmail size: 0..100
         weekStart size: 0..4
         weekEnd size: 0..4
+                        
+        offerID      nullable: true
+        contactPhone nullable: true
 
         contactEmail(email: true)
         contactPhone(phoneNumber: [strict: true])
@@ -80,7 +84,8 @@ class Request1 {
         fsc()
         species()
         creditRate(inList:[0,1,2])
-        termsOfDelivery(inList: ['Fritt Leverantören', 'Fritt kund'])
+//        termsOfDelivery(inList: ['EXW', 'Domicile'])
+        termsOfDelivery(inList: ['Fritt leverantören', 'Fritt kunden'])
         volumeRequested()
         length()
         weekStart()
@@ -91,8 +96,8 @@ class Request1 {
         contactPerson()
         contactPhone()
         city()
-//		fText(new FreeText())
-	status(inList: ["Ny", "Kontrakterad", "Ej Avslut"])
+//	status(inList: ["New", "Contracted", "Not Finalized"])
+	status(inList: ["Ny", "Kontrakterad", "Ej avslut"])
 	dateCreated()
 
     }

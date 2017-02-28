@@ -7,91 +7,91 @@ import grails.plugin.springsecurity.annotation.Secured
 @Transactional(readOnly = true)
 
 @Secured('ROLE_ADMIN')
-class Request1Controller {
+class RequestController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Request1.list(params), model:[request1Count: Request1.count()]
+        respond Request.list(params), model:[RequestCount: Request.count()]
     }
 
-    def show(Request1 request1) {
-        respond request1
+    def show(Request Request) {
+        respond Request
     }
 
     def create() {
-        respond new Request1(params)
+        respond new Request(params)
     }
 
     @Transactional
-    def save(Request1 request1) {
-        if (request1 == null) {
+    def save(Request Request) {
+        if (Request == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        if (request1.hasErrors()) {
+        if (Request.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond request1.errors, view:'create'
+            respond Request.errors, view:'create'
             return
         }
 
-        request1.save flush:true
+        Request.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'request1.label', default: 'Request1'), request1.id])
-                redirect request1
+                flash.message = message(code: 'default.created.message', args: [message(code: 'Request.label', default: 'Request'), Request.id])
+                redirect Request
             }
-            '*' { respond request1, [status: CREATED] }
+            '*' { respond Request, [status: CREATED] }
         }
     }
 
-    def edit(Request1 request1) {
-        respond request1
+    def edit(Request Request) {
+        respond Request
     }
 
     @Transactional
-    def update(Request1 request1) {
-        if (request1 == null) {
+    def update(Request Request) {
+        if (Request == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        if (request1.hasErrors()) {
+        if (Request.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond request1.errors, view:'edit'
+            respond Request.errors, view:'edit'
             return
         }
 
-        request1.save flush:true
+        Request.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'request1.label', default: 'Request1'), request1.id])
-                redirect request1
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'Request.label', default: 'Request'), Request.id])
+                redirect Request
             }
-            '*'{ respond request1, [status: OK] }
+            '*'{ respond Request, [status: OK] }
         }
     }
 
     @Transactional
-    def delete(Request1 request1) {
+    def delete(Request Request) {
 
-        if (request1 == null) {
+        if (Request == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
-        request1.delete flush:true
+        Request.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'request1.label', default: 'Request1'), request1.id])
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Request.label', default: 'Request'), Request.id])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
@@ -101,7 +101,7 @@ class Request1Controller {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'request1.label', default: 'Request1'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'Request.label', default: 'Request'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }

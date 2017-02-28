@@ -1,7 +1,9 @@
 import grails.databinding.converters.ValueConverter
+import com.torntrading.utils.DatabaseMessageSource
 // Place your Spring DSL code here
 beans = {
     "defaultGrailsjava.lang.DoubleConverter"(DoubleValueConverter)
+//    messageSource(DatabaseMessageSource)
 }
 class DoubleValueConverter implements ValueConverter {
 
