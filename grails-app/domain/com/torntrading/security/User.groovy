@@ -2,6 +2,7 @@ package com.torntrading.security
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import com.torntrading.portal.UserSettings
 
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
@@ -31,6 +32,10 @@ class User implements Serializable {
 			encodePassword()
 		}
 	}
+        
+        UserSettings getUserSettings() {
+            us
+        }
 
 	protected void encodePassword() {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
@@ -41,10 +46,13 @@ class User implements Serializable {
 	static constraints = {
 		password blank: false, password: true
 		username blank: false, unique: true
+                us unique:true, nullable:true
 	}
 
 	static mapping = {
 		password column: '`password`'
                 table '`user`'
 	}
+        
+        static hasOne = [us:UserSettings]
 }

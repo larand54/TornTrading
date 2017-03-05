@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="Offert"<!--value="${message(code: 'offer.label', default: 'Offer')}" /> -->
+        <g:set var="entityName" value="Offert"<!--value="${message(code: 'offer.label', default: 'Offer')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -27,7 +27,7 @@
             </g:hasErrors>
             <g:form action="save">
                 <fieldset class="form">
-                    <f:all bean="offer"/>
+                    <g:render template="offerData" model="[offer:offer]"/>
                 </fieldset>
                 <fieldset class="buttons">
                     <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
@@ -35,4 +35,5 @@
             </g:form>
         </div>
     </body>
+    <script>src="asset/notReadOnly.js"</script>
 </html>

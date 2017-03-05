@@ -1,6 +1,8 @@
 package com.buffer
 
 class Offer {
+    def springSecurityService
+    boolean             fsc
     String              grade
     String              kd
     String              termsOfDelivery
@@ -22,15 +24,18 @@ class Offer {
     String		weekEnd
     String 		status
     Date		dateCreated
+    int                 createdBy 
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
 	
-	
+    def beforeInsert() {
+        createdBy = getUserID()
+    }
     static mapping	= {
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	product 	column: "product",         sqltype:	"char", length: 100
 	lengthDescr	column: "lengthDescr",     sqltype:	"char", length: 50
-	price	 	column: "price",           sqltype:	"char", length: 10
+//	price	 	column: "price",           sqltype:	"char", length: 10
 	currency 	column: "currency",        sqltype:	"char", length: 3
 	volumeUnit	column: "volumeUnit",      sqltype:	"char", length: 6
 	volumeOffered	column: "volumeOffered",   sqltype:	"float"
@@ -38,7 +43,7 @@ class Offer {
 	weekEnd		column: "weekEnd",         sqltype:	"char", length: 4
 	status		column: "status",          sqltype:	"char", length: 11
 	dateCreated	column: "dateCreated",     defaultValue: newDate()
-                
+//        createdBy       column: "createdBy",       defaultValue: 199//getUserID()
         grade            column: 'grade',          sqltype: 'char', length: 8
         kd               column: 'kd',             sqltype: 'char', length: 4
         company          column: 'company',        sqltype: 'char', length: 50
@@ -69,6 +74,7 @@ class Offer {
 		product()
 		lengthDescr()
                 kd()
+                fsc()
                 grade()
 		price()
 		currency()
@@ -86,6 +92,7 @@ class Offer {
 		dateCreated()
                 termsOfDelivery(inList: ['Fritt leverantören', 'Fritt kunden'])
 
+                millOfferID     nullable:true
                 requestID       nullable:true
                 sawMill         nullable:true
                 weekStart       nullable:true
@@ -96,5 +103,12 @@ class Offer {
                 city            nullable:true
                 country         nullable:true
                 company         nullable:true
+                currency        nullable:true
+    }
+    def int getUserID() {
+        def user = springSecurityService.isLoggedIn() ?
+            springSecurityService.loadCurrentUser() :
+            null
+        return user ? user.id: -1 //securityService.currentUser.id//
     }
 }

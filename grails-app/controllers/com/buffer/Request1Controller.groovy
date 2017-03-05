@@ -40,7 +40,7 @@ class Request1Controller {
 
         request1.save flush:true
 
-        request.withFormat {
+        request1.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'request1.label', default: 'Request1'), request1.id])
                 redirect request1
@@ -69,7 +69,7 @@ class Request1Controller {
 
         request1.save flush:true
 
-        request.withFormat {
+        request1.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'request1.label', default: 'Request1'), request1.id])
                 redirect request1
@@ -89,7 +89,7 @@ class Request1Controller {
 
         request1.delete flush:true
 
-        request.withFormat {
+        request1.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'request1.label', default: 'Request1'), request1.id])
                 redirect action:"index", method:"GET"
@@ -99,7 +99,7 @@ class Request1Controller {
     }
 
     protected void notFound() {
-        request.withFormat {
+        request1.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'request1.label', default: 'Request1'), params.id])
                 redirect action: "index", method: "GET"

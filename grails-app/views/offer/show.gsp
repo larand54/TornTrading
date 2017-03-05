@@ -1,8 +1,9 @@
+import grails.plugin.springsecurity.userdetails
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="Offert"<!--value="${message(code: 'offer.label', default: 'Offer')}" /> -->
+        <g:set var="entityName" value="Offert"<!--value="${message(code: 'offer.label', default: 'Offer')}" />
         <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -19,7 +20,7 @@
             <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:display bean="offer" />
+            <g:render template="offerData" model="[offer:offer]"/>
             <g:form resource="${this.offer}" method="DELETE">
                 <fieldset class="buttons">
                     <g:link class="edit" action="edit" resource="${this.offer}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
@@ -27,5 +28,11 @@
                 </fieldset>
             </g:form>
         </div>
+    <g:javascript src="readOnly.js"/><g:javascript>alert('hello')</g:javascript>
+    <g:javascript>
+$(document).ready(function(){
+$('.elements').attr('readonly',true);
+$('.elements').prop('disabled',true);
+});</g:javascript>
     </body>
 </html>

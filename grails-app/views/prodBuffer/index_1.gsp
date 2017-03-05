@@ -18,11 +18,9 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <g:form action="createOffer">
 			<table>
 				<thead>
 					<tr>
-                                                <td> Välj</td>
 						<td> ID</td>
 						<td> Verk</td>
 						<td> produkt</td>
@@ -49,13 +47,13 @@
 			<tbody>				
 				<g:each in="${prodBufferList}" status="i" var="prodBuffer">
 					<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
-                                                <td><g:checkBox name="toOffer" value="${prodBuffer.id}" checked="false"  /></td>
-                                                <td>${prodBuffer.id}</td>
+						<td><g:checkBox name="statements.${statement.id}" value="true" checked="${contractInstance.statements.contains(statement)?:''}" /></td>
+						<td>${prodBuffer.id}</td>
 						<td>${prodBuffer.sawMill}</td>
 						<td>${prodBuffer.product}</td>
 						<td>${prodBuffer.length}</td>
 						<td>${prodBuffer.volumeOffered}</td>
-						<td>${prodBuffer.onOrder}</td>
+						<td>${prodBuffer.volumeBooked}</td>
 						<td>${prodBuffer.volumeAvailable}</td>
 						<td>${prodBuffer.currency}</td>
 						<td>${prodBuffer.price}</td>
@@ -80,38 +78,6 @@
             <div class="pagination">
                 <g:paginate total="${prodBufferCount ?: 0}" />
             </div>
-                <fieldset class="buttons">
-                    <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
-                </fieldset>
-         </g:form>
-       </div>
+        </div>
     </body>
-<script>
-var countChecked = function() {
-  var n = $( "input:checked" ).length;
-  $( "div" ).text( n + (n === 1 ? " is" : " are") + " checked!" );
-};
-countChecked();
- 
-$( "input[type=checkbox]" ).on( "click", countChecked );
-</script>
-<script>
-
-//some code
-
-var items = [1,2,3];
-
-//some code
-
-  $('#add-location').click(function () {
-    $.ajax({
-      type: "POST",
-      url: "${g.createLink(controller:'myController', action: 'myControllerMethod')}",
-      data: {items: items},
-      success: function (data) {
-        console.log(data)
-      }
-    });
-  });
-</script>
 </html>
