@@ -30,6 +30,7 @@ class Offer {
 	
     def beforeInsert() {
         createdBy = getUserID()
+        status = 'Preliminary'
     }
     static mapping	= {
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
@@ -88,7 +89,7 @@ class Offer {
                 contactPerson()
                 contactPhone()
                 city()
-                status(inList: ["Preliminär", "Aktiv", "Avslutad", "Anullerad"])
+                status(inList: ["Preliminary", "Activ", "Finished", "Cancelled"])
 		dateCreated()
                 termsOfDelivery(inList: ['Fritt leverantören', 'Fritt kunden'])
 
@@ -97,6 +98,9 @@ class Offer {
                 sawMill         nullable:true
                 weekStart       nullable:true
                 weekEnd         nullable:true
+                volumeOffered   nullable:true
+                kd              nullable:true
+                grade           nullable:true
                 contactPhone    nullable:true
                 contactEmail    nullable:true
                 contactPerson   nullable:true
@@ -104,6 +108,7 @@ class Offer {
                 country         nullable:true
                 company         nullable:true
                 currency        nullable:true
+                status          nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?

@@ -22,16 +22,16 @@
 			<table>
 			<thead>
 			<tr>
-				<td> Verk</td>
-				<td> Kund</td>
-				<td> Ordernr</td>
-				<td> Destination</td>
-				<td> Period</td>
-				<td> produkt</td>
-				<td> Längd</td>
-				<td> Paketstorlek</td>
-				<td> Kvantitet</td>
-				<td> Pris</td>
+				<th> Verk</th>
+				<th> Kund</th>
+				<th> Ordernr</th>
+				<th> Destination</th>
+				<th> Period</th>
+				<th> produkt</th>
+				<th> Längd</th>
+				<th> Paketstorlek</th>
+				<th> Kvantitet</th>
+				<th> Pris</th>
 				
 			</tr>
 			</thead>

@@ -13,9 +13,7 @@ class Orders_and_StoreController {
         //        params.max = Math.min(max ?: 10, 100)
         //       respond Orders.list(params), model:[ordersCount: Orders.count(), ProdBuffer.list(params), model:[prodBufferCount: ProdBuffer.count()]]
         def User user
-        user = springSecurityService.isLoggedIn() ?
-        springSecurityService.getCurrentUser() :
-        null
+        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
         def mill = (us != null) ? us.supplierName :''
         def roles = springSecurityService.getPrincipal().getAuthorities()
@@ -32,7 +30,10 @@ class Orders_and_StoreController {
                 break
             }
         }
-        
+        myList.each(){
+            it.initiateVolumes()
+            it.fillWeekList()
+        }
         def orders = Orders.list()
         [orders: orders, prodBuffer: myList]
     }
@@ -41,6 +42,10 @@ class Orders_and_StoreController {
 	
     def show_prodbuffer() {
         redirect(controller: "prodBuffer",action: "show", id: params.id)
+    }
+
+    def edit_prodbuffer() {
+        redirect(controller: "prodBuffer",action: "edit", id: params.id)
     }
 
     def show_order() {

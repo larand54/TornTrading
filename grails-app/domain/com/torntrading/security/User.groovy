@@ -25,7 +25,11 @@ class User implements Serializable {
 
 	def beforeInsert() {
 		encodePassword()
+//                new UserSettings(user:this,currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)           
 	}
+        
+        def afterInsert() {
+        }
 
 	def beforeUpdate() {
 		if (isDirty('password')) {

@@ -22,28 +22,28 @@
 			<table>
 				<thead>
 					<tr>
-                                                <td> Välj</td>
-						<td> ID</td>
-						<td> Verk</td>
-						<td> produkt</td>
-						<td> Längd</td>
-						<td> Offererad volym</td>
-						<td> Bokad volym</td>
-						<td> Kvar att boka</td>
-						<td> Valuta</td>
-						<td> Pris</td>
-						<td> vecka start</td>
-						<td>Vecka slut</td>
-						<td> W01</td>
-						<td> W02</td>
-						<td> W03</td>
-						<td> W04</td>
-						<td> W05</td>
-						<td> W06</td>
-						<td> W07</td>
-						<td> W08</td>
-						<td> W09</td>
-						<td> W10</td>
+                                                <th> Välj</th>
+						<th> ID</th>
+						<th> Verk</th>
+						<th> produkt</th>
+						<th> Längd</th>
+						<th> Offererad volym</th>
+						<th> Bokad volym</th>
+						<th> Kvar att boka</th>
+						<th> Valuta</th>
+						<th> Pris</th>
+						<th> vecka start</th>
+						<th>Vecka slut</th>
+						<th> W01</th>
+						<th> W02</th>
+						<th> W03</th>
+						<th> W04</th>
+						<th> W05</th>
+						<th> W06</th>
+						<th> W07</th>
+						<th> W08</th>
+						<th> W09</th>
+						<th> W10</th>
 					</tr>
 				</thead>
 			<tbody>				

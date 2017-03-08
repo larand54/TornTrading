@@ -1,13 +1,30 @@
 package com.buffer
 
 class TimeTagLib {
+    def springSecurityService
     static final namespace = 'myTag'
-	static defaultEncodeAs = [taglib:'html']
+    static defaultEncodeAs = [taglib:'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
-	def weekNo = {attrs, body ->
-		Date date = new Date()
-		def calendar = date.toCalendar()
-		def week = calendar.get(calendar.WEEK_OF_YEAR)
-	    out  << String.format("V%02d", (week+(attrs.offset as Integer)))
-	}
+    def weekNo = {attrs, body ->
+        Date date = new Date()
+        def calendar = date.toCalendar()
+        calendar.add(Calendar.DATE,7*(attrs.offset as int))
+        def week = calendar.get(Calendar.WEEK_OF_YEAR)
+        out  << String.format("V%02d", week)
+    }
+    def userCompany = { attrs, body ->
+        def loggedInUser = springSecurityService.currentUser
+        def uc = loggedInUser.getUserSettings().supplierName
+        out << uc
+    }
+    def userVolumeUnit = { attrs, body ->
+        def loggedInUser = springSecurityService.currentUser
+        def uvu = loggedInUser.getUserSettings().volumeUnit
+        out << uvu
+    }
+    def userCurrency = { attrs, body ->
+        def loggedInUser = springSecurityService.currentUser
+        def uc = loggedInUser.getUserSettings().currency
+        out << uc
+    }
 }

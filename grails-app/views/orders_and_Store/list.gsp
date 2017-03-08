@@ -13,8 +13,8 @@
                 <li><a class="create" href="${createLink(uri: '/orders_and_Store/add_prodBuffer')}"><g:message code="prodBuffer.create.label"/></a></li>
             </ul>
         </div>
-        <g:set var="entityName" value='Offert' />
-        <div id="scroll1 class scrolls>
+        <g:set var="entityName" value='Produkt' />
+        <div id="scroll1 class scrolls">
              <div id="list-prodBuffer" class="content scaffold-list" role="main">
              <h1><g:message code="default.list.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
@@ -55,7 +55,7 @@
                 <tbody>
                     <g:each in="${prodBuffer}" status="i" var="pb">
                         <tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
-                            <td><g:link action="show_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
+                            <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
                             <td>${pb.sawMill}</td>
                             <td>${pb.product}</td>
                             <td>${pb.productNo}</td>
@@ -94,9 +94,6 @@
     <g:set var="entityName" value='Orders' />
     <div id="list-orders" class="content scaffold-list" role="main">
         <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-        <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-        </g:if>
         <table>
             <thead>
                 <tr>

@@ -37,7 +37,9 @@ class ProdBuffer {
     double availW08
     double availW09
     double availW10
+    double[] volList
 
+    static transients = ['volList']
     static mapping	= {
         table 'LOBuffertv2'
         id              column: "id",              type:        'integer'
@@ -93,8 +95,19 @@ class ProdBuffer {
         currency                nullable: true
         price                   nullable: true
         volumeUnit              nullable: true
-        weekEnd                 nullable: true
-        weekStart               nullable: true
+        
+        weekEnd                 nullable: true,
+           validator: { val, obj -> 
+              (val as int) >= (obj.weekStart as int) }
+          
+        weekStart               nullable: true,
+           validator: { val, obj -> 
+              if (obj.id) {
+                // don't check existing instances
+                return
+              }
+              (val as int) >= obj.getCurrentWeek()}
+          
         availW01                nullable: true
         availW02                nullable: true
         availW03                nullable: true
@@ -107,5 +120,107 @@ class ProdBuffer {
         availW10                nullable: true
        
     }
+    def beforeInsert() {
+        initiateVolumes()
+        fillWeekList()
+    }
+    
+    def beforeupdate() {
+        upDateVolumes()
+        updateVolumeOnweeks()
+    }
+        
+    def int getCurrentWeek() {
+	Date date = new Date()
+	def calendar = date.toCalendar()
+	return calendar.get(calendar.WEEK_OF_YEAR)        
+    }
+    
+    def int getCurrentYear() {
+	Date date = new Date()
+	def calendar = date.toCalendar()
+	return calendar.get(calendar.YEAR)-2000        
+    }
+    
+    def int getWeekFromYearWeek(int aYearWeek) {
+        // aYearWeek = 1718, aYear = 17 -> week = 1718 - 1700 = 18        
+        return ((aYearWeek as int) - getYearFromYearWeek(aYearWeek)*100) as int     
+    }
+    
+    def int getYearFromYearWeek(aYearWeek) {
+        return (aYearWeek as int) / 100
+    }
+    
+    def int getWeeksInYear() {
+        def Date d = new Date()
+	def cal = d.toCalendar()
+        return cal.getWeeksInWeekYear()
+    }
+    
+    def initiateVolumes() {
+        
+        // Beräkna index för start och slut veckorna
+        def cw = getCurrentWeek()
+        def sw = getWeekFromYearWeek(weekStart as int)
+        if (sw < cw) sw = cw
+        def ew = getWeekFromYearWeek(weekEnd as int)
+        def weeksInYear = getWeeksInYear()
+        def ixStart = 1
+        def ixEnd = ixStart
+        def cy = getCurrentYear()
+        def sy = getYearFromYearWeek(weekStart as int)
+        def ey = getYearFromYearWeek(weekEnd as int)
+        if (ey == sy) {
+            if (cy == sy) {
+                // normal case -- everything in current year
+                ixStart = 1 - cw + sw
+                ixEnd   = 1 - cw + ew
+            }
+            else {
+                ixStart = 1 + weeksInYear - cw + sw
+                ixEnd   = 1 + weeksInYear - cw + ew
+            }
+        } else {
+                ixStart = 1 - cw + sw
+                ixEnd   = 1 + weeksInYear - cw + ew
+        }
+        if (ixStart > 10) ixStart = 10
+        if (ixEnd > 10) ixEnd = 10
+        //Kopiera in volymer i veckolistan
+        volList = new double[10]
+        for (int i = 1; i < ixStart; i++) {
+            volList[i-1] = 0.0            
+        }
+        for (int i = ixStart; i <= ixEnd; i++) {
+            volList[i-1] = volumeAvailable - getOnOrder(cw)
+        }
+        volumeRest = volumeAvailable - onOrder
+        volumeRestInclOffers = volumeRest - volumeOffered
+    }
+    def fillWeekList() {
+        availW01 = volList[0]
+        availW02 = volList[1]
+        availW03 = volList[2]
+        availW04 = volList[3]
+        availW05 = volList[4]
+        availW06 = volList[5]
+        availW07 = volList[6]
+        availW08 = volList[7]
+        availW09 = volList[8]
+        availW10 = volList[9]
+    }
+            
+    def int getOnOrder(int cw) {
+        return onOrder
+    }
+        
+        
+    
+    def updateVolumes(aYearWeek, aYear) {
+  
+    }
 
+    def updateVolumesOnWeek() {
+        
+    }
 }

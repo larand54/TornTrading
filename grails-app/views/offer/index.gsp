@@ -22,22 +22,22 @@
             <table>
                 <thead>
                     <tr>
-                        <td> <g:message code="ID"/> </td>
-                        <td> <g:message code="default.status.label"/> </td>
-                        <td> <g:message code="default.sawMill.label"/> </td>
-                        <td> <g:message code="default.company.label"/> </td>
-                        <td> <g:message code="default.product.label"/> </td>
-                        <td> <g:message code="default.lengthDescr.label"/> </td>
-                        <td> <g:message code="default.grade.label"/> </td>
-                        <td> <g:message code="default.kd.label"/> </td>
-                        <td> <g:message code="FSC"/> </td>
-                        <td> <g:message code="default.price.label"/> </td>
-                        <td> <g:message code="default.currency.label"/> </td>
-                        <td> <g:message code="default.volumeUnit.short.label"/> </td>
-                        <td> <g:message code="default.volumeOffered.short.label"/> </td>
-                        <td> <g:message code="default.weekStart.short.label"/> </td>
-                        <td> <g:message code="default.weekEnd.short.label"/> </td>
-                        <td> <g:message code="delivery.terms.label"/> </td>
+                        <th> <g:message code="ID"/> </th>
+                        <th> <g:message code="default.status.label"/> </th>
+                        <th> <g:message code="default.sawMill.label"/> </th>
+                        <th> <g:message code="default.company.label"/> </th>
+                        <th> <g:message code="default.product.label"/> </th>
+                        <th> <g:message code="default.lengthDescr.label"/> </th>
+                        <th> <g:message code="default.grade.label"/> </th>
+                        <th> <g:message code="default.kd.label"/> </th>
+                        <th> <g:message code="FSC"/> </th>
+                        <th> <g:message code="default.price.label"/> </th>
+                        <th> <g:message code="default.currency.label"/> </th>
+                        <th> <g:message code="default.volumeUnit.short.label"/> </th>
+                        <th> <g:message code="default.volumeOffered.short.label"/> </th>
+                        <th> <g:message code="default.weekStart.short.label"/> </th>
+                        <th> <g:message code="default.weekEnd.short.label"/> </th>
+                        <th> <g:message code="delivery.terms.label"/> </th>
                     </tr>
                 </thead>
                 <tbody>

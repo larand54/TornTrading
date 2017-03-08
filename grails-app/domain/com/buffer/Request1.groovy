@@ -6,7 +6,7 @@ class Request1 {
     double volumeRequested
     boolean fsc
     int    creditRate
-    int     offerID     // Om inte null så anger det id på en upplaggd offert med denna förfrågan som grund.
+    int    offerID     // Om inte null så anger det id på en upplagd offert med denna förfrågan som grund.
     String length
     String quality
     String kd

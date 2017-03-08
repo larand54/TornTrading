@@ -28,7 +28,6 @@ import grails.plugin.springsecurity.userdetails
                 </fieldset>
             </g:form>
         </div>
-    <g:javascript src="readOnly.js"/><g:javascript>alert('hello')</g:javascript>
     <g:javascript>
 $(document).ready(function(){
 $('.elements').attr('readonly',true);

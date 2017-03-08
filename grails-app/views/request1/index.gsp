@@ -22,31 +22,31 @@
 			<table>
 			<thead>
 			<tr>
-				<td> Förfr. nr.</td>
-				<td> Längd</td>
-				<td> Bredd</td>
-				<td> Tjocklek</td>
-				<td> Volym</td>
-				<td> Kvalitet</td>
-				<td> KD</td>
-				<td> Träslag</td>
-				<td> FSC</td>
-				<td> Start</td>
-				<td> Slut</td>
-				<td> Företag</td>
-				<td> Land</td>
-				<td> Kontakt</td>
-				<td> Tel.</td>
-				<td> Email</td>
-				<td> Status</td>
-				<td> Inkom</td>
+				<th> Förfr. nr.</th>
+				<th> Längd</th>
+				<th> Bredd</th>
+				<th> Tjocklek</th>
+				<th> Volym</th>
+				<th> Kvalitet</th>
+				<th> KD</th>
+				<th> Träslag</th>
+				<th> FSC</th>
+				<th> Start</th>
+				<th> Slut</th>
+				<th> Företag</th>
+				<th> Land</th>
+				<th> Kontakt</th>
+				<th> Tel.</th>
+				<th> Email</th>
+				<th> Status</th>
+				<th> Inkom</th>
 				
 			</tr>
 			</thead>
 			<tbody>
 				<g:each in="${request1List}" status="i" var="request1">
 				<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
-				<td><g:link action="show" id="${request1.id}">${request1.id?.encodeAsHTML()}</g:link></td>
+				<td><g:link action="edit" id="${request1.id}">${request1.id?.encodeAsHTML()}</g:link></td>
 				<td>${request1.length?.encodeAsHTML()}</td>
 				<td>${request1.width?.encodeAsHTML()}</td>
 				<td>${request1.thickness?.encodeAsHTML()}</td>

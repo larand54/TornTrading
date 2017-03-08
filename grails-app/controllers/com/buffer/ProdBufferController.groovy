@@ -5,9 +5,10 @@ import com.torntrading.security.User
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.service.TTBufferService
+import com.buffer.Orders_and_StoreController
 
 @Transactional(readOnly = true)
-@Secured(['ROLE_ADMIN','ROLE_USER','ROLE_SELLER','ROLE_SUPPLIER'])
+@Secured(['ROLE_ADMIN','ROLE_USER','ROLE_SALES','ROLE_SUPPLIER'])
 class ProdBufferController {
     def springSecurityService
     def tTBufferService
@@ -61,9 +62,9 @@ class ProdBufferController {
             of.weekEnd = pb.weekEnd
             of.weekStart = pb.weekStart
             of.termsOfDelivery = 'Fritt kunden'
-            of.kd = 'xxxx'
-            of.grade = 'xxxx'
-            of.status = 'Preliminär'
+//            of.kd = 'xxxx'
+//            of.grade = 'xxxx'
+//            of.status = 'Preliminary'
             of.millOfferID = id
             of.save(failOnError: true)
             return of
@@ -89,9 +90,11 @@ class ProdBufferController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'prodBuffer.label', default: 'ProdBuffer'), prodBuffer.id])
-                redirect prodBuffer
+                //                redirect prodBuffer
+        redirect controller: 'orders_and_Store', action: 'list'
             }
-            '*' { respond prodBuffer, [status: CREATED] }
+//           '*' { respond prodBuffer, [status: CREATED] }
+///                render(view:"/orders_and_Store/list")
         }
     }
 
@@ -118,9 +121,10 @@ class ProdBufferController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'prodBuffer.label', default: 'ProdBuffer'), prodBuffer.id])
-                redirect prodBuffer
+        redirect controller: 'orders_and_Store', action: 'list'
+//                redirect prodBuffer
             }
-            '*'{ respond prodBuffer, [status: OK] }
+//            '*'{ respond prodBuffer, [status: OK] }
         }
     }
 
@@ -166,9 +170,7 @@ class ProdBufferController {
     
     def ArrayList<ProdBuffer> getBufferList() {
         def User user
-        user = springSecurityService.isLoggedIn() ?
-        springSecurityService.getCurrentUser() :
-        null
+        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
         def mill = (us != null) ? us.supplierName :''
         def roles = springSecurityService.getPrincipal().getAuthorities()
