@@ -100,11 +100,11 @@ dataSource:
 environments:
     development:
         dataSource:
-            dbCreate: create-drop
-#            url: jdbc:mysql://localhost:3306/tt_portal
+            dbCreate: none
+#            url: jdbc:mysql://localhost:3306/tt_portal_utv
 #            username: dbuser
 #            password: dbuser
-            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
+            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal_utv
             driverClassName: net.sourceforge.jtds.jdbc.Driver
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
@@ -115,9 +115,10 @@ environments:
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
     production:
         dataSource:
-            dbCreate: create
+            dbCreate: none
 #            url: jdbc:jtds:sqlserver://192.168.225.11:1433/tt_portal
             url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
+#            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
             driverClassName: net.sourceforge.jtds.jdbc.Driver
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa

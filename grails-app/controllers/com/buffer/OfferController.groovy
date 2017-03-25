@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
 @Transactional(readOnly = true)
-@Secured(['ROLE_ADMIN','ROLE_USER'])
+@Secured(['ROLE_ADMIN','ROLE_SALES'])
 class OfferController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
@@ -14,6 +14,7 @@ class OfferController {
         params.max = Math.min(max ?: 10, 100)
         respond Offer.list(params), model:[offerCount: Offer.count()]
     }
+    
 
     def show(Offer offer) {
         respond offer

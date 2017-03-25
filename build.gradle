@@ -7,10 +7,11 @@ buildscript {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.11.6"
         classpath "org.grails.plugins:hibernate5:6.0.4"
+        classpath 'org.grails.plugins:database-migration:3.0.0'
     }
 }
 
-version "0.61"
+version "0.7"
 group "torntrading"
 
 apply plugin:"eclipse"
@@ -59,6 +60,8 @@ dependencies {
 	compile "ca.redtoad:grails-phonenumbers:0.11"
     compile 'org.grails.plugins:spring-security-core:3.1.1'
     compile 'org.grails.plugins:spring-security-ui:3.0.0.M2'
+    compile 'org.grails.plugins:database-migration:3.0.0'
+    compile 'org.liquibase:liquibase-core:3.5.3'
 /*    compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
 
 
@@ -82,4 +85,11 @@ bootRun {
 assets {
     minifyJs = true
     minifyCss = true
+}
+sourceSets {
+    main {
+        resources {
+            srcDir 'grails-app/migrations'
+        }
+    }
 }

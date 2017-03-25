@@ -44,6 +44,7 @@
 						<td> W10</td>
 					</tr>
 				</thead>
+                                <a href="../../migrations/changelog - kopia.groovy"></a>
 			<tbody>				
 				<g:each in="${prodBufferList}" status="i" var="prodBuffer">
 					<tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
@@ -54,6 +55,7 @@
 						<td>${prodBuffer.length}</td>
 						<td>${prodBuffer.volumeOffered}</td>
 						<td>${prodBuffer.volumeBooked}</td>
+                                <a href="../../migrations/changelog - kopia.groovy"></a>
 						<td>${prodBuffer.volumeAvailable}</td>
 						<td>${prodBuffer.currency}</td>
 						<td>${prodBuffer.price}</td>

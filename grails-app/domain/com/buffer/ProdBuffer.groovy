@@ -5,26 +5,30 @@ class ProdBuffer {
     String sawMill 
     String status
     int    loBuffertNo     //-- sätt default tll verknummer
-    int     pkgArticleNo
+    int    pkgArticleNo
     String product
     String length
     int    productNo
-    int     packageSize 
+    int    packageSize 
     double actualLengthMM  
-    String  packageSizename 
+    String packageSizename 
+    String kd
     double volumeAvailable // Leverantörens erbjudande
     double volumeOffered   // summa till kund offererade volymer 
     double onOrder          // kontrakterad volym = bokat 
     double volumeRest      // Resterande volym av leverantörens erbjudande Urspr. - kontrakterat
-    double  volumeRestInclOffers // Ursprung. - kontrakterat - offererat
-    double  delivered       // levererat av urspr. volym
+    double volumeRestInclOffers // Ursprung. - kontrakterat - offererat
+    double delivered       // levererat av urspr. volym
     double makeInquiry 
     int changed 
     int appid 
     
     String volumeUnit
     String currency
-    BigDecimal price
+    BigDecimal priceFSC     // Pris för FSC
+    BigDecimal pricePEFC    // pris för PEFC
+    BigDecimal priceCW      // Pris för ControllWood
+    BigDecimal priceUC      // pris för UnCertified
     String weekStart
     String weekEnd
     double availW01
@@ -42,6 +46,7 @@ class ProdBuffer {
     static transients = ['volList']
     static mapping	= {
         table 'LOBuffertv2'
+        version false
         id              column: "id",              type:        'integer'
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	product 	column: "Produkt",         sqltype:	"char", length: 150
@@ -49,6 +54,7 @@ class ProdBuffer {
 	currency 	column: "currency",        sqltype:	"char", length: 3
 	volumeUnit	column: "volumeUnit",      sqltype:	"char", length: 6
         loBuffertNo     column: "LOBuffertNo"
+        kd              column: "kd",              sqltype:     "char", length: 4
         pkgArticleNo    column: "PkgArticleNo"
         productNo       column: "ProductNo"
         packageSize     column: "PackageSize"
@@ -72,13 +78,14 @@ class ProdBuffer {
         
     }
     static constraints = {
-        status(inList:["Preliminary","Activ","Finished","Cancelled"])
+        status(inList:["Preliminary","Active","Finished","Cancelled"])
         
         sawMill                 nullable: true
         status                  nullable: true
         pkgArticleNo            nullable: true
         product                 nullable: true
         length                  nullable: true
+        kd                      nullable: true
         productNo               nullable: true
         packageSize             nullable: true
         packageSizename         nullable: true
@@ -93,7 +100,22 @@ class ProdBuffer {
         changed                 nullable: true
         appid                   nullable: true
         currency                nullable: true
-        price                   nullable: true
+        priceFSC                nullable: true,      // Endast en av följande 4 priser får ha ett värde//buffer.validation.only_one_price
+           validator: { val, obj -> 
+              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceCW != null) || (obj.priceUC != null))) return 'buffer.validation.only_one_price'}
+          
+        pricePEFC               nullable: true,
+           validator: { val, obj -> 
+              if ((val != null) && ((obj.priceFSC!=null) || (obj.priceCW != null) || (obj.priceUC != null))) return 'buffer.validation.only_one_price'}
+          
+        priceCW                 nullable: true,
+           validator: { val, obj -> 
+              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceFSC != null) || (obj.priceUC != null))) return 'buffer.validation.only_one_price'}
+          
+        priceUC                 nullable: true,
+           validator: { val, obj -> 
+              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceCW != null) || (obj.priceFSC != null))) return 'buffer.validation.only_one_price'}
+          
         volumeUnit              nullable: true
         
         weekEnd                 nullable: true,
@@ -120,14 +142,20 @@ class ProdBuffer {
         availW10                nullable: true
        
     }
+    
+    def beforeValidate() {
+        updateVolumes()
+        updateVolumesOnWeek()
+    }
+    
     def beforeInsert() {
         initiateVolumes()
         fillWeekList()
     }
     
     def beforeupdate() {
-        upDateVolumes()
-        updateVolumeOnweeks()
+        updateVolumes()
+        updateVolumesOnWeek()
     }
         
     def int getCurrentWeek() {
@@ -216,11 +244,11 @@ class ProdBuffer {
         
         
     
-    def updateVolumes(aYearWeek, aYear) {
-  
+    def updateVolumes() {
+        initiateVolumes()
     }
 
     def updateVolumesOnWeek() {
-        
+        fillWeekList()
     }
 }

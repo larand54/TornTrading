@@ -32,4 +32,8 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
+grails.plugins.localeConfiguration.defaultLocale = Locale.ENGLISH
 grails.plugin.springsecurity.logout.postOnly = false
+grails.plugin.databasemigration.updateOnStartFilename = 'changelog.groovy'
+grails.plugin.databasemigration.updateOnStart = false
+//grails.plugin.databasemigration.updateOnStartContexts = ['WoodTrading']

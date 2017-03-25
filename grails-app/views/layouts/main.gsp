@@ -1,18 +1,18 @@
 <!doctype html>
 <html lang="en" class="no-js">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>
-        <g:layoutTitle default="TörnTrading"/>
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>
+            <g:layoutTitle default="TörnTrading"/>
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <asset:stylesheet src="application.css"/>
 
     <g:layoutHead/>
- </head>
- <body>
+</head>
+<body>
 
     <div class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
@@ -20,7 +20,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                 </button>
-                <a class="navbar-brand" href="/#">
+                <a class="navbar-brand" href="/">
                     <i class="fa grails-icon">
                         <asset:image src="Torntrading.png"/>
                     </i>
@@ -37,11 +37,13 @@
     <g:layoutBody/>
 
     <div class="footer" role="contentinfo"></div>
+<sec:ifLoggedIn>
+    <h2> Welcome <sec:username /></h2> 
+</sec:ifLoggedIn>
+<div id="spinner" class="spinner" style="display:none;">
+    <g:message code="spinner.alt" default="Loading&hellip;"/>
+</div>
 
-    <div id="spinner" class="spinner" style="display:none;">
-        <g:message code="spinner.alt" default="Loading&hellip;"/>
-    </div>
-
-    <asset:javascript src="application.js"/>
+<asset:javascript src="application.js"/>
 </body>
 </html>

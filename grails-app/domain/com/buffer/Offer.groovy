@@ -89,7 +89,7 @@ class Offer {
                 contactPerson()
                 contactPhone()
                 city()
-                status(inList: ["Preliminary", "Activ", "Finished", "Cancelled"])
+                status(inList: ["New", "Active", "Sold", "Rejected"])
 		dateCreated()
                 termsOfDelivery(inList: ['Fritt leverantören', 'Fritt kunden'])
 
