@@ -14,7 +14,7 @@ class BootStrap {
             Locale defLocale = new Locale("en", "GB");
             Locale.setDefault(defLocale);
             
-            new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeAvailable: 500, onOrder: 67, currency: 'EUR', kd: '7%',priceFSC:'250.55',  weekStart: '1711', weekEnd: '1718', status: 'Preliminary', volumeUnit: 'AM3').save(failOnError: true)
+            new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeAvailable: 500, onOrder: 67, currency: 'EUR', kd: '7%',grade: 'S/F',priceFSC:'250.55',  weekStart: '1711', weekEnd: '1718', status: 'Preliminary', volumeUnit: 'AM3').save(failOnError: true)
 			
             new ProdBuffer(sawMill:'Boda',product:'38x150 V, Furu', length:'4200 mm', volumeAvailable: 750, onOrder: 150, currency: 'EUR',  weekStart: '1704', weekEnd: '1715', status: 'Preliminary', volumeUnit: 'AM3', kd: '6%', pricePEFC: '355').save()
             new ProdBuffer(sawMill:'Boda',product:'22x90 o/s, Furu', length:'5,6 m', volumeAvailable: 400, , currency: 'EUR',  weekStart: '1706', weekEnd: '1718', status: 'Preliminary', volumeUnit: 'AM3', kd: '11%', priceCW: '338').save()

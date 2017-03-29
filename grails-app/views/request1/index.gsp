@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="Förfrågan" /><!--"${message(code: 'request1.label', default: 'Request1')}" />-->
+        <g:set var="entityName" value="Request" /><!--"${message(code: 'request1.label', default: 'Request1')}" />-->
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -22,24 +22,24 @@
 			<table>
 			<thead>
 			<tr>
-				<th> Förfr. nr.</th>
-				<th> Längd</th>
-				<th> Bredd</th>
-				<th> Tjocklek</th>
-				<th> Volym</th>
-				<th> Kvalitet</th>
+				<th> request. no.</th>
+				<th> Length</th>
+				<th> width</th>
+				<th> Thickness</th>
+				<th> Volume</th>
+				<th> Grade</th>
 				<th> KD</th>
-				<th> Träslag</th>
+				<th> Species</th>
 				<th> FSC</th>
 				<th> Start</th>
-				<th> Slut</th>
-				<th> Företag</th>
-				<th> Land</th>
-				<th> Kontakt</th>
-				<th> Tel.</th>
+				<th> End</th>
+				<th> Company</th>
+				<th> Country</th>
+				<th> Contact</th>
+				<th> Phone</th>
 				<th> Email</th>
 				<th> Status</th>
-				<th> Inkom</th>
+				<th> Added</th>
 				
 			</tr>
 			</thead>

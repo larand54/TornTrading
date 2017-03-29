@@ -22,26 +22,26 @@
 				<thead>
 					<tr>
 						<td> ID</td>
-						<td> Verk</td>
-						<td> produkt</td>
-						<td> Längd</td>
-						<td> Offererad volym</td>
-						<td> Bokad volym</td>
-						<td> Kvar att boka</td>
-						<td> Valuta</td>
+						<td> Mill</td>
+						<td> Product</td>
+						<td> Length</td>
+						<td> Offered volume</td>
+						<td> Booked volume</td>
+						<td> Rest</td>
+						<td> Currency</td>
 						<td> Pris</td>
-						<td> vecka start</td>
-						<td>Vecka slut</td>
-						<td> W01</td>
-						<td> W02</td>
-						<td> W03</td>
-						<td> W04</td>
-						<td> W05</td>
-						<td> W06</td>
-						<td> W07</td>
-						<td> W08</td>
-						<td> W09</td>
-						<td> W10</td>
+						<td> Week start</td>
+						<td> Week end</td>
+						<td> ${myTag.weekNo(offset: "0")}</td>
+						<td> ${myTag.weekNo(offset: "1")}</td>
+						<td> ${myTag.weekNo(offset: "2")}</td>
+						<td> ${myTag.weekNo(offset: "3")}</td>
+						<td> ${myTag.weekNo(offset: "4")}</td>
+						<td> ${myTag.weekNo(offset: "5")}</td>
+						<td> ${myTag.weekNo(offset: "6")}</td>
+						<td> ${myTag.weekNo(offset: "7")}</td>
+						<td> ${myTag.weekNo(offset: "8")}</td>
+						<td> ${myTag.weekNo(offset: "9")}</td>
 					</tr>
 				</thead>
                                 <a href="../../migrations/changelog - kopia.groovy"></a>

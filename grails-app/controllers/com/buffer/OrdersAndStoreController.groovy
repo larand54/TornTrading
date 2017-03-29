@@ -5,27 +5,32 @@ import com.torntrading.security.Role
 import com.torntrading.security.User
 import com.torntrading.security.UserRole
 import com.torntrading.legacy.Supplier
+import com.torntrading.portal.OfferDetail
+import com.torntrading.portal.OfferHeader
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(['ROLE_ADMIN','ROLE_USER','ROLE_SALES', 'ROLE_SUPPLIER'])
+@Secured(['ROLE_ADMIN','ROLE_SALES', 'ROLE_SUPPLIER'])
 class OrdersAndStoreController {
     def springSecurityService
     def list(Integer max) { 
         System.out.println("Controller List <<<<<<<<")
         def orders = Orders.list()
-//        def prodList = ProdBuffer.list()
-//        respond ProdBuffer.list(params), model:[prodListCount: ProdBuffer.count()]
-//         respond Orders.list(params), model:[ordersCount: Orders.count()]
+        def offerDetails = OfferDetail.list()
+
+//        System.out.println("Offerdetails count: "+offerDetails.size)
+        //        def prodList = ProdBuffer.list()
+        //        respond ProdBuffer.list(params), model:[prodListCount: ProdBuffer.count()]
+        //         respond Orders.list(params), model:[ordersCount: Orders.count()]
 
         def List<String> millList = getMills()
-        [orders: orders, prodBuffer: getBufferList(), millList: millList]
-/*        params.max = Math.min(max ?: 10, 100)
+        [orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList]
+        /*        params.max = Math.min(max ?: 10, 100)
         if (params.paginate == 'prodBuffer') {
-            def prodBufferPagination = [max: params.max, offset: params.offset]
-            session.prodBufferPagination = prodBufferPagination
+        def prodBufferPagination = [max: params.max, offset: params.offset]
+        session.prodBufferPagination = prodBufferPagination
         } else if (params.paginate == 'orders') {
-            def ordersPagination = [max: params.max, offset: params.offset]
-            session.ordersPagination = ordersPagination
+        def ordersPagination = [max: params.max, offset: params.offset]
+        session.ordersPagination = ordersPagination
         }
         def ordersList = Orders.list(session.ordersPagination ?: [max: 10, offset: 0])
         def prodBufferList = ProdBuffer.list(session.prodBufferPagination ?: [max: 10, offset: 0])
@@ -33,12 +38,18 @@ class OrdersAndStoreController {
         params.offset = null
         params.max = null
         [prodBufferList: prodBufferList, totalProds: ProdBuffer.count(), totalOrders: Orders.count(), ordersList: ordersList]
-*/   }
+         */   }
            
     def availableProducts() {
         System.out.println(params)
         def List<ProdBuffer> prodBuffer = getBufferList()
         render(template:"AvailableProductData", model:[prodBuffer: prodBuffer])
+    }
+    def listOffers(){
+        System.out.println("#--#"+params)
+        params.id=1
+        def List<OfferDetail> offerDetails = getOfferList()
+        render(template:"ListOffers", model:[offerDetails: offerDetails])
     }
 	
     def show_prodbuffer() {
@@ -60,6 +71,18 @@ class OrdersAndStoreController {
         System.out.println("getMills <<<<")
         ProdBuffer.executeQuery("SELECT DISTINCT sawMill FROM ProdBuffer")
     }
+    
+    def List<OfferDetail> getOfferList() {
+        System.out.println(" getOfferList>>>" + params)
+        def User user
+        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
+        def us = user.getUserSettings()
+        def mill = (us != null) ? us.supplierName :''
+        def roles = springSecurityService.getPrincipal().getAuthorities()
+        def ol = OfferDetail.list()//OfferDetail.findAll(it.millOfferId==params.id)
+        
+        return ol.findAll({it.millOfferID==params.id})
+    }
     def List<ProdBuffer> getBufferList() {
         def User user
         user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
@@ -71,11 +94,11 @@ class OrdersAndStoreController {
         def List<ProdBuffer> tempList
         System.out.println(" GetBufferList>>>" + params)
         if ((params.sawMill != null) && (params.sawMill != '')) {
-           tempList = prodBuffer.findAll({it.sawMill==params.sawMill}) 
-           System.out.println("Filtered")
+            tempList = prodBuffer.findAll({it.sawMill==params.sawMill}) 
+            System.out.println("Filtered")
         } else {
-          tempList = prodBuffer  
-           System.out.println("UN-Filtered")
+            tempList = prodBuffer  
+            System.out.println("UN-Filtered")
         }
         for(def role in roles){ if(role.getAuthority() == "ROLE_ADMIN") {
                 myList = tempList
@@ -98,51 +121,115 @@ class OrdersAndStoreController {
         
     
     def createOffer(){
-        createOfferHeader()
-        //        render "Antal valda: ${params.toOffer.size()}"
-        for( n in params.list('toOffer')) {
-            //            render "${n}-"
-            //            def offer = tTBufferService.createOfferFromBuffer(n)
-            if (n.isInteger()) {
-                int value = n as Integer
-                createOfferFromBuffer(value)
+        int count=0
+        def ofh = createOfferHeader()
+        if (ofh != null) {
+            
+            for( n in params.list('toOffer')) {
+                if (n.isInteger()) {
+                    int value = n as Integer
+                    createOfferDetail(ofh, value)
+                    count = count +1
+                }
             }
+            def user = springSecurityService.isLoggedIn() ?
+            springSecurityService.loadCurrentUser() :
+            null
+            flash.message = "${count} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
+            redirect action:"list", method:"GET"
+        } else {
+            flash.message = "Could not create offer due to systemerror" 
+            redirect action:"list", method:"GET"
+            
         }
-        def user = springSecurityService.isLoggedIn() ?
-        springSecurityService.loadCurrentUser() :
-        null
-        flash.message = "${params.toOffer?.size()} " +  "${message(code:'offerRequested.label')}" + "Användarid: ${user.id}" 
-        redirect action:"list", method:"GET"
     }
     
-    def createOfferFromBuffer(int id) {
+    def handleCertprices(ProdBuffer pb, OfferDetail ofd) {
+        int count=0
+        String cert
+        BigDecimal price
+        if (pb.priceFSC?pb.priceFSC:0 > 0) {
+            count = count + 1
+            price = pb.priceFSC
+            cert = 'FSC'
+        }
+        if (pb.pricePEFC?pb.pricePEFC:0 > 0) {
+            count = count + 1
+            price = pb.pricePEFC
+            cert = 'PEFC'
+        }
+        if (pb.priceUC?pb.priceUC:0 > 0) {
+            count = count + 1
+            price = pb.priceUC
+            cert = 'UC'
+        }
+        if (pb.priceCW?pb.priceCW:0 > 0) {
+            count = count + 1
+            price = pb.priceCW
+            cert = 'CW'
+        }
+        
+        if (count == 1){
+            ofd.endPrice = price
+            ofd.choosedCert = cert
+        }
+    }
+    
+    def createOfferDetail(OfferHeader ofh, int id) {
         def ProdBuffer pb
         pb = ProdBuffer.get(id)
         
-        def Offer of
-        of = new Offer()
-        of.sawMill = pb.sawMill
-        //            of.company = '----'
-        of.lengthDescr = pb.length
-        of.price = pb.price
-        of.product = pb.product
-        of.volumeOffered = pb.volumeRest
-        of.volumeUnit = pb.volumeUnit
-        of.weekEnd = pb.weekEnd
-        of.weekStart = pb.weekStart
-        of.termsOfDelivery = 'Fritt kunden'
-        //            of.kd = 'xxxx'
-        //            of.grade = 'xxxx'
-        //            of.status = 'Preliminary'
-        of.millOfferID = id
-        of.save(failOnError: true)
-        return of
+        def OfferDetail ofd
+        ofd = new OfferDetail(offerHeader: ofh)
+        ofd.lengthDescr = pb.length
+        ofd.priceFSC = pb.priceFSC
+        ofd.pricePEFC = pb.pricePEFC
+        ofd.priceUC = pb.priceUC
+        ofd.priceCW = pb.priceCW
+        ofd.endPrice = 0.0
+        int count=0
+        String cert
+        BigDecimal price
+        if (pb.priceFSC?pb.priceFSC:0 > 0) {
+            count = count + 1
+            price = pb.priceFSC
+            cert = 'FSC'
+        }
+        if (pb.pricePEFC?pb.pricePEFC:0 > 0) {
+            count = count + 1
+            price = pb.pricePEFC
+            cert = 'PEFC'
+        }
+        if (pb.priceUC?pb.priceUC:0 > 0) {
+            count = count + 1
+            price = pb.priceUC
+            cert = 'UC'
+        }
+        if (pb.priceCW?pb.priceCW:0 > 0) {
+            count = count + 1
+            price = pb.priceCW
+            cert = 'CW'
+        }
+        
+        if (count == 1){
+            ofd.endPrice = price
+            ofd.choosedCert = cert
+        }
+        ofd.product = pb.product
+        ofd.volumeOffered = pb.volumeOffered
+        ofd.weekEnd = pb.weekEnd
+        ofd.weekStart = pb.weekStart
+        ofd.offerType='o'
+        ofd.millOfferID = id
+        ofd.save(failOnError: true)
+        return ofd
     }
     
-    def createOfferHeader() {
-      // Check all is same sawmill and grab sawmill name and id
+    def OfferHeader createOfferHeader() {
+        // Check all is same sawmill and grab sawmill name and id
         def ProdBuffer pb
         def String mill = null
+        def String nextMill=null
         def int error = 0
         for( n in params.list('toOffer')) {
             if (n.isInteger()) {
@@ -150,17 +237,22 @@ class OrdersAndStoreController {
                 int clientNo
                 pb = ProdBuffer.get(id)
                 nextMill = pb.sawMill
-                if (nextMill != mill) {
+                System.out.println("Verk: " + nextMill)
+                if (( mill != null) && (nextMill != mill)) {
                     flash.message='Mixed sawmills!'
                     error = id
-                    break
+                    exit
                 }
+                mill = nextMill
                 
-                createOfferFromBuffer(value)
+                //createOfferFromBuffer(value)
             }
         }
-                supplier = Supplier.getBySearchName(mill)
-                clientNo = supplier.clientNo
-      
+        System.out.println("mill: " + mill)
+        def Supplier supplier = Supplier.findBySearchName(mill)//(URLEncoder.encode(mill, "UTF-8"))
+        def int clientNo = supplier.clientNo
+        System.out.println(">>> SawMill: "+ supplier.searchName+" ClientNo: "+ supplier.clientNo)
+        def OfferHeader ofh = new OfferHeader(sawMill: mill, termsOfDelivery: 'Fritt kunden', volumeUnit: pb.volumeUnit, currency: pb.currency).save(failOnError: true)
+        return ofh
     }
 }

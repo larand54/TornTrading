@@ -129,7 +129,7 @@ class ProdBufferController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'prodBuffer.label', default: 'ProdBuffer'), prodBuffer.id])
-                redirect controller: 'orders_and_Store', action: 'list'
+                redirect controller: 'ordersAndStore', action: 'list'
                 //                redirect prodBuffer
             }
             //            '*'{ respond prodBuffer, [status: OK] }

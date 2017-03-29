@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="Förfrågan" /><!--"${message(code: 'request1.label', default: 'Request1')}" />-->
+        <g:set var="entityName" value="Request" /><!--"${message(code: 'request1.label', default: 'Request1')}" />-->
         <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -27,53 +27,50 @@
                 <tr>
                 <td>
                 <fieldset class="form">
-                    <legend>Dimensioner</legend>
-                    Tjocklek: <g:field disabled="true" type="text" name="thickness" required="y" value="${fieldValue(bean: request1, field: 'thickness')}"  style="width: 4em"/>
+                    <legend>Dimensions</legend>
+                    Thickness: <g:field disabled="true" type="text" name="thickness" required="y" value="${fieldValue(bean: request1, field: 'thickness')}"  style="width: 4em"/>
 					<span>
-                    Bredd: <g:field disabled="true" type="text" name="width" required="y" value="${fieldValue(bean: request1, field: 'width')}"  style="width: 4em"/>
+                    Width: <g:field disabled="true" type="text" name="width" required="y" value="${fieldValue(bean: request1, field: 'width')}"  style="width: 4em"/>
 					</span>
                 </fieldset>
                 </td>
                 <td>
                 <fieldset>
-                    <legend>Övriga produktspecifikationer</legend>
-                    Kvalitet:  <g:field disabled="true" type="text" name="quality" required="y" value="${request1?.quality}" size="8"/>
-                    Träslag:  <g:field disabled="true" type="text" name="species" required="y" value="${request1?.species}" size="12"/>
-                    KD%:       <g:field disabled="true" type="text" name="kd" required="Y" value="${request1?.kd}" size="4"/>
-                    Volym AM3: <g:field disabled="true" type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${fieldValue(bean: request1, field: 'volumeRequested')}" style="width: 4em"/>
-                    Längd:     <g:field disabled="true" type="text" size="60" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: auto"/>
-                    FSC:       <g:field disabled="true" type="checkbox" name="fsc" value="${request1?.fsc}" checked="${request1?.fsc}" />
+                    <legend>Other product specifications</legend>
+                    Grade:   <g:field disabled="true" type="text" name="quality" required="y" value="${request1?.quality}" size="8"/>
+                    Species: <g:field disabled="true" type="text" name="species" required="y" value="${request1?.species}" size="12"/>
+                    KD%:      <g:field disabled="true" type="text" name="kd" required="Y" value="${request1?.kd}" size="4"/>
+                    Volume    <g:field disabled="true" type="number decimal" name="volumeRequested" min="1" max="10000" required="Y" value="${fieldValue(bean: request1, field: 'volumeRequested')}" style="width: 4em"/>
+                    Length:   <g:field disabled="true" type="text" size="60" name="length" min="1200" max="7200" required="Y" value="${fieldValue(bean: request1, field: 'length')}" style="width: auto"/>
+                    FSC:      <g:field disabled="true" type="checkbox" name="fsc" value="${request1?.fsc}" checked="${request1?.fsc}" />
                 </fieldset>
                 </td>
                 <td>
                 <fieldset>
-                    <legend>Leveransperiod, vecka</legend>
-                    Från: <g:field disabled="true" type="text" name="weekStart" required="y" value="${request1?.weekStart}" size="3"/>
-                    Till: <g:field disabled="true" type="text" name="weekEnd" required="Y" value="${request1?.weekEnd}" size="3"/>
+                    <legend>Delivery period, week</legend>
+                    From: <g:field disabled="true" type="text" name="weekStart" required="y" value="${request1?.weekStart}" size="3"/>
+                    To: <g:field disabled="true" type="text" name="weekEnd" required="Y" value="${request1?.weekEnd}" size="3"/>
                 </fieldset>
                 </td>
                 </tr>
                 </table>
                 <fieldset class="form">
-                    <legend>Kontaktuppgifter</legend>
+                    <legend>Contact info</legend>
                 <table style="width:100%">
                 <tr>
                 <td>
-                    Företag: <g:field disabled="true" type="text" name="company" required="y" value="${request1?.company}" size="50"/>
+                    Country: <g:field disabled="true" type="text" name="country" required="y" value="${request1?.country}" size="50"/>
                 </td>
                 <td>
-                    Land: <g:field disabled="true" type="text" name="country" required="y" value="${request1?.country}" size="50"/>
-                </td>
-                <td>
-                    Ort:  <g:field disabled="true" type="text" name="city" required="y" value="${request1?.city}" size="50"/>
+                    City:  <g:field disabled="true" type="text" name="city" required="y" value="${request1?.city}" size="50"/>
                 </td>
                 </tr>
                 <tr>
                 <td>
-                    Kontaktperson:  <g:field disabled="true" type="text" name="contactPerson" required="y" value="${request1?.contactPerson}" size="50"/>
+                    Contactperson:  <g:field disabled="true" type="text" name="contactPerson" required="y" value="${request1?.contactPerson}" size="50"/>
                 </td>
                 <td>
-                    Telefon:  <g:field disabled="true" type="text" name="contactPhone" required="y" value="${request1?.contactPhone}" size="50"/>
+                    Phone:  <g:field disabled="true" type="text" name="contactPhone" required="y" value="${request1?.contactPhone}" size="50"/>
                 </td>
                 <td>
                     Email:  <g:field disabled="true" type="text" name="contactEmail" required="y" value="${request1?.contactEmail}" size="50"/>
@@ -81,15 +78,15 @@
                 </tr>
                 <tr>
                     <td>
-                        Leveransvillkor: <g:field disabled="true" type="text" name="termsOfDelivery" value="${request1?.termsOfDelivery}"/>
+                        Delivery terms: <g:field disabled="true" type="text" name="termsOfDelivery" value="${request1?.termsOfDelivery}"/>
                     </td>
                     <td>
-                        Kreditvärdighet: <g:field disabled="true" style="background-color:${request1.txtColorOfCreditRate()}; color:#000000;" type="text" name="creditRate" value="${request1?.creditRate}" size="1"/>
+                        Creditability: <g:field disabled="true" style="background-color:${request1.txtColorOfCreditRate()}; color:#000000;" type="text" name="creditRate" value="${request1?.creditRate}" size="1"/>
                 </tr>
                 </table>
                 </fieldset>
 				<fieldset>
-					<legend> Fritext</legend>
+					<legend> Free text</legend>
 					<g:textArea disabled="true" name="freeText" value="${request1?.freeText}" rows="6" cols="150" style="width:50em; height: 12em" />
 				</fieldset>
 			

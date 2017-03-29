@@ -5,6 +5,7 @@ class OfferDetail {
     def springSecurityService
     
     static belongsTo = [offerHeader: OfferHeader]
+    String              offerType            // ('o') - Offert, ('s') - Stocknota
     String              grade
     String              kd
     String		product
@@ -14,10 +15,10 @@ class OfferDetail {
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
     BigDecimal          markup          // Prispåslag
     BigDecimal          freight         // Fraktkostnad   
-    BigDecimal          fscPrice        // tillägg för FSC
-    BigDecimal          ucPrice         // tillägg för UnControlled wood 
-    BigDecimal          cwPrice         // tillägg för ControllWood
-    BigDecimal          pefcPrice       // tillägg för PEFC
+    BigDecimal          priceFSC        // tillägg för FSC
+    BigDecimal          priceUC         // tillägg för UnControlled wood 
+    BigDecimal          priceCW         // tillägg för ControllWood
+    BigDecimal          pricePEFC       // tillägg för PEFC
     BigDecimal          endPrice        // kundens slutpris
     double		volumeOffered
     String		weekStart
@@ -26,13 +27,20 @@ class OfferDetail {
     int                 createdBy 
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
+    double              oldVolume   // Volym angiven före uppdatering
+//    double              diff        // Ändrad volym vid uppdatering
+//    static transients = ['oldVolume', 'diff']
+
 	
     def beforeInsert() {
         createdBy = getUserID()
         endPrice = 0 //price + freight + markup
+        if (offerType == null) {offerType = 'o'}
     }
+    
     def beforeUpdate() {
-        endPrice = freight + markup
+        oldVolume =  getPersistentValue('volumeOffered')
+        endPrice = (freight?freight:0) + (markup?markup:0)
         if (choosedCert == 'FSC') endPrice = endPrice + priceFSC
         else if (choosedCert == 'PEFC') endPrice = endPrice + pricePEFC
         else if (choosedCert == 'UC') endPrice = endPrice + priceUC
@@ -40,14 +48,20 @@ class OfferDetail {
     }
     
     static mapping	= {
+        offerType       column: "offerType",       sqltype:     "char", length: 1   
 	product 	column: "product",         sqltype:	"char", length: 100
 	lengthDescr	column: "lengthDescr",     sqltype:	"char", length: 50
+        priceFSC        column: "price_fsc"
+        pricePEFC       column: "price_pefc"
+        priceUC         column: "price_uc"
+        priceCW         column: "price_cw"
 	volumeOffered	column: "volumeOffered",   sqltype:	"float"
 	weekStart	column: "weekStart",       sqltype:	"char", length: 4
 	weekEnd		column: "weekEnd",         sqltype:	"char", length: 4
 	dateCreated	column: "dateCreated",     defaultValue: newDate()
         grade            column: 'grade',          sqltype: 'char', length: 8
         kd               column: 'kd',             sqltype: 'char', length: 4
+        oldVolume       column: 'oldVolume',       sqlType:     'float' 
 
     }
     static constraints = {
@@ -65,23 +79,24 @@ class OfferDetail {
 		weekStart()
 		weekEnd()
 		dateCreated()
-//                choosedCert(inList: getAvailableCert())
                 millOfferID     nullable:true
                 requestID       nullable:true
                 weekStart       nullable:true
                 weekEnd         nullable:true
                 volumeOffered   nullable:true
+                oldVolume       nullable:true
                 kd              nullable:true
                 grade           nullable:true
                 endPrice        nullable:true
-                fscPrice        nullable:true
-                pefcPrice       nullable:true
-                ucPrice         nullable:true
-                cwPrice         nullable:true
+                priceFSC        nullable:true
+                pricePEFC       nullable:true
+                priceUC         nullable:true
+                priceCW         nullable:true
                 markup          nullable:true
                 freight         nullable:true
                 lengthDescr     nullable:true
                 choosedCert     nullable:true
+                offerType       nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?
@@ -91,11 +106,16 @@ class OfferDetail {
     }
     
     def List<String> getAvailableCert() {
-        def List<String> sl
-        sl.add(priceFSC?'FSC':null)
+        def List<String> sl = new ArrayList<String>()
+        if (priceFSC != null) sl.add("FSC")
+        if (pricePEFC != null) sl.add('PEFC')
+        if (priceCW != null) sl.add('CW')
+        if (priceUC != null) sl.add('UC')
+
+/*            sl.add(priceFSC?'FSC':null)
         sl.add(pricePEFC?'PEFC':null)
         sl.add(priceUC?'UC':null)
         sl.add(priceCW?'CW':null)
-        return sl
+*/        return sl
     }
 }

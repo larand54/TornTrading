@@ -13,6 +13,7 @@ class OfferHeader {
     String		currency
     String		volumeUnit
     String 		status
+    String              offerType
     Date		dateCreated
     int                 createdBy 
 
@@ -20,12 +21,14 @@ class OfferHeader {
     def beforeInsert() {
         createdBy = getUserID()
         status = 'New'
+        if (offerType == null) {offerType = 'o'}
     }
     static mapping	= {
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	currency 	column: "currency",        sqltype:	"char", length: 3
 	volumeUnit	column: "volumeUnit",      sqltype:	"char", length: 6
 	status		column: "status",          sqltype:	"char", length: 11
+	offerType	column: "offerType",       sqltype:	"char", length: 1
 	dateCreated	column: "dateCreated",     defaultValue: newDate()
         company          column: 'company',        sqltype: 'char', length: 50
         country          column: 'country',        sqltype: 'char', length: 20
@@ -59,6 +62,7 @@ class OfferHeader {
                 termsOfDelivery(inList: ['Fritt leverantören', 'Fritt kunden'])
 
                 sawMill         nullable:true
+                termsOfDelivery nullable:true
                 contactPhone    nullable:true
                 contactEmail    nullable:true
                 contactPerson   nullable:true
@@ -69,6 +73,7 @@ class OfferHeader {
                 volumeUnit      nullable:true
                 status          nullable:true
                 offerDetails    nullable:true
+                offerType       nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?

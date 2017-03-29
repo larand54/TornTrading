@@ -19,7 +19,7 @@
             <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:display bean="prodBuffer" />
+            <g:render template="prodBufferdata" model="[prodBuffer:prodBuffer]"/>
             <g:form resource="${this.prodBuffer}" method="DELETE">
                 <fieldset class="buttons">
                     <g:link class="edit" action="edit" resource="${this.prodBuffer}"><g:message code="default.button.edit.label" default="Edit" /></g:link>

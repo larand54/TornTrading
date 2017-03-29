@@ -1,6 +1,7 @@
 package com.torntrading.portal
 
 import static org.springframework.http.HttpStatus.*
+import com.buffer.ProdBuffer
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -66,16 +67,31 @@ class OfferDetailController {
             respond offerDetail.errors, view:'edit'
             return
         }
-
+        String status =  offerDetail.offerHeader.status 
+        if ((status == 'Sold') || (status == 'Rejected')) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Offer can not be changed (Sold/Rejected)'
+            return
+        }
+        
         offerDetail.choosedCert = params.availableCert
         offerDetail.save flush:true
 
+        if ((offerDetail.volumeOffered > 0.0001) && (offerDetail.oldVolume > 0.0001)) {
+            double diff = offerDetail.volumeOffered - offerDetail.oldVolume
+            if (Math.abs(diff) > 0.0001) {
+                ProdBuffer pb = ProdBuffer.findById(offerDetail.millOfferID)
+                pb.volumeOffered = pb.volumeOffered + diff
+                pb.volumeRestInclOffers = pb.volumeAvailable - pb.volumeOffered - pb.onOrder
+                pb.save()
+            }
+        }
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'offerDetail.label', default: 'OfferDetail'), offerDetail.id])
-                redirect offerDetail
+                redirect controller: "offerHeader", action: "edit", id: "${offerDetail.offerHeader.id}"
             }
-            '*'{ respond offerDetail, [status: OK] }
+            //            '*'{ respond offerDetail, [status: OK] }
         }
     }
 

@@ -13,6 +13,7 @@ class ProdBuffer {
     double actualLengthMM  
     String packageSizename 
     String kd
+    String grade
     double volumeAvailable // Leverantörens erbjudande
     double volumeOffered   // summa till kund offererade volymer 
     double onOrder          // kontrakterad volym = bokat 
@@ -52,9 +53,14 @@ class ProdBuffer {
 	product 	column: "Produkt",         sqltype:	"char", length: 150
 	length  	column: "Length",          sqltype:	"char", length: 25
 	currency 	column: "currency",        sqltype:	"char", length: 3
-	volumeUnit	column: "volumeUnit",      sqltype:	"char", length: 6
+        priceFSC        column: "price_fsc"
+        pricePEFC       column: "price_pefc"
+        priceUC         column: "price_uc"
+        priceCW         column: "price_cw"
+	volumeUnit	column: "volumeUnit",        sqltype:     "char", length: 6
         loBuffertNo     column: "LOBuffertNo"
-        kd              column: "kd",              sqltype:     "char", length: 4
+        kd              column: "kd",                sqltype:     "char", length: 4
+        grade           column: "grade",             sqltype:     "char", length: 8
         pkgArticleNo    column: "PkgArticleNo"
         productNo       column: "ProductNo"
         packageSize     column: "PackageSize"
@@ -86,6 +92,7 @@ class ProdBuffer {
         product                 nullable: true
         length                  nullable: true
         kd                      nullable: true
+        grade                   nullable: true
         productNo               nullable: true
         packageSize             nullable: true
         packageSizename         nullable: true
@@ -100,21 +107,12 @@ class ProdBuffer {
         changed                 nullable: true
         appid                   nullable: true
         currency                nullable: true
-        priceFSC                nullable: true,      // Endast en av följande 4 priser får ha ett värde//buffer.validation.only_one_price
+        priceFSC                nullable: true          
+        pricePEFC               nullable: true           
+        priceCW                 nullable: true          
+        priceUC                 nullable: true/*,
            validator: { val, obj -> 
-              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceCW != null) || (obj.priceUC != null))) return 'buffer.validation.only_one_price'}
-          
-        pricePEFC               nullable: true,
-           validator: { val, obj -> 
-              if ((val != null) && ((obj.priceFSC!=null) || (obj.priceCW != null) || (obj.priceUC != null))) return 'buffer.validation.only_one_price'}
-          
-        priceCW                 nullable: true,
-           validator: { val, obj -> 
-              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceFSC != null) || (obj.priceUC != null))) return 'buffer.validation.only_one_price'}
-          
-        priceUC                 nullable: true,
-           validator: { val, obj -> 
-              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceCW != null) || (obj.priceFSC != null))) return 'buffer.validation.only_one_price'}
+              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceCW != null) || (obj.priceFSC != null))) return 'buffer.validation.only_one_price'}*/
           
         volumeUnit              nullable: true
         

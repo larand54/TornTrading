@@ -1,5 +1,5 @@
 <fieldset class="form">
-    Ange status: <g:select name="status" from="${prodBuffer?.constrainedProperties.status.inList}" 
+    Set status: <g:select name="status" from="${prodBuffer?.constrainedProperties.status.inList}" 
     value="${prodBuffer?.status}" required="Y"/>
 </fieldset>
 <input type="hidden" name="sawMill" value="${myTag.userCompany()}" />
@@ -15,9 +15,10 @@
         <td>
             <fieldset>
                 <legend>Product specifications</legend>
-                Produkt:  <g:field class="elements" type="text" name="product" required="y" value="${prodBuffer?.product}" size="60"/>
-                Längd:     <g:field class="elements" type="text" name="length"  required="y" value="${prodBuffer?.length}" size="30"/>
-                KD:     <g:field class="elements" type="text" name="kd"  required="y" value="${prodBuffer?.kd}" size="2"/>
+                Product:  <g:field class="elements" type="text" name="product"  value="${prodBuffer?.product}" size="60"/>
+                Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="30"/>
+                KD:     <g:field class="elements" type="text" name="kd"   value="${prodBuffer?.kd}" size="2"/>
+                Grade:  <g:field class="elements" type="text" name="grade"   value="${prodBuffer?.grade}" size="3"/>
             </fieldset>
         </td>
     </tr>
@@ -44,7 +45,7 @@
     <tr>
         <td>
             <fieldset>
-                <legend>Leveransperiod, vecka</legend>
+                <legend>Delivery period, week</legend>
                 From: <g:field class="elements" type="text" name="weekStart" required="y" value="${prodBuffer?.weekStart}" size="4"/>
                 To: <g:field class="elements" type="text" name="weekEnd" required="Y" value="${prodBuffer?.weekEnd}" size="4"/>
             </fieldset>

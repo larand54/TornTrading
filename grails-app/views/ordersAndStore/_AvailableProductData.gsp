@@ -3,25 +3,23 @@
         <thead>
             <tr><g:sortableColumn property='toOffer' title='x' />
                 <g:sortableColumn property="Id" title='Id' />
-                <g:sortableColumn property="sawMill" title='Verk' />
-                <g:sortableColumn property="product" title='Produkt' />
-                <g:sortableColumn property="productNo" title='Prodnr' />
-                <g:sortableColumn property="length" title='Längd' />
-                <g:sortableColumn property="volumeAvailable" title='Ursp.' />
+                <g:sortableColumn property="sawMill" title='Mill' />
+                <g:sortableColumn property="product" title='Product' />
+                <g:sortableColumn property="length" title='Length' />
+                <g:sortableColumn property="volumeAvailable" title='Orig.' />
                 <g:sortableColumn property="volumeOffered" title='Offer.' />
-                <g:sortableColumn property="onOrder" title='Bokat' />
-                <g:sortableColumn property="volumeRest" title='Tillg' />
-                <g:sortableColumn property="volumeRestInclOffers" title='TlgOff' />
-                <g:sortableColumn property="delivered" title='Lev.' />
-                <g:sortableColumn property="volumeUnit" title='Enhet' />
-                <g:sortableColumn property="currency" title='Valuta' />
+                <g:sortableColumn property="onOrder" title='Bkd' />
+                <g:sortableColumn property="volumeRest" title='Avail' />
+                <g:sortableColumn property="volumeRestInclOffers" title='InclOff' />
+                <g:sortableColumn property="volumeUnit" title='Unit' />
+                <g:sortableColumn property="currency" title='Cur' />
                 <g:sortableColumn property="kd" title='KD' />
-                <g:sortableColumn property="priceFSC" title='Price FSC' />
-                <g:sortableColumn property="priceFSC" title='Price PEFC' />
-                <g:sortableColumn property="priceFSC" title='Price CW' />
-                <g:sortableColumn property="priceFSC" title='Price UC' />
+                <g:sortableColumn property="priceFSC" title='FSC' />
+                <g:sortableColumn property="priceFSC" title='PEFC' />
+                <g:sortableColumn property="priceFSC" title='CW' />
+                <g:sortableColumn property="priceFSC" title='UC' />
                 <g:sortableColumn property="weekStart" title='Start' />
-                <g:sortableColumn property="weekEnd" title='Slut' />
+                <g:sortableColumn property="weekEnd" title='End' />
                 <g:sortableColumn property="status" title='Status' />
                 <g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "0")}" />
                 <g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "1")}" />
@@ -37,27 +35,18 @@
         </thead>
         <tbody>
 
-<!--            <g:each in="${prodBuffer.findAll{it.sawMill == "${sawMill}"}}" status="i" var="pb"> </g:each>-->
-<!--            <g:if test = "${params.sawMill != null}"> 
-                "${ showThis = prodBuffer.findAll{it.sawMill == params.sawMill}}"
-            </g:if>
-            <g:else>
-                "${ showThis = prodBuffer}"
-            </g:else>  -->
-                <g:each in="${prodBuffer}" status="i" var="pb"> 
+            <g:each in="${prodBuffer}" status="i" var="pb"> 
                 <tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
                     <td><g:checkBox name="toOffer" value="${pb.id}" checked="false"  /></td>
                     <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
                     <td>${pb.sawMill}</td>
                     <td>${pb.product}</td>
-                    <td>${pb.productNo}</td>
                     <td>${pb.length}</td>
                     <td>${pb.volumeAvailable}</td>
-                    <td>${pb.volumeOffered}</td>
+                    <td><a id="${pb.id}" onclick="listOffers(${pb.id})">${pb.volumeOffered}</a></td> 
                     <td>${pb.onOrder}</td>
                     <td>${pb.volumeRest}</td>
                     <td>${pb.volumeRestInclOffers}</td>
-                    <td>${pb.delivered}</td>
                     <td>${pb.volumeUnit}</td>
                     <td>${pb.currency}</td>
                     <td>${pb.kd}</td>

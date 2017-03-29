@@ -25,7 +25,7 @@
                         </table>
                 </fieldset>
                 <fieldset>
-                    <legend>Kontaktuppgifter</legend>
+                    <legend>Contact info</legend>
                     <table>
                         <tr>
                              <td>
