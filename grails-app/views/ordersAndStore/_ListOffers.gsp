@@ -1,11 +1,12 @@
 <div id="offerList">
-    <g:set var="entityName" value='Offers' />
+    <g:set var="entityName" value='Offer' />
     <div id="list-offers" class="content scaffold-list" role="main">
         <h1><g:message code="default.list.label" args="[entityName]" /></h1>
         <table style="width:100%">
             <thead>
                 <tr>
                     <g:sortableColumn property="product" title='Product' />
+                    <g:sortableColumn property="offerType" title='o/s' />
                     <g:sortableColumn property="lengthDescr" title='Length' />
                     <g:sortableColumn property="volumeOffered" title='Volume' />
                     <g:sortableColumn property="kd" title='KD' />
@@ -23,6 +24,7 @@
                 <g:each in="${offerDetails}" status="i" var="od">
                     <tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
                         <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.product?.encodeAsHTML()}</g:link></td>
+                        <td>[${od.offerType}]</td>
                         <td>${od?.lengthDescr}</td>
                         <td>${od?.volumeOffered}</td>
                         <td>${od?.kd}</td>

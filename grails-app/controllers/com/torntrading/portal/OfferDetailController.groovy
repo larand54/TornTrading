@@ -77,13 +77,14 @@ class OfferDetailController {
         offerDetail.choosedCert = params.availableCert
         offerDetail.save flush:true
 
-        if ((offerDetail.volumeOffered > 0.0001) && (offerDetail.oldVolume > 0.0001)) {
+        System.out.println("OfferDetailUpdated, oldVolume: "+offerDetail.oldVolume+" Volume offered: "+ offerDetail.volumeOffered)
+        if (offerDetail.volumeOffered > 0.0001) {
             double diff = offerDetail.volumeOffered - offerDetail.oldVolume
             if (Math.abs(diff) > 0.0001) {
                 ProdBuffer pb = ProdBuffer.findById(offerDetail.millOfferID)
                 pb.volumeOffered = pb.volumeOffered + diff
                 pb.volumeRestInclOffers = pb.volumeAvailable - pb.volumeOffered - pb.onOrder
-                pb.save()
+                pb.save(failOnError:true)
             }
         }
         request.withFormat {

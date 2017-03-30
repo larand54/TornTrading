@@ -70,7 +70,7 @@
 
 
 
-        <g:set var="entityName" value='Orders' />
+        <g:set var="entityName" value='Order' />
         <div id="list-orders" class="content scaffold-list" role="main">
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
             <table>

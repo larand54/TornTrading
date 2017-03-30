@@ -43,7 +43,7 @@
                     <td>${pb.product}</td>
                     <td>${pb.length}</td>
                     <td>${pb.volumeAvailable}</td>
-                    <td><a id="${pb.id}" onclick="listOffers(${pb.id})">${pb.volumeOffered}</a></td> 
+                    <td><a onclick="listOffers(${pb.id})">${pb.volumeOffered}</a></td> 
                     <td>${pb.onOrder}</td>
                     <td>${pb.volumeRest}</td>
                     <td>${pb.volumeRestInclOffers}</td>
