@@ -86,32 +86,4 @@
          </g:form>
        </div>
     </body>
-<script>
-var countChecked = function() {
-  var n = $( "input:checked" ).length;
-  $( "div" ).text( n + (n === 1 ? " is" : " are") + " checked!" );
-};
-countChecked();
- 
-$( "input[type=checkbox]" ).on( "click", countChecked );
-</script>
-<script>
-
-//some code
-
-var items = [1,2,3];
-
-//some code
-
-  $('#add-location').click(function () {
-    $.ajax({
-      type: "POST",
-      url: "${g.createLink(controller:'myController', action: 'myControllerMethod')}",
-      data: {items: items},
-      success: function (data) {
-        console.log(data)
-      }
-    });
-  });
-</script>
 </html>

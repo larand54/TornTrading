@@ -36,14 +36,16 @@
         <tbody>
 
             <g:each in="${prodBuffer}" status="i" var="pb"> 
-                <tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
+                <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
                     <td><g:checkBox name="toOffer" value="${pb.id}" checked="false"  /></td>
                     <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
                     <td>${pb.sawMill}</td>
                     <td>${pb.product}</td>
                     <td>${pb.length}</td>
                     <td>${pb.volumeAvailable}</td>
-                    <td><a onclick="listOffers(${pb.id})">${pb.volumeOffered}</a></td> 
+                    <td><div id="${pb.id}" class="offers" >${pb.volumeOffered}</div></td>
+<!--                <td><a  onclick='listOffers()'> ${pb.volumeOffered}</a></td>
+                    <td><g:link action="listOffers" id="${pb.id}"> ${pb.volumeOffered}</g:link></td>-->
                     <td>${pb.onOrder}</td>
                     <td>${pb.volumeRest}</td>
                     <td>${pb.volumeRestInclOffers}</td>

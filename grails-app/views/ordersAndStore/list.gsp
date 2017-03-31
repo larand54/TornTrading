@@ -17,21 +17,33 @@
         </style>
         <script type="text/javascript">
             function availableProducts(){
-            $.ajax({
+                $.ajax({
                     url:'${g.createLink( controller:'ordersAndStore', action:'availableProducts' )}',
-            data: [sawMill],
-            type: 'get'
-            }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
+                        data: [sawMill],
+                        type: 'get'
+                }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
             }
 
-            function listOffers(id){
+
+    $( document ).ready( function() {
+        $( '.offers' ).click( function ( event ){
+            myID = this.id
             $.ajax({
-            url:'${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
-            data: [id],
-            type: 'get'
-            }).success( function ( data ) { $( '#offerList' ).html( data ); });
+                url: '${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
+                data: {id:this.id},
+                type: 'get'
+            }).success( function ( data ) { $( '#offerList' ).html( data );     });
+        });
+    });
+            
+            function listOffers(){
+                $.ajax({
+                    url:'${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
+                    data: [],
+                    type: 'get'
+                }).success( function ( data ) { $( '#offerList' ).html( data ); });
             }
-
+            
         </script>    
     </head>
     <body>
@@ -40,6 +52,7 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><a class="create" href="${createLink(uri: '/ordersAndStore/add_prodBuffer')}"><g:message code="prodBuffer.create.label"/></a></li>
+                <li><a class="create" href="${createLink(uri: '/massMail/createMassMail')}"><g:message code="massMail.create.label"/></a></li>
             </ul>
         </div>
         <g:set var="entityName" value='Product' />
@@ -58,6 +71,7 @@
                     <div class="pagination">
                         <g:paginate total="${prodBufferCount ?: 0}" /> 
                     </div>
+                    
                     <fieldset class="buttons">
                         <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
                     </fieldset>

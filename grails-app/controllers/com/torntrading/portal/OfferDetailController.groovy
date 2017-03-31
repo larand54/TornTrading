@@ -78,7 +78,7 @@ class OfferDetailController {
         offerDetail.save flush:true
 
         System.out.println("OfferDetailUpdated, oldVolume: "+offerDetail.oldVolume+" Volume offered: "+ offerDetail.volumeOffered)
-        if (offerDetail.volumeOffered > 0.0001) {
+        if ((offerDetail.volumeOffered > 0.0001) || (offerDetail.oldVolume > 0.0001)){
             double diff = offerDetail.volumeOffered - offerDetail.oldVolume
             if (Math.abs(diff) > 0.0001) {
                 ProdBuffer pb = ProdBuffer.findById(offerDetail.millOfferID)
