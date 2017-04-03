@@ -15,9 +15,9 @@ class OrdersAndStoreController {
     def list(Integer max) { 
         System.out.println("Controller List <<<<<<<<")
         def orders = Orders.list()
-        def offerDetails = OfferDetail.list()
+        def offerDetails = null//OfferDetail.list()
 
-//        System.out.println("Offerdetails count: "+offerDetails.size)
+        //        System.out.println("Offerdetails count: "+offerDetails.size)
         //        def prodList = ProdBuffer.list()
         //        respond ProdBuffer.list(params), model:[prodListCount: ProdBuffer.count()]
         //         respond Orders.list(params), model:[ordersCount: Orders.count()]
@@ -47,14 +47,22 @@ class OrdersAndStoreController {
     }
     def listOffers(){
         System.out.println("#--#"+params)
+        def User user
+        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
+        def us = user.getUserSettings()
+        //        def mill = (us != null) ? us.supplierName :''
+        def roles = springSecurityService.getPrincipal().getAuthorities()
+        for(def role in roles){ if((role.getAuthority() == "ROLE_ADMIN") || (role.getAuthority() == "ROLE_SALES")){
     
-        def List<OfferDetail> offerDetails = getOfferList()
-            System.out.println("OfferDetail filtered count: "+offerDetails.count) 
-        def orders = Orders.list()
-        def List<String> millList = getMills()
+                def List<OfferDetail> offerDetails = getOfferList()
+                System.out.println("OfferDetail filtered count: "+offerDetails.count) 
+                def orders = Orders.list()
+                //        def List<String> millList = getMills()
 
-//        render(view:"list", model[orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList])
-        render(template:"ListOffers", model:[offerDetails: offerDetails])
+                //        render(view:"list", model[orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList])
+                render(template:"ListOffers", model:[offerDetails: offerDetails])
+            }
+        }
     }
 	
     def show_prodbuffer() {
@@ -81,11 +89,6 @@ class OrdersAndStoreController {
         System.out.println(" getOfferList>>>" + params)
         def int id = params.id.toInteger()
         System.out.println(" getOfferList>>>ID: " + id)
-        def User user
-        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
-        def us = user.getUserSettings()
-        def mill = (us != null) ? us.supplierName :''
-        def roles = springSecurityService.getPrincipal().getAuthorities()
         def ol = OfferDetail.list()
         return ol.findAll({it.millOfferID==id})
     }

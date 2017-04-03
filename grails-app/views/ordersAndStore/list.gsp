@@ -15,35 +15,31 @@
             overflow-x: auto;
             }
         </style>
+        <style>
+            .offers {
+            color: #ff0000
+            }
+            </</style>
         <script type="text/javascript">
             function availableProducts(){
-                $.ajax({
+            $.ajax({
                     url:'${g.createLink( controller:'ordersAndStore', action:'availableProducts' )}',
-                        data: [sawMill],
-                        type: 'get'
+                    data: [sawMill],
+                    type: 'get'
                 }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
             }
 
 
-    $( document ).ready( function() {
-        $( '.offers' ).click( function ( event ){
-            myID = this.id
-            $.ajax({
-                url: '${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
-                data: {id:this.id},
-                type: 'get'
-            }).success( function ( data ) { $( '#offerList' ).html( data );     });
-        });
-    });
-            
-            function listOffers(){
-                $.ajax({
-                    url:'${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
-                    data: [],
-                    type: 'get'
-                }).success( function ( data ) { $( '#offerList' ).html( data ); });
-            }
-            
+            $( document ).ready( function() {
+                $( '.offers' ).click( function ( event ){
+                    $.ajax({
+                        url: '${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
+                        data: {id:this.id},
+                        type: 'get'
+                    }).success( function ( data ) { $( '#offerList' ).html( data );     });
+                });
+            });
+
         </script>    
     </head>
     <body>
@@ -71,7 +67,7 @@
                     <div class="pagination">
                         <g:paginate total="${prodBufferCount ?: 0}" /> 
                     </div>
-                    
+
                     <fieldset class="buttons">
                         <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
                     </fieldset>
