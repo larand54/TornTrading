@@ -31,7 +31,7 @@
 
 
             $( document ).ready( function() {
-                $( '.offers' ).click( function ( event ){
+                $( document ).on('click', '.offers', function ( event ){
                     $.ajax({
                         url: '${g.createLink( controller:'ordersAndStore', action:'listOffers' )}',
                         data: {id:this.id},
@@ -62,7 +62,12 @@
                 <g:form action="createOffer">
                     <div id="selectMill">
                         Select mill:
-                        <g:select name="sawMill" from="${millList}" value="" onchange="availableProducts(sawMill)" noSelection = "${['':'All']}" />
+                        <g:if test="selectedMill">
+                            <g:select name="sawMill" from="${millList}" value="" onchange="availableProducts(sawMill)" noSelection = "${['':'All']}" />
+                        </g:if>                        <g:else>
+                            <g:select name="sawMill" from="${millList}" value="All" onchange="availableProducts(sawMill)" optionValue="All" optionKey="All"/>
+                        </g:else>
+
                     </div>
                     <g:render template="AvailableProductData" model="[prodBuffer:prodBuffer]"/>
                     <div class="pagination">
@@ -77,7 +82,7 @@
         </div>
 
 
-        <g:render template="ListOffers" model="[offerDetails:offerDetails]"/>
+        <div id="offerList"></div>
 
 
 

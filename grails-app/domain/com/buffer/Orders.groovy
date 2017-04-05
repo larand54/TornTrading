@@ -18,6 +18,7 @@ class Orders {
 
 
 	static mapping = {
+                table('wt_orders')
 		orderNo 		column: "orderNo", 		sqltype: "char", length: 20
 		sawMill 		column: "sawMill", 		sqltype: "char", length: 80
 		period 		column: "period", 		sqltype: "char", length: 4

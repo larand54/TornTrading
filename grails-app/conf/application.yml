@@ -116,12 +116,11 @@ environments:
     production:
         dataSource:
             dbCreate: none
-#            url: jdbc:jtds:sqlserver://192.168.225.11:1433/tt_portal
-            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
 #            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
+            url: jdbc:jtds:sqlserver://192.168.225.11:1433/tt_sys
             driverClassName: net.sourceforge.jtds.jdbc.Driver
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
+            password: Avoc3nt
 #            password: mulan2010
-#            password: Avoc3nt
-            password: woods2011
+#            password: woods2011

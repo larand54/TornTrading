@@ -31,7 +31,7 @@
             <g:form resource="${this.offerDetail}" method="PUT">
                 <g:hiddenField name="version" value="${this.offerDetail?.version}" />
                 <fieldset class="form">
-                    <g:render template="offerDData" model="[offerDetail:offerDetail]"/>
+                    <g:render template="OfferDData" model="[offerDetail:offerDetail]"/>
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />

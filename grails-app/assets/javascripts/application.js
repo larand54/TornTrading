@@ -9,7 +9,6 @@
 //= require bootstrap
 //= require_tree .
 //= require_self
-//= require listOffers
 
 if (typeof jQuery !== 'undefined') {
     (function($) {

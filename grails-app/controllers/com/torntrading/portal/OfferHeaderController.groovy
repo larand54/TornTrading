@@ -75,10 +75,14 @@ class OfferHeaderController {
 
         request.withFormat {
             form multipartForm {
+                System.out.println("withFormat")
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'offerHeader.label', default: 'OfferHeader'), offerHeader.id])
-                redirect offerHeader
+                redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
+                //redirect offerHeader
             }
-            '*'{ respond offerHeader, [status: OK] }
+//               redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
+
+            //            '*'{ respond offerHeader, [status: OK] }
         }
     }
 

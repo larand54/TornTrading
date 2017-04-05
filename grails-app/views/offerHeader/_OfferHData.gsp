@@ -24,24 +24,24 @@
     <table style="width:100%">
         <tr>
             <td>
-                Company: <g:field class="elements" type="text" name="company" required="y" value="${offerHeader?.company}" size="50"/>
+                Company: <g:field class="elements" type="text" name="company"  value="${offerHeader?.company}" size="50"/>
             </td>
             <td>
                 country: <g:field class="elements" type="text" name="country" value="${offerHeader?.country}" size="50"/>
             </td>
             <td>
-                City:  <g:field class="elements" type="text" name="city" required="y" value="${offerHeader?.city}" size="50"/>
+                City:  <g:field class="elements" type="text" name="city"  value="${offerHeader?.city}" size="50"/>
             </td>
         </tr>
         <tr>
             <td>
-                Contact:  <g:field class="elements" type="text" name="contactPerson" required="y" value="${offerHeader?.contactPerson}" size="50"/>
+                Contact:  <g:field class="elements" type="text" name="contactPerson"  value="${offerHeader?.contactPerson}" size="50"/>
             </td>
             <td>
                 Phone:  <g:field class="elements" type="text" name="contactPhone"  value="${offerHeader?.contactPhone}" size="50"/>
             </td>
             <td>
-                Email:  <g:field class="elements" type="text" name="contactEmail" required="y" value="${offerHeader?.contactEmail}" size="50"/>
+                Email:  <g:field class="elements" type="text" name="contactEmail"  value="${offerHeader?.contactEmail}" size="50"/>
             </td>
         </tr>	
     </table>

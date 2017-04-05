@@ -47,7 +47,7 @@ class ProdBuffer {
     static transients = ['volList']
     static mapping	= {
         table 'LOBuffertv2'
-        version false
+        version true
         id              column: "id",              type:        'integer'
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	product 	column: "Produkt",         sqltype:	"char", length: 150

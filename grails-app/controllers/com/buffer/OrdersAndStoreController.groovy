@@ -23,7 +23,7 @@ class OrdersAndStoreController {
         //         respond Orders.list(params), model:[ordersCount: Orders.count()]
 
         def List<String> millList = getMills()
-        [orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList]
+        [orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList, selectedMill:false]
         /*        params.max = Math.min(max ?: 10, 100)
         if (params.paginate == 'prodBuffer') {
         def prodBufferPagination = [max: params.max, offset: params.offset]
@@ -42,8 +42,10 @@ class OrdersAndStoreController {
            
     def availableProducts() {
         System.out.println(params)
+        def offerDetails = null 
         def List<ProdBuffer> prodBuffer = getBufferList()
-        render(template:"AvailableProductData", model:[prodBuffer: prodBuffer])
+        render(template:"AvailableProductData", model:[prodBuffer: prodBuffer, offerDetails:offerDetails])
+        render(template:"ListOffers", model:[offerDetails: offerDetails])
     }
     def listOffers(){
         System.out.println("#--#"+params)
@@ -57,9 +59,6 @@ class OrdersAndStoreController {
                 def List<OfferDetail> offerDetails = getOfferList()
                 System.out.println("OfferDetail filtered count: "+offerDetails.count) 
                 def orders = Orders.list()
-                //        def List<String> millList = getMills()
-
-                //        render(view:"list", model[orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList])
                 render(template:"ListOffers", model:[offerDetails: offerDetails])
             }
         }
@@ -147,7 +146,7 @@ class OrdersAndStoreController {
             flash.message = "${count} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
             redirect action:"list", method:"GET"
         } else {
-            flash.message = "Could not create offer due to systemerror" 
+            //flash.message = "Could not create offer due to systemerror" 
             redirect action:"list", method:"GET"
             
         }
@@ -248,9 +247,9 @@ class OrdersAndStoreController {
                 nextMill = pb.sawMill
                 System.out.println("Verk: " + nextMill)
                 if (( mill != null) && (nextMill != mill)) {
-                    flash.message='Mixed sawmills!'
+                    flash.message='Could not create offer due to Mixed sawmills!'
                     error = id
-                    exit
+                    return null
                 }
                 mill = nextMill
                 

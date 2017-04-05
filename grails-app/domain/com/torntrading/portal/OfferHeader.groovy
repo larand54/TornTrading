@@ -16,6 +16,7 @@ class OfferHeader {
     String              offerType
     Date		dateCreated
     int                 createdBy 
+    Integer             stockNoteID  // Om skapad som massutskick är detta utskickets id
 
     static hasMany =[offerDetails: OfferDetail]
     def beforeInsert() {
@@ -24,6 +25,7 @@ class OfferHeader {
         if (offerType == null) {offerType = 'o'}
     }
     static mapping	= {
+        stockNoteID     column: "stocknoteID",     sqltype:     "bigint"
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	currency 	column: "currency",        sqltype:	"char", length: 3
 	volumeUnit	column: "volumeUnit",      sqltype:	"char", length: 6
@@ -74,6 +76,7 @@ class OfferHeader {
                 status          nullable:true
                 offerDetails    nullable:true
                 offerType       nullable:true
+                stockNoteID     nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?
