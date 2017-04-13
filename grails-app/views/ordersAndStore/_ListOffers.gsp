@@ -5,7 +5,8 @@
         <table style="width:100%">
             <thead>
                 <tr>
-                    <g:sortableColumn property="offerType" title='o/s' />
+                    <g:sortableColumn property="millOfferId" title='MOID' />
+                    <g:sortableColumn property="offerType" title='Typ' />
                     <g:sortableColumn property="sawMill" title='Sawmill' />
                     <g:sortableColumn property="product" title='Product' />
                     <g:sortableColumn property="lengthDescr" title='Length' />
@@ -19,11 +20,14 @@
                     <g:sortableColumn property="pricePEFC" title='PEFC' />
                     <g:sortableColumn property="priceUC" title='UC' />
                     <g:sortableColumn property="priceCW" title='CW' />
+                    <g:sortableColumn property="weekStart" title='Start' />
+                    <g:sortableColumn property="weekEnd" title='End' />
                 </tr>
             </thead>
             <tbody>
                 <g:each in="${offerDetails}" status="i" var="od">
                     <tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
+                        <td>[${od.millOfferID}]</td>
                         <td>[${od.offerType}]</td>
                         <td>${od.offerHeader.sawMill}
                         <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.product?.encodeAsHTML()}</g:link></td>
@@ -38,6 +42,8 @@
                         <td>${od?.pricePEFC}</td>
                         <td>${od?.priceUC}</td>
                         <td>${od?.priceCW}</td>
+                        <td>${od?.weekStart}</td>
+                        <td>${od?.weekEnd}</td>
                     </tr>
                 </g:each>
             </tbody>

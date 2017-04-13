@@ -4,14 +4,14 @@ import static org.springframework.http.HttpStatus.*
 import com.torntrading.security.User
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
-import com.torntrading.service.TTBufferService
 import com.buffer.OrdersAndStoreController
+import com.torntrading.portal.PlannedVolume
 
 @Transactional(readOnly = true)
 @Secured(['ROLE_ADMIN','ROLE_USER','ROLE_SALES','ROLE_SUPPLIER'])
 class ProdBufferController {
     def springSecurityService
-    def tTBufferService
+    def prodBufferService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -65,7 +65,6 @@ class ProdBufferController {
         of.product = pb.product
         of.volumeOffered = pb.volumeRest
         of.volumeUnit = pb.volumeUnit
-        of.weekEnd = pb.weekEnd
         of.weekStart = pb.weekStart
         of.termsOfDelivery = 'Fritt kunden'
         //            of.kd = 'xxxx'
@@ -136,6 +135,18 @@ class ProdBufferController {
         }
     }
 
+    @Transactional
+    def addVolume(ProdBuffer prodBuffer) {
+        println(params)
+        prodBuffer = ProdBuffer.get(params.pid)
+        println(prodBuffer.product)
+        prodBuffer.addToPlannedVolumes(new PlannedVolume(week:params.fromWeek, volume: params.addVol) )
+        prodBufferService.addPlannedVolume(prodBuffer, params.addVol as Double, params.fromWeek as Integer)
+      flash.message = 'Vill du uppdatera volymer?' 
+      notFound()
+      return
+    }
+    
     @Transactional
     def delete(ProdBuffer prodBuffer) {
 

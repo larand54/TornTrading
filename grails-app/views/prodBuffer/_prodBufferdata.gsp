@@ -27,7 +27,8 @@
             <fieldset>
                 <legend>Volumes</legend>
                 Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${myTag.userVolumeUnit()}" size="2"/>
-                Volume : <g:field class="elements" type="number decimal" name="volumeAvailable" min="1" max="10000" required="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeAvailable')}" style="width: 6em"/>
+                Available volume : <g:field class="elements" type="number decimal" name="volumeAvailable" min="1" max="10000" readonly="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeAvailable')}" style="width: 6em"/>
+                In stock : <g:field class="elements" type="number decimal" name="volumeInStock" min="1" max="10000" required="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeInStock')}" style="width: 6em"/>
             </fieldset>
         </td>
     </tr>
@@ -44,11 +45,11 @@
         </td>
     <tr>
         <td>
-            <fieldset>
-                <legend>Delivery period, week</legend>
+<!--            <fieldset>
+                <legend>Planned production</legend>
                 From: <g:field class="elements" type="text" name="weekStart" required="y" value="${prodBuffer?.weekStart}" size="4"/>
-                To: <g:field class="elements" type="text" name="weekEnd" required="Y" value="${prodBuffer?.weekEnd}" size="4"/>
-            </fieldset>
+                From: <g:field class="elements" type="number decimal" name="plannedVolume" required="y" value="${plannedVolume}" size="4"/>
+            </fieldset> -->
         </td>
     </tr>    
     </tr>

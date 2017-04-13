@@ -6,11 +6,10 @@
                 <g:sortableColumn property="sawMill" title='Mill' />
                 <g:sortableColumn property="product" title='Product' />
                 <g:sortableColumn property="length" title='Length' />
-                <g:sortableColumn property="volumeAvailable" title='Orig.' />
-                <g:sortableColumn property="volumeOffered" title='Offer.' />
-                <g:sortableColumn property="onOrder" title='Bkd' />
-                <g:sortableColumn property="volumeRest" title='Avail' />
-                <g:sortableColumn property="volumeRestInclOffers" title='InclOff' />
+                <g:sortableColumn property="inStock" title='InStock' />
+                <g:sortableColumn property="onOrder" title='Sold' />
+                <g:sortableColumn property="volumeOffered" title='Offer' />
+                <g:sortableColumn property="volumeAvailable" title='Avail' />
                 <g:sortableColumn property="volumeUnit" title='Unit' />
                 <g:sortableColumn property="currency" title='Cur' />
                 <g:sortableColumn property="kd" title='KD' />
@@ -18,9 +17,6 @@
                 <g:sortableColumn property="priceFSC" title='PEFC' />
                 <g:sortableColumn property="priceFSC" title='CW' />
                 <g:sortableColumn property="priceFSC" title='UC' />
-                <g:sortableColumn property="weekStart" title='Start' />
-                <g:sortableColumn property="weekEnd" title='End' />
-                <g:sortableColumn property="status" title='Status' />
                 <g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "0")}" />
                 <g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "1")}" />
                 <g:sortableColumn property="availW03" title="${myTag.weekNo(offset: "2")}" />
@@ -42,13 +38,10 @@
                     <td>${pb.sawMill}</td>
                     <td>${pb.product}</td>
                     <td>${pb.length}</td>
-                    <td>${pb.volumeAvailable}</td>
+                    <td>${pb.volumeInStock}</td>
+                    <td>${pb.volumeOnOrder}</td>
                     <td><div id="${pb.id}" class="offers" >${pb.volumeOffered}</div></td>
-<!--                <td><a  onclick='listOffers()'> ${pb.volumeOffered}</a></td>
-                    <td><g:link action="listOffers" id="${pb.id}"> ${pb.volumeOffered}</g:link></td>-->
-                    <td>${pb.onOrder}</td>
-                    <td>${pb.volumeRest}</td>
-                    <td>${pb.volumeRestInclOffers}</td>
+                    <td>${pb.volumeAvailable}</td>
                     <td>${pb.volumeUnit}</td>
                     <td>${pb.currency}</td>
                     <td>${pb.kd}</td>
@@ -56,9 +49,6 @@
                     <td>${pb.pricePEFC}</td>
                     <td>${pb.priceCW}</td>
                     <td>${pb.priceUC}</td>
-                    <td>${pb.weekStart}</td>
-                    <td>${pb.weekEnd}</td>
-                    <td>${pb.status}</td>
                     <td>${pb.availW01}</td>
                     <td>${pb.availW02}</td>
                     <td>${pb.availW03}</td>

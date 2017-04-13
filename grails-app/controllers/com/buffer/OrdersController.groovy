@@ -7,7 +7,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Transactional(readOnly = true)
 @Secured(['ROLE_ADMIN','ROLE_USER'])
 class OrdersController {
-
+    def prodBufferService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -38,7 +38,8 @@ class OrdersController {
         }
 
         orders.save flush:true
-
+        def Double vol = orders.quantity
+        prodBufferService.addOrderVolume(ProdBuffer.get(orders.millOfferID), vol)
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'orders.label', default: 'Orders'), orders.id])

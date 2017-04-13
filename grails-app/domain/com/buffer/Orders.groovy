@@ -2,6 +2,7 @@ package com.buffer
 
 class Orders {
 	
+        Integer millOfferID          // id från ProdBuffer
 	String 	orderNo
 	String 	sawMill
 	String 	customer
@@ -19,9 +20,10 @@ class Orders {
 
 	static mapping = {
                 table('wt_orders')
+		millOfferID 		column: "millOfferID"
 		orderNo 		column: "orderNo", 		sqltype: "char", length: 20
 		sawMill 		column: "sawMill", 		sqltype: "char", length: 80
-		period 		column: "period", 		sqltype: "char", length: 4
+		period                  column: "period", 		sqltype: "char", length: 4
 		customer 		column: "customer", 		sqltype: "char", length: 50
 		destination 		column: "destination", 		sqltype: "char", length: 80
 		product 		column: "product", 		sqltype: "char", length: 100

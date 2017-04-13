@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'offerHeader.label', default: 'OfferHeader')}" />
+        <g:set var="entityName" value="${message(code: 'offerHeader.label', default: 'Offer')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -11,7 +11,6 @@
         <div class="nav" role="navigation">
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
             </ul>
         </div>
         <div id="list-offerHeader" class="content scaffold-list" role="main">
@@ -24,7 +23,9 @@
             <tr>
                 <g:sortableColumn property="Id" title='Id' />
                 <g:sortableColumn property="offerType" title="Type" />
+                <g:sortableColumn property="customer" title="Customer" />
                 <g:sortableColumn property="sawMill" title='Mill' />
+                <g:sortableColumn property="dateCreated" title='Created' />
                 <g:sortableColumn property="status" title='Status' />
             </tr>
         </thead>
@@ -34,7 +35,9 @@
                 <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
                     <td><g:link action="edit" id="${oh.id}">${oh.id}</g:link></td>
                     <td>${oh.offerType}</td>
+                    <td>${oh.company}</td>
                     <td>${oh.sawMill}</td>
+                    <td>${oh.dateCreated}</td>
                     <td>${oh.status}</td>
                 </tr>
             </g:each>

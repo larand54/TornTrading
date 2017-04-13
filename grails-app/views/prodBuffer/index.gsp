@@ -34,7 +34,6 @@
 						<th> Valuta</th>
 						<th> Pris</th>
 						<th> vecka start</th>
-						<th> Vecka slut</th>
 						<th> W01</th>
 						<th> W02</th>
 						<th> W03</th>
@@ -56,12 +55,11 @@
 						<td>${prodBuffer.product}</td>
 						<td>${prodBuffer.length}</td>
 						<td>${prodBuffer.volumeOffered}</td>
-						<td>${prodBuffer.onOrder}</td>
+						<td>${prodBuffer.volumeOnOrder}</td>
 						<td>${prodBuffer.volumeAvailable}</td>
 						<td>${prodBuffer.currency}</td>
 						<td>${prodBuffer.priceFSC}</td>
 						<td>${prodBuffer.weekStart}</td>
-						<td>${prodBuffer.weekEnd}</td>
 						<td>${prodBuffer.availW01}</td>
 						<td>${prodBuffer.availW02}</td>
 						<td>${prodBuffer.availW03}</td>

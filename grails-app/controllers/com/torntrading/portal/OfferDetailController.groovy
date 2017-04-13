@@ -8,6 +8,8 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
 @Transactional(readOnly = true)
 class OfferDetailController {
+    def prodBufferService
+    def offerDetailService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -38,7 +40,6 @@ class OfferDetailController {
             respond offerDetail.errors, view:'create'
             return
         }
-
         offerDetail.save flush:true
 
         request.withFormat {
@@ -74,19 +75,22 @@ class OfferDetailController {
             return
         }
         
-        offerDetail.choosedCert = params.availableCert
-        offerDetail.save flush:true
-
-        System.out.println("OfferDetailUpdated, oldVolume: "+offerDetail.oldVolume+" Volume offered: "+ offerDetail.volumeOffered)
-        if ((offerDetail.volumeOffered > 0.0001) || (offerDetail.oldVolume > 0.0001)){
-            double diff = offerDetail.volumeOffered - offerDetail.oldVolume
-            if (Math.abs(diff) > 0.0001) {
-                ProdBuffer pb = ProdBuffer.findById(offerDetail.millOfferID)
-                pb.volumeOffered = pb.volumeOffered + diff
-                pb.volumeRestInclOffers = pb.volumeAvailable - pb.volumeOffered - pb.onOrder
-                pb.save(failOnError:true)
-            }
+        ProdBuffer pb = ProdBuffer.findById(offerDetail.millOfferID)
+        if (pb == null) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Offer not created! Connected product does not exist!'
+            return            
         }
+        offerDetail.choosedCert = params.availableCert
+        
+        offerDetail.save flush:true
+        
+        def Double volumeChange = offerDetailService.getVolumeChange(offerDetail)
+        if (Math.abs(volumeChange) > 0.0) {
+            prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)
+        }
+        
+        System.out.println("OfferDetailUpdated, oldVolume: "+offerDetail.oldVolume+" Volume offered: "+ offerDetail.volumeOffered)
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'offerDetail.label', default: 'OfferDetail'), offerDetail.id])

@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'offerHeader.label', default: 'OfferHeader')}" />
+        <g:set var="entityName" value="${message(code: 'offerHeader.label', default: 'Offer')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -12,8 +12,6 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-                <li><g:link class="create" id="${this.offerHeader.id}" action="addRow"><g:message code="offer.add.detail.label" args="[entityName]" /></g:link></li>
                 </ul>
             </div>
             <div id="edit-offerHeader" class="content scaffold-edit" role="main">
@@ -79,11 +77,6 @@
                     </tbody>
                 </table>
             </fieldset>
-            <g:form resource="${od}" method="DELETE">
-                <fieldset class="buttons">
-                    <g:link class="create" controller="offerHeader" action="addRow" ><g:message code="default.button.edit.label" default="Edit" /></g:link>
-                    </fieldset>
-            </g:form>
         </div>
     </body>
 </html>

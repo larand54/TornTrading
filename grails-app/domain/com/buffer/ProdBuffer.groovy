@@ -1,26 +1,25 @@
 package com.buffer
-
+import com.torntrading.portal.*
 class ProdBuffer {
     int id
     String sawMill 
     String status
-    int    loBuffertNo     //-- sätt default tll verknummer
+    int    loBuffertNo     //-- sätt default till verknummer
     int    pkgArticleNo
     String product
     String length
     int    productNo
     int    packageSize 
-    double actualLengthMM  
+    Double actualLengthMM  
     String packageSizename 
     String kd
     String grade
-    double volumeAvailable // Leverantörens erbjudande
-    double volumeOffered   // summa till kund offererade volymer 
-    double onOrder          // kontrakterad volym = bokat 
-    double volumeRest      // Resterande volym av leverantörens erbjudande Urspr. - kontrakterat
-    double volumeRestInclOffers // Ursprung. - kontrakterat - offererat
-    double delivered       // levererat av urspr. volym
-    double makeInquiry 
+    Double volumeInStock = 0.0          // Vad leverantören har i lager just nu
+    Double volumeAvailable = 0.0        // Leverantörens erbjudande
+    Double volumeOffered = 0.0          // Leverantörens erbjudande
+    Double volumeOnOrder = 0.0          // Såld volym
+    Double volumeInitial = 0.0          // Lager då posten skapades av urspr. volym
+    Double makeInquiry = 0.0
     int changed 
     int appid 
     
@@ -31,20 +30,20 @@ class ProdBuffer {
     BigDecimal priceCW      // Pris för ControllWood
     BigDecimal priceUC      // pris för UnCertified
     String weekStart
-    String weekEnd
-    double availW01
-    double availW02
-    double availW03
-    double availW04
-    double availW05
-    double availW06
-    double availW07
-    double availW08
-    double availW09
-    double availW10
-    double[] volList
+    Double availW01
+    Double availW02
+    Double availW03
+    Double availW04
+    Double availW05
+    Double availW06
+    Double availW07
+    Double availW08
+    Double availW09
+    Double availW10
+    Double[] volList
 
     static transients = ['volList']
+    static hasMany = [plannedVolumes: PlannedVolume]
     static mapping	= {
         table 'LOBuffertv2'
         version true
@@ -66,9 +65,12 @@ class ProdBuffer {
         packageSize     column: "PackageSize"
         packageSizeName column: "PackageSizeName"
         actuallengthMM  column: "ActualLengthMM"
-        onOrder         column: "OnOrder"
-        delivered       column: "Delivered"
-        makeInquiry     column: "MakeInquiry"
+        volumeInStock         column: "volume_instock",     defaultValue: "0.0"
+        volumeAvailable       column: "volume_available",   defaultValue: "0.0"
+        volumeOffered         column: "volume_offered",     defaultValue: "0.0"
+        volumeOnOrder         column: "volume_onorder",     defaultValue: "0.0"
+        volumeInitial         column: "volume_initial",     defaultValue: "0.0"
+        makeInquiry           column: "MakeInquiry",        defaultValue: "0.0"
         changed         column: "Changed"
         appid           column: "Appid"
         availW01        column: "Period1"
@@ -84,7 +86,7 @@ class ProdBuffer {
         
     }
     static constraints = {
-        status(inList:["Preliminary","Active","Finished","Cancelled"])
+        status(inList:["Active","Finished","Cancelled"])
         
         sawMill                 nullable: true
         status                  nullable: true
@@ -99,10 +101,9 @@ class ProdBuffer {
         actualLengthMM          nullable: true
         volumeAvailable         nullable: true
         volumeOffered           nullable: true
-        onOrder                 nullable: true
-        volumeRest              nullable: true
-        volumeRestInclOffers    nullable: true
-        delivered               nullable: true
+        volumeOnOrder           nullable: true
+        volumeInStock           nullable: true
+        volumeInitial           nullable: true
         makeInquiry             nullable: true
         changed                 nullable: true
         appid                   nullable: true
@@ -110,24 +111,17 @@ class ProdBuffer {
         priceFSC                nullable: true          
         pricePEFC               nullable: true           
         priceCW                 nullable: true          
-        priceUC                 nullable: true/*,
-           validator: { val, obj -> 
-              if ((val != null) && ((obj.pricePEFC!=null) || (obj.priceCW != null) || (obj.priceFSC != null))) return 'buffer.validation.only_one_price'}*/
-          
-        volumeUnit              nullable: true
-        
-        weekEnd                 nullable: true,
-           validator: { val, obj -> 
-              (val as int) >= (obj.weekStart as int) }
-          
-        weekStart               nullable: true,
+        priceUC                 nullable: true
+        volumeUnit              nullable: true 
+        weekStart               nullable: true
+/*        weekStart               nullable: true,
            validator: { val, obj -> 
               if (obj.id) {
                 // don't check existing instances
                 return
               }
               (val as int) >= obj.getCurrentWeek()}
-          
+*/          
         availW01                nullable: true
         availW02                nullable: true
         availW03                nullable: true
@@ -138,22 +132,19 @@ class ProdBuffer {
         availW08                nullable: true
         availW09                nullable: true
         availW10                nullable: true
+        volList                 nullable: true
        
     }
     
     def beforeValidate() {
-        updateVolumes()
-        updateVolumesOnWeek()
     }
     
     def beforeInsert() {
-        initiateVolumes()
-        fillWeekList()
+        status = "Active"
+        volumeInitial = volumeInStock
     }
     
     def beforeupdate() {
-        updateVolumes()
-        updateVolumesOnWeek()
     }
         
     def int getCurrentWeek() {
@@ -183,70 +174,4 @@ class ProdBuffer {
         return cal.getWeeksInWeekYear()
     }
     
-    def initiateVolumes() {
-        
-        // Beräkna index för start och slut veckorna
-        def cw = getCurrentWeek()
-        def sw = getWeekFromYearWeek(weekStart as int)
-        if (sw < cw) sw = cw
-        def ew = getWeekFromYearWeek(weekEnd as int)
-        def weeksInYear = getWeeksInYear()
-        def ixStart = 1
-        def ixEnd = ixStart
-        def cy = getCurrentYear()
-        def sy = getYearFromYearWeek(weekStart as int)
-        def ey = getYearFromYearWeek(weekEnd as int)
-        if (ey == sy) {
-            if (cy == sy) {
-                // normal case -- everything in current year
-                ixStart = 1 - cw + sw
-                ixEnd   = 1 - cw + ew
-            }
-            else {
-                ixStart = 1 + weeksInYear - cw + sw
-                ixEnd   = 1 + weeksInYear - cw + ew
-            }
-        } else {
-                ixStart = 1 - cw + sw
-                ixEnd   = 1 + weeksInYear - cw + ew
-        }
-        if (ixStart > 10) ixStart = 10
-        if (ixEnd > 10) ixEnd = 10
-        //Kopiera in volymer i veckolistan
-        volList = new double[10]
-        for (int i = 1; i < ixStart; i++) {
-            volList[i-1] = 0.0            
-        }
-        for (int i = ixStart; i <= ixEnd; i++) {
-            volList[i-1] = volumeAvailable - getOnOrder(cw)
-        }
-        volumeRest = volumeAvailable - onOrder
-        volumeRestInclOffers = volumeRest - volumeOffered
-    }
-    def fillWeekList() {
-        availW01 = volList[0]
-        availW02 = volList[1]
-        availW03 = volList[2]
-        availW04 = volList[3]
-        availW05 = volList[4]
-        availW06 = volList[5]
-        availW07 = volList[6]
-        availW08 = volList[7]
-        availW09 = volList[8]
-        availW10 = volList[9]
-    }
-            
-    def int getOnOrder(int cw) {
-        return onOrder
-    }
-        
-        
-    
-    def updateVolumes() {
-        initiateVolumes()
-    }
-
-    def updateVolumesOnWeek() {
-        fillWeekList()
-    }
 }

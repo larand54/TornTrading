@@ -49,7 +49,7 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><a class="create" href="${createLink(uri: '/ordersAndStore/add_prodBuffer')}"><g:message code="prodBuffer.create.label"/></a></li>
-                <li><a class="create" href="${createLink(uri: '/massMail/createMassMail')}"><g:message code="massMail.create.label"/></a></li>
+                <li><a class="create" href="${createLink(uri: '/under_construction')}"><g:message code="stockNote.create.label"/></a></li>
             </ul>
         </div>
         <g:set var="entityName" value='Product' />
@@ -64,7 +64,8 @@
                         Select mill:
                         <g:if test="selectedMill">
                             <g:select name="sawMill" from="${millList}" value="" onchange="availableProducts(sawMill)" noSelection = "${['':'All']}" />
-                        </g:if>                        <g:else>
+                        </g:if>                        
+                        <g:else>
                             <g:select name="sawMill" from="${millList}" value="All" onchange="availableProducts(sawMill)" optionValue="All" optionKey="All"/>
                         </g:else>
 
@@ -99,7 +100,6 @@
                         <g:sortableColumn property="period" title='Period' />
                         <g:sortableColumn property="product" title='Produkt' />
                         <g:sortableColumn property="lengthDescr" title='Längd' />
-                        <g:sortableColumn property="packetSize" title='Paketstorlek' />
                         <g:sortableColumn property="quantity" title='Kvantitet' />
                         <g:sortableColumn property="price" title='Pris' />
 
@@ -115,7 +115,6 @@
                             <td>${order.period?.encodeAsHTML()}</td>
                             <td>${order.product?.encodeAsHTML()}</td>
                             <td>${order.lengthDescr?.encodeAsHTML()}</td>
-                            <td>${order.packetSize?.encodeAsHTML()}</td>
                             <td>${order.quantity?.encodeAsHTML()}</td>
                             <td>${order.price?.encodeAsHTML()}</td>
                         </g:each>
