@@ -16,7 +16,7 @@
         <a href="/offerHeader/index">Offers</a>
     </li>
     <li>
-        <a href="/stockNotes/index">Stock notes</a>
+        <a href="/stocknote/index">Stock notes</a>
     </li>
     <li>
         <a href="/ordersAndStore/list">Available volumes</a>

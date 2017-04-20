@@ -4,33 +4,23 @@ import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.portal.OfferDetail
+import com.torntrading.portal.OfferHeader
 
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
 @Transactional(readOnly = true)
-class OfferHeaderController {
+
+class StocknoteController {
+    def prodBufferService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond OfferHeader.list(params), model:[offerHeaderCount: OfferHeader.count()]
-    }
-
-    def show(OfferHeader offerHeader) {
-        respond offerHeader
-    }
-
-    def create() {
-        respond new OfferHeader(params)
+        def List<OfferHeader> offerHeader = OfferHeader.findAllByOfferType('s')
+        println("Stocknotes: "+offerHeader)
+        [offerHeader:offerHeader]
+//        respond OfferHeader.list(params), model:[offerHeaderCount: OfferHeader.count()]
     }
     
-    def addRow() {
-        forward(controller:"offerDetail", action:"create")
-    }
-
-    def renderEdit() {
-        println("%%%% Params: "+params)
-        render(view:"edit", model:[offerHeader:offerHeader])
-    }
     @Transactional
     def save(OfferHeader offerHeader) {
         if (offerHeader == null) {
@@ -56,7 +46,7 @@ class OfferHeaderController {
         }
     }
 
-    def edit(OfferHeader offerHeader) {
+    def editStocknote(OfferHeader offerHeader) {
         respond offerHeader
     }
 
@@ -119,12 +109,13 @@ class OfferHeaderController {
         }
     }
     
-    def report() {
+    def createPDF() {
         println "Report params: "+params
+        def file = new File("asets/CheckOut16x16.png")
         def OfferHeader offerHeader = OfferHeader.get(params.id)
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader],   filename: "offertrapport-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader],   filename: "Stocknote-"+params.id+".pdf")
 //        notFound()
     }
 }

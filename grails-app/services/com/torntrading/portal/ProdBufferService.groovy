@@ -7,6 +7,14 @@ import grails.transaction.Transactional
 @Transactional
 class ProdBufferService {
 
+    def List<String> getActiveAvailableMills() {
+        System.out.println("getActiveAvailableMills <<<<")
+        ProdBuffer.executeQuery("SELECT DISTINCT sawMill FROM ProdBuffer PB WHERE PB.status='Active' AND PB.volumeAvailable > 0.1 ORDER BY PB.sawMill" )
+    }
+    
+    def List<ProdBuffer> getActiveAvailableProducts() {
+        ProdBuffer.executeQuery("SELECT * FROM ProdBuffer PB WHERE PB.status='Active' AND PB.volumeAvailable > 0.1 ORDER BY PB.sawMill" )
+    }
     
     def addOfferVolume(ProdBuffer aPB, Double aVol, Integer aWeek) {
         aPB.volumeOffered = aPB.volumeOffered + aVol

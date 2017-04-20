@@ -90,6 +90,10 @@ class OrdersAndStoreController {
         System.out.println("getMills <<<<")
         ProdBuffer.executeQuery("SELECT DISTINCT sawMill FROM ProdBuffer")
     }
+    def List<String> getActiveAvailableMills() {
+        System.out.println("getActiveAvailableMills <<<<")
+        ProdBuffer.executeQuery("SELECT DISTINCT sawMill FROM ProdBuffer PB WHERE PB.status='Active' AND PB.volumeAvailable > 0.1 ORDER BY PB.sawMill" )
+    }
     
     def List<OfferDetail> getOfferList() {
         System.out.println(" getOfferList>>>" + params)
@@ -129,27 +133,42 @@ class OrdersAndStoreController {
         }
         myList.each(){
             prodBufferService.updateWeekList(it)
-    //        it.initiateVolumes()
-    //        it.fillWeekList()
+            //        it.initiateVolumes()
+            //        it.fillWeekList()
         }
         return myList
     }
     
-    def prepareForStockNotes() {
-        def List<String> sawMills = getMills()
-        
-        //        render [stockNotes:stockNotes, sawMills:sawMills]
+    def List<ProdBuffer> getProductsFromMill(String aMill) {
+        return prodBuffer.findAll({it.sawMill==aMill})  
     }
-    def createStockNotes() {
+    
+    def createStocknotes() {
+        def List<String> sawMills = getActiveAvailableMills()
+        println(">>>> CreateStocknotes <<<<"+ sawMills)
+        [sawMills:sawMills]
+    }
+    
+    def createStocknote() {
+        println("XXXX CreateStocknotes-- XXXX")
+        println("ZZZ SawMills: "+params.sawMill)
+        for( n in params.list('sawMill')) {
+            println("¤¤¤¤ SawMill: "+n)
+        }
         int count=0
-        def ofh = createStockNoteHeader()
-        if (ofh != null) {
-            offerType?ofh.offerType=offerType:null
-            for( n in params.list('sawMills')) {
-                if (n.isInteger()) {
-                    int value = n as Integer
-                    createOfferDetail(ofh, value, offerType)
-                    count = count +1
+        if (params.sawMill != null) {
+            def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK').save(failOnError: true)
+            ofh.offerType='s'
+            def List<ProdBuffer> products = ProdBuffer.findAllByStatus('Active')
+            println("Products: "+products)
+            for( mill in params.list('sawMill')) {
+                    println("mill: "+mill)
+                for (pb in products) {
+                    println("Sawmill: "+pb.sawMill+" mill: "+mill)
+                    if (pb.sawMill==mill && pb.volumeAvailable > 0.1) {
+                        createOfferDetail(ofh, pb.id, ofh.offerType)
+                        count = count +1
+                    }
                 }
             }
             def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
@@ -175,7 +194,7 @@ class OrdersAndStoreController {
             }
             def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
             flash.message = "${count} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
-            redirect action:"list", method:"GET"
+            redirect(controller:"offerHeader", action: 'edit', id: ofh.id)
         } else {
             //flash.message = "Could not create offer due to systemerror" 
             redirect action:"list", method:"GET"
@@ -221,6 +240,11 @@ class OrdersAndStoreController {
         def OfferDetail ofd
         ofd = new OfferDetail(offerHeader: ofh)
         offerType?ofd.offerType=offerType:null
+        
+        if (offerType=='s') {
+            ofd.volumeOffered = pb.volumeAvailable  
+        }
+        ofd.sawMill = pb.sawMill
         ofd.lengthDescr = pb.length
         ofd.priceFSC = pb.priceFSC
         ofd.pricePEFC = pb.pricePEFC
@@ -289,7 +313,7 @@ class OrdersAndStoreController {
             }
         }
         System.out.println("mill: " + mill)
-        def Supplier supplier = Supplier.findBySearchName(mill)//(URLEncoder.encode(mill, "UTF-8"))
+        def Supplier supplier = Supplier.findBySearchName(mill)
         def int clientNo = supplier.clientNo
         System.out.println(">>> SawMill: "+ supplier.searchName+" ClientNo: "+ supplier.clientNo)
         def OfferHeader ofh = new OfferHeader(sawMill: mill, termsOfDelivery: 'Fritt kunden', volumeUnit: pb.volumeUnit, currency: pb.currency).save(failOnError: true)

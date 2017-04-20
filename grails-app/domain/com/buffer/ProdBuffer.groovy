@@ -1,5 +1,8 @@
 package com.buffer
+
 import com.torntrading.portal.*
+import grails.validation.ValidationException
+
 class ProdBuffer {
     int id
     String sawMill 
@@ -144,7 +147,15 @@ class ProdBuffer {
         volumeInitial = volumeInStock
     }
     
-    def beforeupdate() {
+    def beforeUpdate() {
+        def oldVolume =  getPersistentValue('volumeInStock')
+        println("BeforeUpdate -- oldVolume: "+ oldVolume+" volumeInstock: "+volumeInStock+" VolumeInitial: "+volumeInitial)
+        if (oldVolume != volumeInStock && oldVolume!=volumeInitial){
+            println("Error detected!")
+//           throw new Exception("Changing InStock not allowed after offer/sold or planed volumes added!")
+            this.errors.rejectValue('volumeInStock','failedVolume.error')
+            return false
+        }
     }
         
     def int getCurrentWeek() {

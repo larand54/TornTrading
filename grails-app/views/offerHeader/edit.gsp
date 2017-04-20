@@ -12,7 +12,9 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-                </ul>
+                <li><a class="print" href="${createLink(action:'report', params:[id:this.offerHeader.id])}"><g:message code="default.offer.report.label"/></a></li>
+                <g:link url="${request.getHeader('referer')}">Back</g:link> 
+            </ul>
             </div>
             <div id="edit-offerHeader" class="content scaffold-edit" role="main">
                 <h1><g:message code="default.edit.label" args="[entityName]" /></h1>

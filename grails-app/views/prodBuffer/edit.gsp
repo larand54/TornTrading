@@ -7,7 +7,6 @@
         <script type="text/javascript">
             $( document ).ready( function() {
                 $( document ).on('click', '.addVolume', function ( event ){
-                    alert("I'm here!");
                     var fromWeek =   $('#weekStart').val();
                     var addVol = $('#plannedVolume').val();
                     var pid = $('#pid').val();

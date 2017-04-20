@@ -24,6 +24,7 @@ class OfferHeader {
         if (offerType == null) {offerType = 'o'}
     }
     static mapping	= {
+        offerDetails sort: "sawMill"
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	currency 	column: "currency",        sqltype:	"char", length: 3
 	volumeUnit	column: "volumeUnit",      sqltype:	"char", length: 6

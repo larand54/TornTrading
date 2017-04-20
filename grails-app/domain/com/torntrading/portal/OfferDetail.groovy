@@ -11,6 +11,7 @@ class OfferDetail {
     String		product
     String		lengthDescr
     String              choosedCert
+    String              sawMill
     
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
     BigDecimal          markup          // Prispåslag
@@ -48,6 +49,8 @@ class OfferDetail {
     }
     
     static mapping	= {
+        sort "sawMill"
+	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
         offerType       column: "offerType",       sqltype:     "char", length: 1   
 	product 	column: "product",         sqltype:	"char", length: 100
 	lengthDescr	column: "lengthDescr",     sqltype:	"char", length: 50
@@ -65,6 +68,7 @@ class OfferDetail {
 
     }
     static constraints = {
+		sawMill		size: 0..80, nullable:true
 		product		size: 0..100
 		lengthDescr	size: 0..50
 		weekStart	size: 0..4

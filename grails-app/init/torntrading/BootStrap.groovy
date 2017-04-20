@@ -89,12 +89,12 @@ class BootStrap {
         }
 	if (Environment.current == Environment.PRODUCTION) {
             Locale.setDefault( new Locale("en", "GB"));
-            ProdBuffer.findByProduct('38x125 o/s, Furu')?:new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeAvailable: 500, onOrder: 67, currency: 'EUR', kd: '7%',grade: 'S/F',priceFSC:'250.55',  weekStart: '1711', weekEnd: '1718', volumeUnit: 'AM3').save(failOnError: true)
+/*            ProdBuffer.findByProduct('38x125 o/s, Furu')?:new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeAvailable: 500, onOrder: 67, currency: 'EUR', kd: '7%',grade: 'S/F',priceFSC:'250.55',  weekStart: '1711', weekEnd: '1718', volumeUnit: 'AM3').save(failOnError: true)
 			
             ProdBuffer.findByProduct('38x150 V, Furu')?:new ProdBuffer(sawMill:'Boda',product:'38x150 V, Furu', length:'4200 mm', volumeAvailable: 750, onOrder: 150, currency: 'EUR',  weekStart: '1704', weekEnd: '1715', status: 'Preliminary', volumeUnit: 'AM3', kd: '6%', pricePEFC: '355').save()
             ProdBuffer.findByProduct('22x90 o/s, Furu')?:new ProdBuffer(sawMill:'Boda',product:'22x90 o/s, Furu', length:'5,6 m', volumeAvailable: 400, , currency: 'EUR',  weekStart: '1706', weekEnd: '1718', volumeUnit: 'AM3', kd: '11%', priceCW: '338').save()
             ProdBuffer.findByProduct('38x125 o/s, Gran')?:new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Gran', length:'3800mm', volumeAvailable: 375, onOrder: 90, volumeBooked: 200, volumeRest: 300, currency: 'SEK',  weekStart: '1708', weekEnd: '1712', volumeUnit: 'AM3', kd: '9%', priceUC: '305').save()
-/**/
+
             Orders.findByProduct('38x150 V, Furu')?:new Orders(sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0004',destination:'Poznan',period:'1702',product:'38x150 V, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Preliminär').save()
             Orders.findByProduct('38x125 o/s, Furu')?:new Orders(sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0001',destination:'Poznan',period:'1701',product:'38x125 o/s, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Preliminär').save()
             Orders.findByProduct('45x150 V, Furu')?:new Orders(sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0002',destination:'Poznan',period:'1701',product:'45x150 V, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Avslutad').save()
@@ -102,7 +102,7 @@ class BootStrap {
             Orders.findByProduct('45x125 o/s, Furu')?:new Orders(sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0004',destination:'Poznan',period:'1702',product:'45x125 o/s, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'EUR',price:22,status:'Aktiv').save()
             Request1.findByLength(4700)?:new Request1(length:4700,width:90,thickness:45,volumeRequested:200,quality:'q123',kd:'75%',fsc: 'false',species: 'Gran',creditRate:0,termsOfDelivery:'Fritt kunden',weekStart:'1704',weekEnd:'1708',company:'Bengtssons trävaror AB',country:'Sweden',city:'Malmö',contactPerson:'Peter Andersson',contactPhone:'+46703500763',contactEmail:'peter@gmail.com',status:'Ny', freeText:'Skriv vaduvill här!').save(failOnError:true)
             Request1.findByLength(3800)?:new Request1(length:3800,width:120,thickness:35,volumeRequested:180,quality:'FS',kd:'7%',fsc:'true',species: 'Furu',creditRate:0,termsOfDelivery:'Fritt leverantören',weekStart:'1709',weekEnd:'1712',company:'Bengtssons trävaror AB',country:'Sweden',city:'Malmö',contactPerson:'Peter Andersson',contactPhone:'+46703500763',contactEmail:'peter@gmail.com',status:'Ny', freeText:'Skriv nåt mer här!').save(failOnError:true)
-
+*/
             def adminRole = Role.findByAuthority('ROLE_ADMIN')?:new Role(authority: 'ROLE_ADMIN').save(failOnError:true)
             
             def userRole = Role.findByAuthority('ROLE_USER')?:new Role(authority: 'ROLE_USER').save(failOnError:true)
