@@ -8,9 +8,10 @@ class OfferDetail {
     String              offerType            // ('o') - Offert, ('s') - Stocknota
     String              grade
     String              kd
-    String		product
+    String		dimension
     String		lengthDescr
     String              choosedCert
+    String              species
     String              sawMill
     
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
@@ -52,7 +53,7 @@ class OfferDetail {
         sort "sawMill"
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
         offerType       column: "offerType",       sqltype:     "char", length: 1   
-	product 	column: "product",         sqltype:	"char", length: 100
+	dimension 	column: "dimension",         sqltype:	"char", length: 100
 	lengthDescr	column: "lengthDescr",     sqltype:	"char", length: 50
         priceFSC        column: "price_fsc"
         pricePEFC       column: "price_pefc"
@@ -62,23 +63,23 @@ class OfferDetail {
 	weekStart	column: "weekStart",       sqltype:	"char", length: 4
 	weekEnd		column: "weekEnd",         sqltype:	"char", length: 4
 	dateCreated	column: "dateCreated",     defaultValue: newDate()
-        grade            column: 'grade',          sqltype: 'char', length: 8
+        grade            column: 'grade',          sqltype: 'char'
         kd               column: 'kd',             sqltype: 'char', length: 4
         oldVolume       column: 'oldVolume',       sqlType:     'float' 
 
     }
     static constraints = {
 		sawMill		size: 0..80, nullable:true
-		product		size: 0..100
+		dimension		size: 0..100
 		lengthDescr	size: 0..50
 		weekStart	size: 0..4
 		weekEnd		size: 0..4
-                grade size: 0..8
                 kd size: 0..4
-		product()
+		dimension()
 		lengthDescr()
                 kd()
-                grade()
+                grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)"])
+                species(inList:["Redwood", "Whitewood"])
 		volumeOffered()
 		weekStart()
 		weekEnd()

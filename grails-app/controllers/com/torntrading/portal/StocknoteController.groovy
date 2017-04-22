@@ -11,6 +11,7 @@ import com.torntrading.portal.OfferHeader
 
 class StocknoteController {
     def prodBufferService
+    def assetResourceLocator
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -110,12 +111,10 @@ class StocknoteController {
     }
     
     def createPDF() {
+        def file = assetResourceLocator.findAssetForURI( 'Checkout16x16.png' )
         println "Report params: "+params
-        def file = new File("asets/CheckOut16x16.png")
         def OfferHeader offerHeader = OfferHeader.get(params.id)
         println(">>> Offerheader: "+offerHeader.sawMill)
-//        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader],   filename: "Stocknote-"+params.id+".pdf")
-//        notFound()
+        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: file.getByteArray()],   filename: "Stocknote-"+params.id+".pdf")
     }
 }

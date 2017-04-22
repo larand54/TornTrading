@@ -5,9 +5,10 @@
         <td>
             <fieldset>
                 <legend>Product specificationes</legend>
-                Product:  <g:field class="elements" type="text" name="product" required="y" value="${offerDetail?.product}" size="60"/>
+                Species:  <g:select name="species" from="${offerDetail?.constrainedProperties.species.inList}" value="${offerDetail?.species}"/>
+                Dimension:  <g:field class="elements" type="text" name="dimension" required="y" value="${offerDetail?.dimension}" size="60"/>
                 Length:     <g:field class="elements" type="text" name="lengthDescr"  required="Y" value="${offerDetail?.lengthDescr}" size="30"/>
-                Grade:  <g:field class="elements" type="text" name="grade"  value="${offerDetail?.grade}" size="8"/>
+                Grade:  <g:select name="grade" from="${offerDetail?.constrainedProperties.grade.inList}" value="${offerDetail?.grade}"/>
                 KD:       <g:field class="elements" type="text" name="kd"  value="${offerDetail?.kd}" size="4"/>
             </fieldset>
         </td>

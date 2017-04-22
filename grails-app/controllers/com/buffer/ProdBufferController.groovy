@@ -29,53 +29,7 @@ class ProdBufferController {
     }
     
     
-    def createOffer(){
-        //        render "Antal valda: ${params.toOffer.size()}"
-        for( n in params.list('toOffer')) {
-            //            render "${n}-"
-            //            def offer = tTBufferService.createOfferFromBuffer(n)
-            if (n.isInteger()) {
-                int value = n as Integer
-                createOfferFromBuffer(value)
-            }
-        }
-        def user = springSecurityService.isLoggedIn() ?
-        springSecurityService.loadCurrentUser() :
-        null
-        flash.message = "${params.toOffer?.size()} " +  "${message(code:'offerRequested.label')}" + "Användarid: ${user.id}" 
-        redirect action:"index", method:"GET"
-    }
     
-    def createOfferFromBuffer(int id) {
-        def ProdBuffer pb
-        pb = ProdBuffer.get(id)
-        
-        def User user
-        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
-        def us = user.getUserSettings()
-        def mill = (us != null) ? us.supplierName :''
-        def roles = springSecurityService.getPrincipal().getAuthorities()
-
-        def Offer of
-        of = new Offer()
-        of.sawMill = pb.sawMill
-        //            of.company = '----'
-        of.lengthDescr = pb.length
-        of.price = pb.price
-        of.product = pb.product
-        of.volumeOffered = pb.volumeRest
-        of.volumeUnit = pb.volumeUnit
-        of.weekStart = pb.weekStart
-        of.termsOfDelivery = 'Fritt kunden'
-        //            of.kd = 'xxxx'
-        //            of.grade = 'xxxx'
-        //            of.status = 'Preliminary'
-        of.millOfferID = id
-        of.currency = us.currency
-        of.volumeUnit = us.volumeUnit
-        of.save(failOnError: true)
-        return of
-    }
     
 
     @Transactional
@@ -139,9 +93,10 @@ class ProdBufferController {
     def addVolume(ProdBuffer prodBuffer) {
         println(params)
         prodBuffer = ProdBuffer.get(params.pid)
-        println(prodBuffer.product)
+        println(prodBuffer.dimension)
         prodBuffer.addToPlannedVolumes(new PlannedVolume(week:params.fromWeek, volume: params.addVol) )
         prodBufferService.addPlannedVolume(prodBuffer, params.addVol as Double, params.fromWeek as Integer)
+        prodBufferService.updateWeekList(prodBuffer)
       flash.message = 'Vill du uppdatera volymer?' 
       notFound()
       return

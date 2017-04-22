@@ -26,7 +26,8 @@
                                                 <th> Välj</th>
 						<th> ID</th>
 						<th> Verk</th>
-						<th> produkt</th>
+						<th> Träslag</th>
+						<th> Dimension</th>
 						<th> Längd</th>
 						<th> Offererad volym</th>
 						<th> Bokad volym</th>
@@ -52,7 +53,8 @@
                                                 <td><g:checkBox name="toOffer" value="${prodBuffer.id}" checked="false"  /></td>
                                                 <td>${prodBuffer.id}</td>
 						<td>${prodBuffer.sawMill}</td>
-						<td>${prodBuffer.product}</td>
+						<td>${prodBuffer.species}</td>
+						<td>${prodBuffer.dimension}</td>
 						<td>${prodBuffer.length}</td>
 						<td>${prodBuffer.volumeOffered}</td>
 						<td>${prodBuffer.volumeOnOrder}</td>

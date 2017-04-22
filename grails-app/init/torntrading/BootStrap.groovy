@@ -14,7 +14,7 @@ class BootStrap {
 	if (Environment.current == Environment.DEVELOPMENT) {
             Locale defLocale = new Locale("en", "GB");
             Locale.setDefault(defLocale);
-            def pb1 = ProdBuffer.findByProduct('38x125 o/s, Furu')?:new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeInStock:200, volumeAvailable: 200, currency: 'EUR', kd: '7%',grade: 'S/F',priceFSC:'250.55',  weekStart: '1716', volumeUnit: 'AM3').save(flush:true,failOnError: true)
+/*            def pb1 = ProdBuffer.findByProduct('38x125 o/s, Furu')?:new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Furu', length:4200, volumeInStock:200, volumeAvailable: 200, currency: 'EUR', kd: '7%',grade: 'S/F',priceFSC:'250.55',  weekStart: '1716', volumeUnit: 'AM3').save(flush:true,failOnError: true)
             PlannedVolume.findById(1)?:new PlannedVolume(prodBuffer:pb1, volume:150, week: 1720).save()
             PlannedVolume.findById(2)?:new PlannedVolume(prodBuffer:pb1, volume:250, week: 1722).save()
             def pb2 = ProdBuffer.findByProduct('38x150 V, Furu')?:new ProdBuffer(sawMill:'Boda',product:'38x150 V, Furu', length:'4200 mm', volumeInStock:200, volumeAvailable: 200, currency: 'EUR',  weekStart: '1717', volumeUnit: 'AM3', kd: '6%', pricePEFC: '355').save(failOnError: true)
@@ -22,7 +22,7 @@ class BootStrap {
             def pb4 = ProdBuffer.findByProduct('38x125 o/s, Gran')?:new ProdBuffer(sawMill:'Boda',product:'38x125 o/s, Gran', length:'3800mm', volumeInStock:200, volumeAvailable: 200, currency: 'SEK',  weekStart: '1715', volumeUnit: 'AM3', kd: '9%', priceUC: '305').save(failOnError: true)
             def pb5 = ProdBuffer.findByProduct('45x150 V, Gran')?:new ProdBuffer(sawMill:'Boda',product:'45x150 V, Gran', length:'3800mm', volumeInStock:200, volumeAvailable: 200,  currency: 'SEK',  weekStart: '1716', volumeUnit: 'AM3', kd: '9%', priceUC: '305').save(failOnError: true)
 
-/*            Orders.findByProduct('38x125 o/s, Furu')?:new Orders(millOfferID:pb1.id,sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0001',destination:'Poznan',period:'1717',product:'38x125 o/s, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Preliminär').save(failOnError: true)
+            Orders.findByProduct('38x125 o/s, Furu')?:new Orders(millOfferID:pb1.id,sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0001',destination:'Poznan',period:'1717',product:'38x125 o/s, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Preliminär').save(failOnError: true)
             Orders.findByProduct('38x125 o/s, Furu+')?:new Orders(millOfferID:pb1.id,sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0001',destination:'Poznan',period:'1717',product:'38x125 o/s, Furu+',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Preliminär').save(failOnError: true)
             Orders.findByProduct('38x150 V, Furu')?:new Orders(millOfferID:2,sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0004',destination:'Poznan',period:'1721',product:'38x150 V, Furu',lengthDescr:'4200',packetSize:'Helpaket',quantity:50,currency:'SEK',price:200,status:'Preliminär').save(failOnError: true)
             Orders.findByProduct('22x90 o/s, Furu')?:new Orders(millOfferID:pb3.id,sawMill:'Boda',customer:'Poznan timber',orderNo:'BP-0003',destination:'Poznan',period:'1722',product:'22x90 o/s, Furu',lengthDescr:'3800',packetSize:'Helpaket',quantity:150,currency:'SEK',price:110,status:'Cancellerad').save(failOnError: true)

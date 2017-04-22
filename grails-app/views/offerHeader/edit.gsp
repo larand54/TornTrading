@@ -43,7 +43,8 @@
                 <table style="width:100%">
                     <thead>
                         <tr>
-                            <g:sortableColumn property="${offerHeader.offerDetails.product}" title='Product' />
+                            <g:sortableColumn property="${offerHeader.offerDetails.species}" title='Species' />
+                            <g:sortableColumn property="${offerHeader.offerDetails.dimension}" title='Dimension' />
                             <g:sortableColumn property="${offerHeader.offerDetails.lengthDescr}" title='Length' />
                             <g:sortableColumn property="${offerHeader.offerDetails.volumeOffered}" title='Volume' />
                             <g:sortableColumn property="${offerHeader.offerDetails.kd}" title='KD' />
@@ -61,7 +62,8 @@
                     <tbody>
                         <g:each in="${offerHeader.offerDetails}" status="i" var="od">
                             <tr>
-                                <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.product?.encodeAsHTML()}</g:link></td>
+                                <td>${od?.species}</td>
+                                <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.dimension?.encodeAsHTML()}</g:link></td>
                                 <td>${od?.lengthDescr}</td>
                                 <td>${od?.volumeOffered}</td>
                                 <td>${od?.kd}</td>

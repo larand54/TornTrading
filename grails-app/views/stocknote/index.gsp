@@ -21,9 +21,8 @@
     <table>
         <thead>
             <tr>
-                <g:sortableColumn property="Id" title='Stocknote no' />
-                <g:sortableColumn property="offerType" title="Type" />
-                <g:sortableColumn property="customer" title="Customer" />
+                <g:sortableColumn property="id" title='Stocknote no' />
+                <g:sortableColumn property="company" title="Customer" />
                 <g:sortableColumn property="dateCreated" title='Created' />
                 <g:sortableColumn property="createdBy" title='Created by' />
                 <g:sortableColumn property="status" title='Status' />
@@ -34,7 +33,6 @@
             <g:each in="${offerHeader}" status="i" var="oh"> 
                 <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
                     <td><g:link action="editStocknote" id="${oh.id}">${oh.id}</g:link></td>
-                    <td>${oh.offerType}</td>
                     <td>${oh.company}</td>
                     <td>${oh.dateCreated}</td>
                     <td>${oh.createdBy}</td>

@@ -4,21 +4,15 @@
 </fieldset>
 <input type="hidden" name="sawMill" value="${myTag.userCompany()}" />
 <table style="width:100%">
-<!--    <tr>
-        <td>
-            Sågverk:   <g:field class="elements" type="text" name="sawMill" required="y" value="${prodBuffer?.sawMill}" size="8"/>
-            LoBuffNo:   <g:field class="elements" type="numeric" name="loBuffNo" required="y" value="${prodBuffer?.loBuffertNo}" size="8"/>
-        </td>
-    </tr>
--->
     <tr>
         <td>
             <fieldset>
                 <legend>Product specifications</legend>
-                Product:  <g:field class="elements" type="text" name="product"  value="${prodBuffer?.product}" size="60"/>
+                Species:  <g:select name="species" from="${prodBuffer?.constrainedProperties.species.inList}"/> 
+                Dimension:  <g:field class="elements" type="text" name="dimension"  value="${prodBuffer?.dimension}" size="60"/>
                 Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="30"/>
                 KD:     <g:field class="elements" type="text" name="kd"   value="${prodBuffer?.kd}" size="2"/>
-                Grade:  <g:field class="elements" type="text" name="grade"   value="${prodBuffer?.grade}" size="3"/>
+                Grade:  <g:select name="grade" from="${prodBuffer?.constrainedProperties.grade.inList}" value="${prodBuffer?.grade}"/>
             </fieldset>
         </td>
     </tr>
@@ -27,7 +21,6 @@
             <fieldset>
                 <legend>Volumes</legend>
                 Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${myTag.userVolumeUnit()}" size="2"/>
-                Available volume : <g:field class="elements" type="number decimal" name="volumeAvailable" min="1" max="10000" readonly="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeAvailable')}" style="width: 6em"/>
                 In stock : <g:field class="elements" type="number decimal" name="volumeInStock" min="1" max="10000" required="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeInStock')}" style="width: 6em"/>
             </fieldset>
         </td>

@@ -1,3 +1,4 @@
+<h3>Stocknote no: ${offerHeader?.id}</h3>
 <h2> Delivery </h2>
 <table style="width:100%">
     <thead>

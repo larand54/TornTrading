@@ -7,9 +7,10 @@ class ProdBuffer {
     int id
     String sawMill 
     String status
+    String species
     int    loBuffertNo     //-- sätt default till verknummer
     int    pkgArticleNo
-    String product
+    String dimension
     String length
     int    productNo
     int    packageSize 
@@ -52,7 +53,7 @@ class ProdBuffer {
         version true
         id              column: "id",              type:        'integer'
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
-	product 	column: "Produkt",         sqltype:	"char", length: 150
+	dimension 	column: "dimension",        sqltype:	"char", length: 150
 	length  	column: "Length",          sqltype:	"char", length: 25
 	currency 	column: "currency",        sqltype:	"char", length: 3
         priceFSC        column: "price_fsc"
@@ -62,7 +63,7 @@ class ProdBuffer {
 	volumeUnit	column: "volumeUnit",        sqltype:     "char", length: 6
         loBuffertNo     column: "LOBuffertNo"
         kd              column: "kd",                sqltype:     "char", length: 4
-        grade           column: "grade",             sqltype:     "char", length: 8
+        grade           column: "grade",             sqltype:     "char"
         pkgArticleNo    column: "PkgArticleNo"
         productNo       column: "ProductNo"
         packageSize     column: "PackageSize"
@@ -90,11 +91,13 @@ class ProdBuffer {
     }
     static constraints = {
         status(inList:["Active","Finished","Cancelled"])
+        species(inList:["Redwood", "Whitewood"])
+        grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)"])
         
         sawMill                 nullable: true
         status                  nullable: true
         pkgArticleNo            nullable: true
-        product                 nullable: true
+        dimension               nullable: true
         length                  nullable: true
         kd                      nullable: true
         grade                   nullable: true

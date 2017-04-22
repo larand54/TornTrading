@@ -90,7 +90,7 @@ class ProdBufferService {
     }
 /*    def updateVolumes(ProdBuffer aPB) {
         if (aPB.status =='Active') {
-            System.out.println(">>>>> Service: updateVolumes ProdBuffer product: "+aPB.product)
+            System.out.println(">>>>> Service: updateVolumes ProdBuffer dimension: "+aPB.dimension)
             def Double offeredVolume
             def offerDetails = OfferDetail.list()
             System.out.println("List: "+offerDetails)
@@ -187,7 +187,7 @@ class ProdBufferService {
     }
 
     def calcWeekList(ProdBuffer aPB, Double[] volList) {
-        
+//        println("Volume added: "+aPB.plannedVolumes.volume+" in week: "+aPB.plannedVolumes.week)
         if (aPB.status =='Active') {
             // get Current week number:
             Integer cw = getCurrentWeek()
@@ -195,6 +195,7 @@ class ProdBufferService {
             for (int i = 1; i < 11; i++) {
                 volList[i-1] = aPB.volumeInitial           
             }
+//            print(aPB.id+" Initial Volumelist: "+volList)
             // Add planned volumes
             def Integer ix
             def Integer i
@@ -205,15 +206,18 @@ class ProdBufferService {
                 // calc week index of this volume 
                 if (cy == pvYear) {
                     ix = pvWeek-cw+1
+//                    println(aPB.id+" Week(1-10) in this year: "+ix)
                 } else {
                     // volume in next year - special calc
                     // How many weeks left this year not counting cw
                     def Integer weeksInThisYear = getWeeksInYear()
                     ix = weeksInThisYear - cw + 1 + pvWeek
+//                    println("Week(1-10) in next year: "+ix)
                 }
                 for (i=ix-1;i<10;i++) {
                     volList[i] = volList[i] + pv.volume
                 }
+//            print(aPB.id+" After Planned Volumelist: "+volList)
             }
         
             // Offerter
@@ -221,12 +225,14 @@ class ProdBufferService {
             for (i=0;i<10;i++) {
                 volList[i] = volList[i] - offerTotal
             }
+//            print(aPB.id+" After offer Volumelist: "+volList)
             
             // Sålda volymer
             def orderTotal = getTotalOrderVolume(aPB)
             for (i=0;i<10;i++) {
                 volList[i] = volList[i] - orderTotal
             }
+//            print(aPB.id+" After sold Volumelist: "+volList)
         }
             
     }

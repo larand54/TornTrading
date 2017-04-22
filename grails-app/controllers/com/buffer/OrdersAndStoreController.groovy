@@ -14,8 +14,7 @@ class OrdersAndStoreController {
     def springSecurityService
     def prodBufferService
     def list(Integer max) { 
-        System.out.println("Controller List <<<<<<<<")
-        def orders = Orders.list()
+        System.out.println("Controller List <<<<<<<< params: "+params)
         def offerDetails = null//OfferDetail.list()
 
         //        System.out.println("Offerdetails count: "+offerDetails.size)
@@ -24,7 +23,8 @@ class OrdersAndStoreController {
         //         respond Orders.list(params), model:[ordersCount: Orders.count()]
 
         def List<String> millList = getMills()
-        [orders: orders, prodBuffer: getBufferList(), offerDetails: offerDetails, millList: millList, selectedMill:false]
+        def List<ProdBuffer> prodBuffer = getBufferList()
+        [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false]
         /*        params.max = Math.min(max ?: 10, 100)
         if (params.paginate == 'prodBuffer') {
         def prodBufferPagination = [max: params.max, offset: params.offset]
@@ -109,7 +109,8 @@ class OrdersAndStoreController {
         def us = user.getUserSettings()
         def mill = (us != null) ? us.supplierName :''
         def roles = springSecurityService.getPrincipal().getAuthorities()
-        def prodBuffer = ProdBuffer.findAllByStatus('Active')
+        
+        def prodBuffer = ProdBuffer.findAllByStatus('Active', [sort:params.sort, order:params.order])
         def List<ProdBuffer> myList
         def List<ProdBuffer> tempList
         System.out.println(" GetBufferList active count: " + prodBuffer.count)
@@ -133,8 +134,6 @@ class OrdersAndStoreController {
         }
         myList.each(){
             prodBufferService.updateWeekList(it)
-            //        it.initiateVolumes()
-            //        it.fillWeekList()
         }
         return myList
     }
@@ -157,12 +156,12 @@ class OrdersAndStoreController {
         }
         int count=0
         if (params.sawMill != null) {
-            def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK').save(failOnError: true)
-            ofh.offerType='s'
             def List<ProdBuffer> products = ProdBuffer.findAllByStatus('Active')
             println("Products: "+products)
             for( mill in params.list('sawMill')) {
                     println("mill: "+mill)
+            def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK').save(failOnError: true)
+            ofh.offerType='s'
                 for (pb in products) {
                     println("Sawmill: "+pb.sawMill+" mill: "+mill)
                     if (pb.sawMill==mill && pb.volumeAvailable > 0.1) {
@@ -244,6 +243,8 @@ class OrdersAndStoreController {
         if (offerType=='s') {
             ofd.volumeOffered = pb.volumeAvailable  
         }
+        ofd.species = pb.species
+        ofd.grade = pb.grade
         ofd.sawMill = pb.sawMill
         ofd.lengthDescr = pb.length
         ofd.priceFSC = pb.priceFSC
@@ -279,7 +280,7 @@ class OrdersAndStoreController {
             ofd.endPrice = price
             ofd.choosedCert = cert
         }
-        ofd.product = pb.product
+        ofd.dimension = pb.dimension
         ofd.weekStart = pb.weekStart
         ofd.millOfferID = id
         ofd.offerType = offerType

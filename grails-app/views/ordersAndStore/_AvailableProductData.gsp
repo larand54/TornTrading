@@ -2,12 +2,13 @@
     <table>
         <thead>
             <tr><g:sortableColumn property='toOffer' title='x' />
-                <g:sortableColumn property="Id" title='Id' />
+                <g:sortableColumn property="id" title='Id' />
                 <g:sortableColumn property="sawMill" title='Mill' />
-                <g:sortableColumn property="product" title='Product' />
+                <g:sortableColumn property="species" title='Species' />
+                <g:sortableColumn property="dimension" title='Dimension' />
                 <g:sortableColumn property="length" title='Length' />
-                <g:sortableColumn property="inStock" title='InStock' />
-                <g:sortableColumn property="onOrder" title='Sold' />
+                <g:sortableColumn property="volumeInStock" title='InStock' />
+                <g:sortableColumn property="volumeOnOrder" title='Sold' />
                 <g:sortableColumn property="volumeOffered" title='Offer' />
                 <g:sortableColumn property="volumeAvailable" title='Avail' />
                 <g:sortableColumn property="volumeUnit" title='Unit' />
@@ -36,7 +37,8 @@
                     <td><g:checkBox name="toOffer" value="${pb.id}" checked="false"  /></td>
                     <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
                     <td>${pb.sawMill}</td>
-                    <td>${pb.product}</td>
+                    <td>${pb.species}</td>
+                    <td>${pb.dimension}</td>
                     <td>${pb.length}</td>
                     <td>${pb.volumeInStock}</td>
                     <td>${pb.volumeOnOrder}</td>

@@ -21,9 +21,9 @@
     <table>
         <thead>
             <tr>
-                <g:sortableColumn property="Id" title='Id' />
+                <g:sortableColumn property="id" title='Id' />
                 <g:sortableColumn property="offerType" title="Type" />
-                <g:sortableColumn property="customer" title="Customer" />
+                <g:sortableColumn property="company" title="Customer" />
                 <g:sortableColumn property="sawMill" title='Mill' />
                 <g:sortableColumn property="dateCreated" title='Created' />
                 <g:sortableColumn property="status" title='Status' />

@@ -6,9 +6,8 @@
             <thead>
                 <tr>
                     <g:sortableColumn property="millOfferId" title='MOID' />
-                    <g:sortableColumn property="offerType" title='Typ' />
-                    <g:sortableColumn property="sawMill" title='Sawmill' />
-                    <g:sortableColumn property="product" title='Product' />
+                    <g:sortableColumn property="species" title='Species' />
+                    <g:sortableColumn property="dimension" title='Dimension' />
                     <g:sortableColumn property="lengthDescr" title='Length' />
                     <g:sortableColumn property="volumeOffered" title='Volume' />
                     <g:sortableColumn property="kd" title='KD' />
@@ -28,9 +27,8 @@
                 <g:each in="${offerDetails}" status="i" var="od">
                     <tr class="${ (i % 2) == 0 ? 'even': 'odd'}">
                         <td>[${od.millOfferID}]</td>
-                        <td>[${od.offerType}]</td>
-                        <td>${od.offerHeader.sawMill}
-                        <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.product?.encodeAsHTML()}</g:link></td>
+                        <td>[${od.species}]</td>
+                        <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.dimension?.encodeAsHTML()}</g:link></td>
                         <td>${od?.lengthDescr}</td>
                         <td>${od?.volumeOffered}</td>
                         <td>${od?.kd}</td>
