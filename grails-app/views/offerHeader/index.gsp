@@ -18,32 +18,32 @@
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-    <table>
-        <thead>
-            <tr>
-                <g:sortableColumn property="id" title='Id' />
-                <g:sortableColumn property="offerType" title="Type" />
-                <g:sortableColumn property="company" title="Customer" />
-                <g:sortableColumn property="sawMill" title='Mill' />
-                <g:sortableColumn property="dateCreated" title='Created' />
-                <g:sortableColumn property="status" title='Status' />
-            </tr>
-        </thead>
-        <tbody>
+            <table>
+                <thead>
+                    <tr>
+                        <g:sortableColumn property="id" title='Id' />
+                        <g:sortableColumn property="offerType" title="Type" />
+                        <g:sortableColumn property="company" title="Customer" />
+                        <g:sortableColumn property="sawMill" title='Mill' />
+                        <g:sortableColumn property="dateCreated" title='Created' />
+                        <g:sortableColumn property="status" title='Status' />
+                    </tr>
+                </thead>
+                <tbody>
 
-            <g:each in="${offerHeaderList}" status="i" var="oh"> 
-                <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
-                    <td><g:link action="edit" id="${oh.id}">${oh.id}</g:link></td>
-                    <td>${oh.offerType}</td>
-                    <td>${oh.company}</td>
-                    <td>${oh.sawMill}</td>
-                    <td>${oh.dateCreated}</td>
-                    <td>${oh.status}</td>
-                </tr>
-            </g:each>
+                    <g:each in="${offerHeaderList}" status="i" var="oh"> 
+                        <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
+                            <td><g:link action="edit" id="${oh.id}">${oh.id}</g:link></td>
+                            <td>${oh.offerType}</td>
+                            <td>${oh.company}</td>
+                            <td>${oh.sawMill}</td>
+                            <td><g:formatDate format="yyyy-MM-dd HH:mm" date="${oh.dateCreated}"/></td>
+                            <td>${oh.status}</td>
+                        </tr>
+                    </g:each>
 
-        </tbody>
-    </table>
+                </tbody>
+            </table>
 
             <div class="pagination">
                 <g:paginate total="${offerHeaderCount ?: 0}" />

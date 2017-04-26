@@ -14,6 +14,7 @@ class OrdersAndStoreController {
     def springSecurityService
     def prodBufferService
     def list(Integer max) { 
+        params.max = Math.min(max ?: 10, 100)
         System.out.println("Controller List <<<<<<<< params: "+params)
         def offerDetails = null//OfferDetail.list()
 
@@ -23,24 +24,28 @@ class OrdersAndStoreController {
         //         respond Orders.list(params), model:[ordersCount: Orders.count()]
 
         def List<String> millList = getMills()
-        def List<ProdBuffer> prodBuffer = getBufferList()
-        [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false]
-        /*        params.max = Math.min(max ?: 10, 100)
-        if (params.paginate == 'prodBuffer') {
-        def prodBufferPagination = [max: params.max, offset: params.offset]
-        session.prodBufferPagination = prodBufferPagination
-        } else if (params.paginate == 'orders') {
-        def ordersPagination = [max: params.max, offset: params.offset]
-        session.ordersPagination = ordersPagination
+        def List<ProdBuffer> pbl = getBufferList()
+        def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
+        respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+    }
+    
+    def getPaginatedList(list, max, offset) {
+        max = Math.min(max ?: 10, 100)
+        offset = offset?:0
+        int total = list.size()
+        int upperLimit = offset+max
+        if (upperLimit >= total) {
+            upperLimit = total-1
+        } else {
+            upperLimit = offset+max-1
         }
-        def ordersList = Orders.list(session.ordersPagination ?: [max: 10, offset: 0])
-        def prodBufferList = ProdBuffer.list(session.prodBufferPagination ?: [max: 10, offset: 0])
-        //This is to stop the paginate using params.offset/max to calculate current step and use the offset/max attributes instead    
-        params.offset = null
-        params.max = null
-        [prodBufferList: prodBufferList, totalProds: ProdBuffer.count(), totalOrders: Orders.count(), ordersList: ordersList]
-         */   }
-           
+        if (offset < total) {
+            return list.getAt(offset..upperLimit)
+        } else {
+            return []
+        }  
+    }
+    
     def availableProducts() {
         System.out.println(params)
         def offerDetails = null 
@@ -150,18 +155,14 @@ class OrdersAndStoreController {
     
     def createStocknote() {
         println("XXXX CreateStocknotes-- XXXX")
-        println("ZZZ SawMills: "+params.sawMill)
-        for( n in params.list('sawMill')) {
-            println("¤¤¤¤ SawMill: "+n)
-        }
         int count=0
         if (params.sawMill != null) {
-            def List<ProdBuffer> products = ProdBuffer.findAllByStatus('Active')
+            def List<ProdBuffer> products = ProdBuffer.createCriteria().list( params ) { eq ( "species", "${params.species}" ) &&  eq ("status", "active")}//findAll(status=='Active',species==params('species'))
             println("Products: "+products)
             for( mill in params.list('sawMill')) {
-                    println("mill: "+mill)
-            def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK').save(failOnError: true)
-            ofh.offerType='s'
+                println("mill: "+mill)
+                def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK', sawMill:mill).save(failOnError: true)
+                ofh.offerType='s'
                 for (pb in products) {
                     println("Sawmill: "+pb.sawMill+" mill: "+mill)
                     if (pb.sawMill==mill && pb.volumeAvailable > 0.1) {
@@ -226,7 +227,7 @@ class OrdersAndStoreController {
             cert = 'CW'
         }
         
-        if (count == 1){
+        if (count == 1){            // Bara ett cert kan väljas
             ofd.endPrice = price
             ofd.choosedCert = cert
         }
@@ -309,7 +310,7 @@ class OrdersAndStoreController {
                     return null
                 }
                 mill = nextMill
-                
+                  
                 //createOfferFromBuffer(value)
             }
         }

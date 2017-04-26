@@ -16,10 +16,12 @@ class StocknoteController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        def List<OfferHeader> offerHeader = OfferHeader.findAllByOfferType('s')
+/*        def List<OfferHeader> offerHeader = OfferHeader.findAllByOfferType('s')
         println("Stocknotes: "+offerHeader)
         [offerHeader:offerHeader]
-//        respond OfferHeader.list(params), model:[offerHeaderCount: OfferHeader.count()]
+*/
+        def offerHeader = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "s" )}
+        respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount]
     }
     
     @Transactional

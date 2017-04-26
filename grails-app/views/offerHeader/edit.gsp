@@ -51,7 +51,6 @@
                             <g:sortableColumn property="${offerHeader.offerDetails.grade}" title='Grade' />
                             <g:sortableColumn property="${offerHeader.offerDetails.choosedCert}" title='Cert' />
                             <g:sortableColumn property="${offerHeader.offerDetails.markup}" title='Markup' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.freight}" title='Freight' />
                             <g:sortableColumn property="${offerHeader.offerDetails.endPrice}" title='End price' />
                             <g:sortableColumn property="${offerHeader.offerDetails.priceFSC}" title='Price FSC' />
                             <g:sortableColumn property="${offerHeader.offerDetails.pricePEFC}" title='Price PEFC' />
@@ -70,7 +69,6 @@
                                 <td>${od?.grade}</td>
                                 <td>${od?.choosedCert}</td>
                                 <td>${od?.markup}</td>
-                                <td>${od?.freight}</td>
                                 <td>${od?.endPrice}</td>
                                 <td>${od?.priceFSC}</td>
                                 <td>${od?.pricePEFC}</td>

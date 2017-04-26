@@ -14,7 +14,8 @@
             <td>Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${offerHeader?.volumeUnit}" size="2"/></td>
             <td>Currency : <g:field class="elements" type="text" name="currency" required="y" value="${offerHeader?.currency}" size="2"/></td>
             <td>Deliveryterms: <g:select class="elements" name="termsOfDelivery" from="${offerHeader.constrainedProperties.termsOfDelivery.inList}"
-            value="${offerHeader?.termsOfDelivery}" required="N"/></td>
+                value="${offerHeader?.termsOfDelivery}" required="N"/></td>
+            <td>Freight <g:field class="elements" type="number decimal" name="freight"  value="${fieldValue(bean: offerHeader, field: 'freight')}" style="width: 6em"/>   
             
         </tr>
     </table>

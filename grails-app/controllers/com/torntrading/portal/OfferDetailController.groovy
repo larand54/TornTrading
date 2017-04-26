@@ -15,7 +15,7 @@ class OfferDetailController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond OfferDetail.list(params), model:[offerDetailCount: OfferDetail.count()]
+        respond OfferDetail.findAll(offerType=='o'), model:[offerDetailCount: OfferDetail.count()]
     }
 
     def show(OfferDetail offerDetail) {

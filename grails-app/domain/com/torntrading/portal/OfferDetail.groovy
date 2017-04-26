@@ -16,7 +16,6 @@ class OfferDetail {
     
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
     BigDecimal          markup          // Prispåslag
-    BigDecimal          freight         // Fraktkostnad   
     BigDecimal          priceFSC        // tillägg för FSC
     BigDecimal          priceUC         // tillägg för UnControlled wood 
     BigDecimal          priceCW         // tillägg för ControllWood
@@ -36,17 +35,35 @@ class OfferDetail {
 	
     def beforeInsert() {
         createdBy = getUserID()
-        endPrice = 0 //price + freight + markup
+        def certList = getAvailableCert()
+        println("Antal cert: "+ certList.size())
+        if (certList.size() == 1) {
+            choosedCert = certList[0]
+            endPrice = getCertPrice(choosedCert)
+            println("Cert: "+certList[0]+" certPris: "+endPrice)
+            markup = 0.03 * endPrice
+            endPrice = endPrice + markup
+        } else {
+            markup = 0.0 
+            endPrice = 0.0
+        }
         if (offerType == null) {offerType = 'o'}
     }
     
     def beforeUpdate() {
         oldVolume =  getPersistentValue('volumeOffered')
-        endPrice = (freight?freight:0) + (markup?markup:0)
-        if (choosedCert == 'FSC') endPrice = endPrice + priceFSC
-        else if (choosedCert == 'PEFC') endPrice = endPrice + pricePEFC
-        else if (choosedCert == 'UC') endPrice = endPrice + priceUC
-        else if (choosedCert == 'CW') endPrice = endPrice + priceCW
+        def oldCert = getPersistentValue('choosedCert')
+        def certList = getAvailableCert()
+        if (certList.size() == 1)       choosedCert = certList[0]
+        if (choosedCert == 'FSC')       endPrice = priceFSC
+        else if (choosedCert == 'PEFC') endPrice = pricePEFC
+        else if (choosedCert == 'UC')   endPrice = priceUC
+        else if (choosedCert == 'CW')   endPrice = priceCW
+        println("Choose cert UPDATE: "+choosedCert)
+        if (markup != null) {
+            if ((markup == 0 || choosedCert != oldCert) && endPrice > 0) markup = endPrice * 0.03 // 3% default
+            endPrice = endPrice + markup
+        }
     }
     
     static mapping	= {
@@ -98,7 +115,6 @@ class OfferDetail {
                 priceUC         nullable:true
                 priceCW         nullable:true
                 markup          nullable:true
-                freight         nullable:true
                 lengthDescr     nullable:true
                 choosedCert     nullable:true
                 offerType       nullable:true
@@ -117,10 +133,13 @@ class OfferDetail {
         if (priceCW != null) sl.add('CW')
         if (priceUC != null) sl.add('UC')
 
-/*            sl.add(priceFSC?'FSC':null)
-        sl.add(pricePEFC?'PEFC':null)
-        sl.add(priceUC?'UC':null)
-        sl.add(priceCW?'CW':null)
-*/        return sl
+        return sl
+    }
+    
+    def getCertPrice(String cert) {
+       if (cert=='FSC') return priceFSC 
+       if (cert=='PEFC') return pricePEFC 
+       if (cert=='CW') return priceCW 
+       if (cert=='UC') return priceUC 
     }
 }

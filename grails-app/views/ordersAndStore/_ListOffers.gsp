@@ -13,7 +13,6 @@
                     <g:sortableColumn property="kd" title='KD' />
                     <g:sortableColumn property="choosedCert" title='Cert' />
                     <g:sortableColumn property="markup" title='Markup' />
-                    <g:sortableColumn property="freight" title='Freight' />
                     <g:sortableColumn property="endPrice" title='Price' />
                     <g:sortableColumn property="priceFSC" title='FSC' />
                     <g:sortableColumn property="pricePEFC" title='PEFC' />
@@ -34,7 +33,6 @@
                         <td>${od?.kd}</td>
                         <td>${od?.choosedCert}</td>
                         <td>${od?.markup}</td>
-                        <td>${od?.freight}</td>
                         <td>${od?.endPrice}</td>
                         <td>${od?.priceFSC}</td>
                         <td>${od?.pricePEFC}</td>

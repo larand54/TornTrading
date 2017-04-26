@@ -12,7 +12,8 @@ class OfferHeaderController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond OfferHeader.list(params), model:[offerHeaderCount: OfferHeader.count()]
+        def offerHeader = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
+        respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount]
     }
 
     def show(OfferHeader offerHeader) {

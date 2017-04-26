@@ -20,7 +20,6 @@
             <fieldset>
                 <legend>Prices</legend>
                 markup <g:field class="elements" type="number decimal" name="markup"  value="${fieldValue(bean: offerDetail, field: 'markup')}" style="width: 6em"/>
-                freight <g:field class="elements" type="number decimal" name="freight"  value="${fieldValue(bean: offerDetail, field: 'freight')}" style="width: 6em"/>   
                 <g:select name="availableCert" from="${offerDetail.availableCert}" value="${offerDetail.choosedCert}" />    
                 
                 priceFSC: ${offerDetail.priceFSC}
