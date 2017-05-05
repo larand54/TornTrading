@@ -3,7 +3,6 @@ package com.torntrading.portal
 class OfferDetail {
 
     def springSecurityService
-    
     static belongsTo = [offerHeader: OfferHeader]
     String              offerType            // ('o') - Offert, ('s') - Stocknota
     String              grade
@@ -21,6 +20,7 @@ class OfferDetail {
     BigDecimal          priceCW         // tillägg för ControllWood
     BigDecimal          pricePEFC       // tillägg för PEFC
     BigDecimal          endPrice        // kundens slutpris
+    BigDecimal          agentFee = 0.03//grailsApplication.config.getProperty('woodtrading.pricing.agentFee')
     double		volumeOffered
     String		weekStart
     String		weekEnd
@@ -29,6 +29,7 @@ class OfferDetail {
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
     double              oldVolume   // Volym angiven före uppdatering
+    static transients = ['agentFee']
 //    double              diff        // Ändrad volym vid uppdatering
 //    static transients = ['oldVolume', 'diff']
 
@@ -41,7 +42,7 @@ class OfferDetail {
             choosedCert = certList[0]
             endPrice = getCertPrice(choosedCert)
             println("Cert: "+certList[0]+" certPris: "+endPrice)
-            markup = 0.03 * endPrice
+            markup = agentFee * endPrice
             endPrice = endPrice + markup
         } else {
             markup = 0.0 
@@ -61,7 +62,7 @@ class OfferDetail {
         else if (choosedCert == 'CW')   endPrice = priceCW
         println("Choose cert UPDATE: "+choosedCert)
         if (markup != null) {
-            if ((markup == 0 || choosedCert != oldCert) && endPrice > 0) markup = endPrice * 0.03 // 3% default
+            if ((markup == 0 || choosedCert != oldCert) && endPrice > 0) markup = endPrice * agentFee // 3% default
             endPrice = endPrice + markup
         }
     }

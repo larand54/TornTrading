@@ -6,7 +6,7 @@
         <title><g:message code="default.report.label" args="[entityName]" /></title>
 <style type="text/css">
 @page {
-  size: 210mm 297mm; // A4 format 
+  size: A4 landscape; //210mm 297mm; // A4 format 
   @bottom-center { content: element(footer);} // if you want footer
   @top-center { content: element(header); } // if you want header
 }
@@ -33,7 +33,7 @@ div.break {
                     <g:render template="OfferReportHeader" model="[offerHeader:offerHeader]"/>
 
             <g:render template="OfferReportDetail" model="[offerDetail:offerDetail]"/>
-<div class="break"/>
+<!--<div class="break"/>-->
         </div>
     </body>
 </html>

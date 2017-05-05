@@ -81,13 +81,18 @@ class OfferDetailController {
             flash.message = 'Offer not created! Connected product does not exist!'
             return            
         }
+        
+        
         offerDetail.choosedCert = params.availableCert
         
         offerDetail.save flush:true
+    
         
         def Double volumeChange = offerDetailService.getVolumeChange(offerDetail)
         if (Math.abs(volumeChange) > 0.0) {
-            prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)
+            if (offerDetail.offerHeader.status == 'Active') {
+                prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)
+            }
         }
         
         System.out.println("OfferDetailUpdated, oldVolume: "+offerDetail.oldVolume+" Volume offered: "+ offerDetail.volumeOffered)

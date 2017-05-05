@@ -124,3 +124,7 @@ environments:
             password: Avoc3nt
 #            password: mulan2010
 #            password: woods2011
+
+woodtrading:
+    pricing:
+        agentFee: 0.03

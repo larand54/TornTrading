@@ -47,6 +47,7 @@ class ProdBuffer {
     Double[] volList
 
     static transients = ['volList']
+    SortedSet plannedVolumes
     static hasMany = [plannedVolumes: PlannedVolume]
     static mapping	= {
         table 'LOBuffertv2'
@@ -148,6 +149,11 @@ class ProdBuffer {
     def beforeInsert() {
         status = "Active"
         volumeInitial = volumeInStock
+        for (int i=0; i<12; i++) {
+            def pv = new PlannedVolume(week:i+1 as Integer, volume:0 as Double)
+            addToPlannedVolumes(pv)
+            println("Add planned volume record: "+i)
+        }
     }
     
     def beforeUpdate() {
@@ -155,11 +161,16 @@ class ProdBuffer {
         println("BeforeUpdate -- oldVolume: "+ oldVolume+" volumeInstock: "+volumeInStock+" VolumeInitial: "+volumeInitial)
         if (oldVolume != volumeInStock && oldVolume!=volumeInitial){
             println("Error detected!")
-//           throw new Exception("Changing InStock not allowed after offer/sold or planed volumes added!")
             this.errors.rejectValue('volumeInStock','failedVolume.error')
             return false
         }
     }
+    
+    def afterUpdate() {
+        
+    }
+    
+    
         
     def int getCurrentWeek() {
 	Date date = new Date()

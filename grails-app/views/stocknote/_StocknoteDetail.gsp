@@ -1,24 +1,48 @@
 <fieldset class="form">
     <h2>Products</h2>
     <table style="width:100%">
+        <colgroup>
+            <col width="10%"/>
+            <col width="19%"/>
+            <col width="4%"/>
+            <col width="6%"/>
+            <col width="6%"/>
+            <col width="6%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+            <col width="3%"/>
+        </colgroup>
         <thead>
             <tr>
-                <th>Species</th>
-                <th>Dimension</th>
+                <th> In Stock</th>
+                <th colspan="8"></th>
+                <th colspan="9">Planned Production for sale</th>
+            </tr>
+            <tr>
+                <th>Dim [mm]</th>
                 <th>Length</th>
                 <th>Volume</th>
                 <th>KD</th>
                 <th>Grade</th>
                 <th id="nocenter">FSC</th>
                 <th id="nocenter">PEFC</th>
-                <th id="nocenter">Unctfd</th>
+                <th id="nocenter">Un Certified</th>
                 <th id="nocenter">Ctrl Wood</th> 
             </tr>
         </thead>
         <tbody>
             <g:each in="${offerHeader.offerDetails}" status="i" var="od">
                 <tr>
-                    <td>${od?.species}</td>
                     <td>${od?.dimension}</td>
                     <td>${od?.lengthDescr}</td>
                     <td>${od?.volumeOffered}</td>

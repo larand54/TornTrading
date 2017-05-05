@@ -14,6 +14,7 @@ class OfferHeader {
     String		volumeUnit
     String 		status
     String              offerType
+    String              species         // Används av stocknota
     BigDecimal          freight         // Fraktkostnad   
     Date		dateCreated
     int                 createdBy 
@@ -77,6 +78,7 @@ class OfferHeader {
                 offerDetails    nullable:true
                 offerType       nullable:true
                 freight         nullable:true
+                species         nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?

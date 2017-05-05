@@ -6,7 +6,7 @@
         <title><g:message code="default.stocknote.report.label" args="[entityName]" /></title>
         <style type="text/css">
             @page {
-                size: A4 landscape //210mm 297mm; // A4 format 
+                size: A4 landscape; //210mm 297mm; // A4 format 
                 @bottom-center { content: element(footer);} // if you want footer
                 @top-center { content: element(header); } // if you want header
             }
@@ -14,11 +14,31 @@
             div.break {
                 page-break-after:always;
             }
+            .StocknoteTitle {
+                font-size: 1.8em;
+                font-weight: bold;
+                vertical-align: bottom
+            }
+            .StocknoteSpec {
+                font-size: 1.2em;
+                font-weight: bold;
+                vertical-align: bottom
+            }
+            div.row {
+                position: relative;
+                clear: both;
+            }
         </style>    
     </head>
     <body>
         <div id="report-Stocknote" class="content scaffold-show" role="main">
-            <h1>Stocknote ---- ${this.offerHeader.sawMill}</h1>
+            <table style="width:75%">
+                <tr>
+                <td class="StocknoteTitle">Stocknote</td>
+                <td class="StocknoteSpec">    ${this.offerHeader.sawMill}</td>
+                <td class="StocknoteSpec">    ${this.offerHeader.species}</td>
+                </tr>
+            </table>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>

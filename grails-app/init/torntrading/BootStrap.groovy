@@ -9,7 +9,7 @@ import com.torntrading.portal.UserSettings
 
 
 class BootStrap {
-
+    def prodBufferService
     def init = { servletContext ->
 	if (Environment.current == Environment.DEVELOPMENT) {
             Locale defLocale = new Locale("en", "GB");
@@ -156,6 +156,10 @@ class BootStrap {
 
         }
         
+        // Update woodtrading status with new week and correct volumelist on weekchange
+        int id = 1
+        def wts = WtStatus.findById(1)?:new WtStatus(id:id).save(failOnError:true)
+//        prodBufferService.checkWeekStatus()
         def destroy = {
         }
     }

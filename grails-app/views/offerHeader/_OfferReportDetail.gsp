@@ -11,7 +11,6 @@
                 <th>KD</th>
                 <th>Grade</th>
                 <th>Cert</th>
-                <th>Freight</th>
                 <th>End price</th>
 <!--                <th>Price FSC</th>
                 <th>Price PEFC</th>
@@ -29,7 +28,6 @@
                     <td>${od?.kd}</td>
                     <td>${od?.grade}</td>
                     <td>${od?.choosedCert}</td>
-                    <td>${od?.freight}</td>
                     <td>${od?.endPrice}</td>
 <!--                    <td>${od?.priceFSC}</td>
                     <td>${od?.pricePEFC}</td>

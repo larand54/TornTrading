@@ -2,10 +2,18 @@ package com.torntrading.portal
 
 import com.buffer.ProdBuffer
 import com.buffer.Orders
+import com.torntrading.portal.PlannedVolume
 import grails.transaction.Transactional
 
+    
 @Transactional
 class ProdBufferService {
+    
+    class CellVol {
+        Double vol1
+        Double vol2
+        Double vol3
+    }
 
     def List<String> getActiveAvailableMills() {
         System.out.println("getActiveAvailableMills <<<<")
@@ -16,29 +24,138 @@ class ProdBufferService {
         ProdBuffer.executeQuery("SELECT * FROM ProdBuffer PB WHERE PB.status='Active' AND PB.volumeAvailable > 0.1 ORDER BY PB.sawMill" )
     }
     
+    def checkWeekStatus() {
+        // get current week
+        def int cWeek = getCurrentYearWeek()
+        int id = 1
+        def wtStatus = WtStatus.get(id)
+        def int actWeek = wtStatus.weekUpdated
+        if (cWeek > wtStatus.weekUpdated) {
+            def List<ProdBuffer> pList = ProdBuffer.executeQuery("SELECT * FROM ProdBuffer PB WHERE PB.status='Active' ORDER BY PB.sawMill" )
+            for (p in pList) {
+                weekAdjustVolumes(p)
+                updateAvailableVolumes(p)
+            }
+        }
+        wtStatus.weekUpdated = cWeek
+        wtStatus.save(failOnError:true)
+    }
+    
+    def weekAdjustVolumes(ProdBuffer aP) {
+        def weekListSize = 12
+        def List<PlannedVolume> pv = aP.plannedVolumes
+        for (int i=0; i< weekListSize-1; i++) {
+            if (i==0 && pv[1].volume > 0.1 ) {
+                aP.inStock = aP.inStock + pv[1].volume
+            } else {
+               pv[i] = pv[i+1]
+               pv[i].save(flush:true, failOnError:true)
+            }
+        }
+    }
+    
+    def updateAvailableVolumes(ProdBuffer aPB) {
+        def Double av = aPB.inStock
+        av = av + getTotalPlannedVolume(aPB)
+        av = av - getTotalOfferVolume(aPB)
+        av = av - getTotalOrderedVolume(aPB)
+        aPB.volumeAvailable = av
+        aPB.save(flush:true, failOnError:true)
+    }
+    
+    def Double fillCellVolume(Double aCell, Double aFillVol, Double full) {
+       def Double fill = full - aCell
+       if (fill <= 0.0) return aFillVol
+       if (aFillVol <= fill) {
+           aCell = aCell + aFillVol
+           aFillVol = 0.0
+       } else {
+           aFillVol = aFillVol - fill
+           aCell = 0.0
+       }
+       return aFillVol 
+    }
+    
+    def Double tapCellVolume(CellVol aCellVol) {
+       def cell = aCellVol.vol1
+       def tapVol = aCellVol.vol2
+       if (tapVol > cell) {
+           tapVol = tapVol - cell
+           cell = 0.0
+       } else {
+           cell = cell - tapVol
+           tapVol = 0.0
+       }  
+       aCellVol.vol1 = cell
+       aCellVol.vol2 = tapVol
+       return cell
+    } 
+    
+    def retrieveVolumeFromBuffer(ProdBuffer aPB, Double aVol){
+        def int i = 0
+        def CellVol cellVol = new CellVol(vol1:0, vol2:0) 
+        def pv = aPB.plannedVolumes
+        if (aPB.volumeInStock > 0.0) {
+            cellVol.vol1 = aPB.volumeInStock
+            cellVol.vol2 = aVol
+            aPB.volumeInStock = tapCellVolume(cellVol)
+        }
+        
+        while (cellVol.vol2 > 0.0 && i < 12) {
+            cellVol.vol1 = pv[i].volume
+            pv[i].volume = tapCellVolume(cellVol)
+        }
+        if (cellVol.vol2 > 0.0) aPB.volumeInStock = aPB.volumeInstock - cellVol.vol2
+        aPB.save(failOnError:true)
+    }
+    
+    def restoreVolumeToBuffer(ProdBuffer aPB, Double aVol){
+        def int i = 0
+        def CellVol cellVol = new CellVol(vol1:0, vol2:0) 
+        def PlannedVolume pv = aPB.plannedVolumes
+        
+        while (aVol > 0.0 && i < 12) {
+            cellVol.vol1 = pv[i].volume
+            cellVol.vol2 = pv[i].initialVolume
+            pv[i] = fillCellVolume(pv[i].volume,aVol,pv[i].initialVolume)
+        }
+        if (aPB.volumeInStock > 0.0) {
+            volumeInStock = tapCellVolume(aPB.volumeInStock, aVol)
+        }
+        aPB.save(failOnError:true)
+    }
+    
+    def rejectOffer(ProdBuffer aPB, Double aVol) {
+        aPB.volumeOffered = aPB.volumeOffered - aVol
+        aPB.volumeAvailable = aPB.volumeAvailable + aVol
+        aPB.save(flush:true, failOnError:true)
+        restoreVolumeToBuffer(aPB, aVol)
+    }
+    
     def addOfferVolume(ProdBuffer aPB, Double aVol, Integer aWeek) {
         aPB.volumeOffered = aPB.volumeOffered + aVol
         aPB.volumeAvailable = aPB.volumeAvailable - aVol
-        if (aPB.volumeInStock > aVol) {
-            aPB.volumeInStock = aPB.volumeInStock - aVol 
-        } else {
-            aPB.volumeInStock = 0.0 
+        aPB.save(flush:true, failOnError:true)
+            if (aVol > 0) {
+            retrieveVolumeFromBuffer(aPB, aVol)
+        } else if (aVol < -0.01) {
+            restoreVolumeToBuffer(aPB, -aVol)
         }
+    }
+    
+    def addPlannedVolume(ProdBuffer aPB, Double aVol) {
+        
+        aPB.volumeAvailable = aPB.volumeAvailable + aVol 
+        
         aPB.save(flush:true, failOnError:true)
     }
-    def addPlannedVolume(ProdBuffer aPB, Double aVol, Integer aWeek) {
-        aPB.volumeAvailable = aPB.volumeAvailable + aVol
-        if (aWeek == (getCurrentWeek()+getCurrentYear()*100)) {
-            def diff = aVol - getTotalOfferVolume(aPB)
-            if (diff > 0) {
-                aPB.volumeInStock = aPB.volumeInStock + diff  // kolla omatchade offervolymer först - fixa detta
-            }
-        }
-        aPB.save(flush:true, failOnError:true)
-    }
-    def addOrderVolume(ProdBuffer aPB, Double aVol) {
+
+    def soldOfferVolume(ProdBuffer aPB, Double aVol) {
         aPB.volumeOnOrder = aPB.volumeOnOrder + aVol
-        aPB.volumeAvailable = aPB.volumeAvailable - aVol
+        aPB.volumeOffered = aPB.volumeOffered - aVol
+/*//        aPB.volumeAvailable = aPB.volumeAvailable - aVol
+        
+        aPB.volumeInStock = aPB.volumeInStock - aVol
         if (aPB.volumeInStock > aVol) {
             aPB.volumeInStock = aPB.volumeInStock - aVol 
         } else {
@@ -46,16 +163,18 @@ class ProdBufferService {
             aPB.volumeInStock = 0.0 
             aPB.volumeOffered = aPB.volumeOffered - diff
         }
+*/
         aPB.save(flush:true, failOnError:true)
     }
     
     def Double getTotalOfferVolume(ProdBuffer aPB) {
         def Double offerTotal = 0.0
         if (aPB.status =='Active') {
-            def offerDetails = OfferDetail.list()
             def offerList = OfferDetail.findAllByMillOfferID(aPB.id)  
             for (od in offerList) {
-                offerTotal = offerTotal + od.volumeOffered
+                if (od.orderHeader.status == 'Active') {
+                    offerTotal = offerTotal + od.volumeOffered
+                }
             }
         }
         return offerTotal
@@ -64,9 +183,10 @@ class ProdBufferService {
     def Double getTotalOrderVolume(ProdBuffer aPB) {
         def Double orderTotal = 0.0
         if (aPB.status =='Active') {
-            def orderList = Orders.findAllByMillOfferID(aPB.id)
-            for (or in orderList) {
-                orderTotal = orderTotal + or.quantity
+            for (od in offerList) {
+                if (od.orderHeader.status == 'Sold') {
+                    offerTotal = offerTotal + od.volumeOffered
+                }
             }
         }
         return orderTotal
@@ -88,57 +208,29 @@ class ProdBufferService {
         calcWeekList(aPB, volList)
         fillWeekList(aPB,volList)
     }
-/*    def updateVolumes(ProdBuffer aPB) {
-        if (aPB.status =='Active') {
-            System.out.println(">>>>> Service: updateVolumes ProdBuffer dimension: "+aPB.dimension)
-            def Double offeredVolume
-            def offerDetails = OfferDetail.list()
-            System.out.println("List: "+offerDetails)
-            def offerList = offerDetails.findAll({(it.millOfferID==aPB.id)})  
-            System.out.println("List: "+offerList)
-            def orderList = Orders.findAllByMillOfferID(aPB.id) 
-            System.out.println("OrdersList: "+orderList)
-            def plannedList = aPB.plannedVolumes
-            System.out.println("PlannedList: "+plannedList)
-            def Double offerTotal = 0.0
-            def Double orderTotal = 0.0
-            def Double plannedTotal = 0.0
-            for (pt in plannedList) {
-                plannedTotal = plannedTotal + pt.volume
-            }
-            for (od in offerList) {
-                offerTotal = offerTotal + od.volumeOffered
-            }
-            for (or in orderList) {
-                orderTotal = orderTotal + or.quantity
-            }
-            
-            System.out.println("Planned total: "+plannedTotal)
-            System.out.println("Offered total: "+offerTotal)
-            System.out.println("Ordered total: "+orderTotal)
-            def Double available = aPB.volumeAvailable?:0.0
-            def Double inStock = aPB.volumeInStock?:0.0
-            def booked = offerTotal + orderTotal
-            available = inStock + plannedTotal - booked
-            if (booked < inStock) {
-                inStock = inStock - booked 
-            } else {
-                def diff = booked - inStock
-                inStock = 0.0
-                offerTotal = offerTotal - diff
-            }
-            aPB.volumeAvailable = available
-            aPB.volumeInStock = inStock
-            aPB.volumeOffered = offerTotal
-            aPB.volumeOnOrder = orderTotal
-            aPB.save()
+
+    def Double shiftLeft(List<Double> aList) {
+        def Double shiftOut = aList[0]
+        for (int i=0; i< aList.size()-1; i++) {
+            aList[i] = aList[i+1]
         }
+        aList[aList.size()-1] = 0.0
+        return shiftOut
     }
- */
+    
+    
     def int getCurrentWeek() {
 	Date date = new Date()
 	def calendar = date.toCalendar()
 	return calendar.get(calendar.WEEK_OF_YEAR)        
+    }
+    
+    def int getCurrentYearWeek() {
+    	Date date = new Date()
+	def calendar = date.toCalendar()
+        def cw = getCurrentWeek()
+        def result = (calendar.get(calendar.YEAR) - 2000)*100 + cw
+        return result 
     }
     
     def int getCurrentYear() {
@@ -154,6 +246,10 @@ class ProdBufferService {
     
     def int getYearFromYearWeek(aYearWeek) {
         return (aYearWeek as int) / 100
+    }
+    
+    def int getYearWeekFromWeek(int aWeek, int aYear) {
+        return (aYear-2000)*100 + aWeek
     }
     
     def int getWeeksInYear() {

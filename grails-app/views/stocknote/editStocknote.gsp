@@ -27,7 +27,7 @@
     </ul>
         </div>
         <div id="show-offerHeader" class="content scaffold-show" role="main">
-                <h1>Stocknote ${this.offerHeader.sawMill}</h1>
+                <h1>Stocknote ${this.offerHeader.sawMill} ${this.offerHeader.species}</h1>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>

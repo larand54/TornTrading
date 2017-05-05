@@ -18,16 +18,18 @@
                 <g:sortableColumn property="priceFSC" title='PEFC' />
                 <g:sortableColumn property="priceFSC" title='CW' />
                 <g:sortableColumn property="priceFSC" title='UC' />
-                <g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "0")}" />
-                <g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "1")}" />
-                <g:sortableColumn property="availW03" title="${myTag.weekNo(offset: "2")}" />
-                <g:sortableColumn property="availW04" title="${myTag.weekNo(offset: "3")}" />
-                <g:sortableColumn property="availW05" title="${myTag.weekNo(offset: "4")}" />
-                <g:sortableColumn property="availW06" title="${myTag.weekNo(offset: "5")}" />
-                <g:sortableColumn property="availW07" title="${myTag.weekNo(offset: "6")}" />
-                <g:sortableColumn property="availW08" title="${myTag.weekNo(offset: "7")}" />
-                <g:sortableColumn property="availW09" title="${myTag.weekNo(offset: "8")}" />
-                <g:sortableColumn property="availW10" title="${myTag.weekNo(offset: "9")}" />
+                <g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "1")}" />
+                <g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "2")}" />
+                <g:sortableColumn property="availW03" title="${myTag.weekNo(offset: "3")}" />
+                <g:sortableColumn property="availW04" title="${myTag.weekNo(offset: "4")}" />
+                <g:sortableColumn property="availW05" title="${myTag.weekNo(offset: "5")}" />
+                <g:sortableColumn property="availW06" title="${myTag.weekNo(offset: "6")}" />
+                <g:sortableColumn property="availW07" title="${myTag.weekNo(offset: "7")}" />
+                <g:sortableColumn property="availW08" title="${myTag.weekNo(offset: "8")}" />
+                <g:sortableColumn property="availW09" title="${myTag.weekNo(offset: "9")}" />
+                <g:sortableColumn property="availW10" title="${myTag.weekNo(offset: "10")}" />
+                <g:sortableColumn property="availW11" title="${myTag.weekNo(offset: "11")}" />
+                <g:sortableColumn property="availW12" title="${myTag.weekNo(offset: "12")}" />
             </tr>
         </thead>
         <tbody>
@@ -51,16 +53,9 @@
                     <td>${pb.pricePEFC}</td>
                     <td>${pb.priceCW}</td>
                     <td>${pb.priceUC}</td>
-                    <td>${pb.availW01}</td>
-                    <td>${pb.availW02}</td>
-                    <td>${pb.availW03}</td>
-                    <td>${pb.availW04}</td>
-                    <td>${pb.availW05}</td>
-                    <td>${pb.availW06}</td>
-                    <td>${pb.availW07}</td>
-                    <td>${pb.availW08}</td>
-                    <td>${pb.availW09}</td>
-                    <td>${pb.availW10}</td>
+                    <g:each in="${pb.plannedVolumes}" status="j" var="pv">
+                        <td>${pv.volume}</td>
+                    </g:each>
                 </tr>
             </g:each>
 

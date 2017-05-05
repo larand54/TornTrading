@@ -10,7 +10,16 @@ class TimeTagLib {
         def calendar = date.toCalendar()
         calendar.add(Calendar.DATE,7*(attrs.offset as int))
         def week = calendar.get(Calendar.WEEK_OF_YEAR)
-        out  << String.format("V%02d", week)
+        out  << String.format("W%02d", week)
+    }
+    def yearWeekNo = {attrs, body ->
+        Date date = new Date()
+        def calendar = date.toCalendar()
+        calendar.add(Calendar.DATE,7*(attrs.offset as int))
+        def week = calendar.get(Calendar.WEEK_OF_YEAR)
+        def year = calendar.get(Calendar.YEAR) - 2000
+        week = year*100+week
+        out  << String.format("%04d", week)
     }
     def userCompany = { attrs, body ->
         def loggedInUser = springSecurityService.currentUser

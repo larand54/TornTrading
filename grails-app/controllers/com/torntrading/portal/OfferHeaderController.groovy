@@ -8,6 +8,8 @@ import com.torntrading.portal.OfferDetail
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
 @Transactional(readOnly = true)
 class OfferHeaderController {
+    def offerHeaderService
+    def prodBufferService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -73,6 +75,51 @@ class OfferHeaderController {
             transactionStatus.setRollbackOnly()
             respond offerHeader.errors, view:'edit'
             return
+        }
+        println("OfferHeader: status: "+offerHeader.status)
+        
+        def String oldStatus = offerHeader.getPersistentValue('status')
+        println("OfferHeader: old status: "+oldStatus)
+        def Boolean volumeOk = offerHeaderService.allOfferDetailsVolumeOK(offerHeader)
+        println("OfferHeader: volumeok: "+volumeOk)
+        
+        if (params.status == 'Active' && oldStatus != 'New') {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'You can not back status to active!'
+            respond offerHeader.errors, view:'edit'
+            return            
+        }
+
+        if (params.status == 'New') {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'You can not back status to New!'
+            respond offerHeader.errors, view:'edit'
+            return            
+        }
+
+        if ((oldStatus == 'Sold' || oldStatus == 'Rejected') && params.status != oldStatus) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'You can not change from this status!'
+            respond offerHeader.errors, view:'edit'
+            return            
+        }
+
+        if (params.status == 'Active' && oldStatus != 'Active' && !volumeOk) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Volume is 0 - status can not be set active!'
+            respond offerHeader.errors, view:'edit'
+            return            
+        } else if (params.status == 'Active' && oldStatus != 'Active') {
+          offerHeaderService.addOfferVolume(offerHeader)
+        }
+
+        if (params.status == 'Sold' && oldStatus == 'Active' && volumeOk) {
+          offerHeaderService.soldOfferVolume(offerHeader)  
+        } else if (params.status == 'Sold') {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Volume is 0 or status not Active - status can not be set Sold!'
+            respond offerHeader.errors, view:'edit'
+            return            
         }
 
         offerHeader.save flush:true

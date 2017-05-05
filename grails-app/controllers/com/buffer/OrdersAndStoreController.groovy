@@ -1,6 +1,7 @@
 package com.buffer
 
 import com.torntrading.portal.UserSettings
+import com.torntrading.portal.WtStatus
 import com.torntrading.security.Role
 import com.torntrading.security.User
 import com.torntrading.security.UserRole
@@ -8,6 +9,7 @@ import com.torntrading.legacy.Supplier
 import com.torntrading.portal.OfferDetail
 import com.torntrading.portal.OfferHeader
 import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
 
 @Secured(['ROLE_ADMIN','ROLE_SALES', 'ROLE_SUPPLIER'])
 class OrdersAndStoreController {
@@ -22,7 +24,11 @@ class OrdersAndStoreController {
         //        def prodList = ProdBuffer.list()
         //        respond ProdBuffer.list(params), model:[prodListCount: ProdBuffer.count()]
         //         respond Orders.list(params), model:[ordersCount: Orders.count()]
-
+        // Update woodtrading status with new week and correct volumelist on weekchange
+        int id = 1
+        WtStatus wts = WtStatus.get(id)?:new WtStatus(id:1).save(failOnError:true)
+////        def WtStatus wts = WtStatus.findOrSaveById( id )
+        prodBufferService.checkWeekStatus()
         def List<String> millList = getMills()
         def List<ProdBuffer> pbl = getBufferList()
         def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
@@ -137,9 +143,6 @@ class OrdersAndStoreController {
                 break
             }
         }
-        myList.each(){
-            prodBufferService.updateWeekList(it)
-        }
         return myList
     }
     
@@ -153,6 +156,7 @@ class OrdersAndStoreController {
         [sawMills:sawMills]
     }
     
+    @Transactional
     def createStocknote() {
         println("XXXX CreateStocknotes-- XXXX")
         int count=0
@@ -163,6 +167,7 @@ class OrdersAndStoreController {
                 println("mill: "+mill)
                 def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK', sawMill:mill).save(failOnError: true)
                 ofh.offerType='s'
+                ofh.species=params.species
                 for (pb in products) {
                     println("Sawmill: "+pb.sawMill+" mill: "+mill)
                     if (pb.sawMill==mill && pb.volumeAvailable > 0.1) {
@@ -171,6 +176,13 @@ class OrdersAndStoreController {
                     }
                 }
             }
+            if (count <= 0) {
+                transactionStatus.setRollbackOnly()
+                flash.message = "No product found within criteria so no Stocknote created" 
+                redirect action:"list", method:"GET"
+            }
+        
+
             def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
             flash.message = "${count} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
             redirect action:"list", method:"GET"
