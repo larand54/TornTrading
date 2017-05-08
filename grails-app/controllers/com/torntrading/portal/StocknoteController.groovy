@@ -1,6 +1,7 @@
 package com.torntrading.portal
 
 import static org.springframework.http.HttpStatus.*
+import com.buffer.ProdBuffer
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.portal.OfferDetail
@@ -47,10 +48,6 @@ class StocknoteController {
             }
             '*' { respond offerHeader, [status: CREATED] }
         }
-    }
-
-    def editStocknote(OfferHeader offerHeader) {
-        respond offerHeader
     }
 
     @Transactional
@@ -114,9 +111,10 @@ class StocknoteController {
     
     def createPDF() {
         def file = assetResourceLocator.findAssetForURI( 'Checkout16x16.png' )
-        println "Report params: "+params
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+        def millId = offerHeader.offerDetails.millOfferID
+        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
         println(">>> Offerheader: "+offerHeader.sawMill)
-        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: file.getByteArray()],   filename: "Stocknote-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: file.getByteArray(), prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
     }
 }

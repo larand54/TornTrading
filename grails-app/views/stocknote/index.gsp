@@ -32,7 +32,7 @@
 
                     <g:each in="${offerHeaderList}" status="i" var="oh"> 
                         <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
-                            <td><g:link action="editStocknote" id="${oh.id}">${oh.id}</g:link></td>
+                            <td><g:link action="createPDF" id="${oh.id}">${oh.id}</g:link></td>
                             <td>${oh.sawMill}</td>
                             <td><g:formatDate format="yyyy-MM-dd HH:mm" date="${oh.dateCreated}"/></td>
                             <td>${oh.createdBy}</td>

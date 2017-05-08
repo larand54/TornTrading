@@ -40,7 +40,6 @@
             </g:hasErrors>
                     <g:render template="StocknoteHeader" model="[offerHeader:offerHeader]"/>
 
-            <g:render template="StocknoteDetail" model="[offerDetail:offerDetail]"/>
 <div class="break"/>
         </div>
     </body>

@@ -28,6 +28,15 @@
                 position: relative;
                 clear: both;
             }
+            table.tborder, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            div.header_detail {
+                font-size:  1.5em;
+                font-weight: bold;
+            }
         </style>    
     </head>
     <body>
@@ -52,6 +61,7 @@
             <g:render template="StocknoteHeader" model="[offerHeader:offerHeader]"/>
 
             <g:render template="StocknoteDetail" model="[offerDetail:offerDetail]"/>
+
 <!--            <div class="break"/>-->
         </div>
     </body>
