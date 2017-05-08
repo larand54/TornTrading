@@ -83,6 +83,13 @@ class OfferHeaderController {
         def Boolean volumeOk = offerHeaderService.allOfferDetailsVolumeOK(offerHeader)
         println("OfferHeader: volumeok: "+volumeOk)
         
+        if ((oldStatus != 'Active') && (oldStatus != 'New')) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Not Active or New! Can not be modified!'
+            respond offerHeader.errors, view:'edit'
+            return            
+        }
+
         if (params.status == 'Active' && oldStatus != 'New') {
             transactionStatus.setRollbackOnly()
             flash.message = 'You can not back status to active!'
@@ -106,7 +113,7 @@ class OfferHeaderController {
 
         if (params.status == 'Active' && oldStatus != 'Active' && !volumeOk) {
             transactionStatus.setRollbackOnly()
-            flash.message = 'Volume is 0 - status can not be set active!'
+            flash.message = 'Volume is 0 or more than available - status can not be set active!'
             respond offerHeader.errors, view:'edit'
             return            
         } else if (params.status == 'Active' && oldStatus != 'Active') {
@@ -122,6 +129,14 @@ class OfferHeaderController {
             return            
         }
 
+        if (params.status == 'Rejected' && oldStatus == 'Active') {
+          offerHeaderService.rejectOfferVolume(offerHeader)  
+        } else if (params.status == 'Rejected') {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Status not Active - status can not be set Rejected!'
+            respond offerHeader.errors, view:'edit'
+            return            
+        }
         offerHeader.save flush:true
 
         request.withFormat {

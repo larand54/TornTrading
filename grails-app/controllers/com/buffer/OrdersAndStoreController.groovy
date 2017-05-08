@@ -29,6 +29,7 @@ class OrdersAndStoreController {
         WtStatus wts = WtStatus.get(id)?:new WtStatus(id:1).save(failOnError:true)
 ////        def WtStatus wts = WtStatus.findOrSaveById( id )
         prodBufferService.checkWeekStatus()
+// prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
         def List<String> millList = getMills()
         def List<ProdBuffer> pbl = getBufferList()
         def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
@@ -258,6 +259,7 @@ class OrdersAndStoreController {
         }
         ofd.species = pb.species
         ofd.grade = pb.grade
+        ofd.kd = pb.kd
         ofd.sawMill = pb.sawMill
         ofd.lengthDescr = pb.length
         ofd.priceFSC = pb.priceFSC

@@ -9,6 +9,7 @@ import grails.transaction.Transactional
 @Transactional
 class ProdBufferService {
     
+    // Hjälp klass för att hantera veckobyten med volymer
     class CellVol {
         Double vol1
         Double vol2
@@ -21,7 +22,7 @@ class ProdBufferService {
     }
     
     def List<ProdBuffer> getActiveAvailableProducts() {
-        ProdBuffer.executeQuery("SELECT * FROM ProdBuffer PB WHERE PB.status='Active' AND PB.volumeAvailable > 0.1 ORDER BY PB.sawMill" )
+        ProdBuffer.executeQuery("FROM ProdBuffer PB WHERE PB.status='Active' AND PB.volumeAvailable > 0.1 ORDER BY PB.sawMill" )
     }
     
     def checkWeekStatus() {
@@ -31,7 +32,7 @@ class ProdBufferService {
         def wtStatus = WtStatus.get(id)
         def int actWeek = wtStatus.weekUpdated
         if (cWeek > wtStatus.weekUpdated) {
-            def List<ProdBuffer> pList = ProdBuffer.executeQuery("SELECT * FROM ProdBuffer PB WHERE PB.status='Active' ORDER BY PB.sawMill" )
+            def List<ProdBuffer> pList = ProdBuffer.executeQuery("FROM ProdBuffer PB WHERE PB.status='Active' ORDER BY PB.sawMill" )
             for (p in pList) {
                 weekAdjustVolumes(p)
                 updateAvailableVolumes(p)
@@ -43,37 +44,51 @@ class ProdBufferService {
     
     def weekAdjustVolumes(ProdBuffer aP) {
         def weekListSize = 12
-        def List<PlannedVolume> pv = aP.plannedVolumes
+        def  pv = aP.plannedVolumes
         for (int i=0; i< weekListSize-1; i++) {
-            if (i==0 && pv[1].volume > 0.1 ) {
-                aP.inStock = aP.inStock + pv[1].volume
+            println("AdjustVolumes, I: "+i)
+            if (i==0) {
+                aP.volumeInStock = aP.volumeInStock + pv[1].volume
+                aP.volumeInitial = aP.volumeInitial + pv[1].initialVolume
             } else {
-               pv[i] = pv[i+1]
+               pv[i].volume = pv[i+1].volume
+               pv[i].initialVolume = pv[i+1].initialVolume
+               pv[i].week = pv[i+1].week
                pv[i].save(flush:true, failOnError:true)
             }
         }
+        pv[weekListSize-1].volume = 0
+        pv[weekListSize-1].initialVolume = 0
+        pv[weekListSize-1].week = 0
     }
     
+    // denna funktion skall ej användas då det inte fungerar säkert efter veckoskift
+    // vi lagrar bara 12 värden och vid veckobyte skiftas den 1:a bort och vi vet ej vad som var lagrat där tidigare
+    // Vi löser detta genom att lagra upp initialvärdena i InStocks-initialvärde vid veckobyte
     def updateAvailableVolumes(ProdBuffer aPB) {
-        def Double av = aPB.inStock
-        av = av + getTotalPlannedVolume(aPB)
-        av = av - getTotalOfferVolume(aPB)
-        av = av - getTotalOrderedVolume(aPB)
+        def Double av = aPB.volumeInitial      // Skall var det initiala värdet
+        av = av + getTotalPlannedVolume(aPB)   // skall vara de initiala värdena men efter veckoskift blir de osäkra då det kan tillkomma nya värden
+        def Double toffv = getTotalOfferVolume(aPB)
+        def Double tordv = getTotalOrderVolume(aPB)
+        av = av - toffv
+        av = av - tordv
         aPB.volumeAvailable = av
+        aPB.volumeOffered = toffv
+        aPB.volumeOnOrder = tordv
         aPB.save(flush:true, failOnError:true)
     }
     
-    def Double fillCellVolume(Double aCell, Double aFillVol, Double full) {
-       def Double fill = full - aCell
-       if (fill <= 0.0) return aFillVol
-       if (aFillVol <= fill) {
-           aCell = aCell + aFillVol
-           aFillVol = 0.0
-       } else {
-           aFillVol = aFillVol - fill
-           aCell = 0.0
-       }
-       return aFillVol 
+    def Double fillCellVolume(CellVol aCellVol, Double aFull) {
+        def Double fill = aFull - aCellVol.vol1
+        if (fill <= 0.0) {
+        } else if (aCellVol.vol2 <= fill) {
+           aCellVol.vol1 = aCellVol.vol1 + aCellVol.vol2
+           aCellVol.vol2 = 0.0
+        } else {
+           aCellVol.vol2 = aCellVol.vol2 - fill
+           aCellVol.vol1 = aFull
+        }
+        return aCellVol.vol1 
     }
     
     def Double tapCellVolume(CellVol aCellVol) {
@@ -95,39 +110,45 @@ class ProdBufferService {
         def int i = 0
         def CellVol cellVol = new CellVol(vol1:0, vol2:0) 
         def pv = aPB.plannedVolumes
+        cellVol.vol2 = aVol
         if (aPB.volumeInStock > 0.0) {
             cellVol.vol1 = aPB.volumeInStock
-            cellVol.vol2 = aVol
             aPB.volumeInStock = tapCellVolume(cellVol)
         }
         
         while (cellVol.vol2 > 0.0 && i < 12) {
             cellVol.vol1 = pv[i].volume
             pv[i].volume = tapCellVolume(cellVol)
+            i = i + 1
         }
         if (cellVol.vol2 > 0.0) aPB.volumeInStock = aPB.volumeInstock - cellVol.vol2
         aPB.save(failOnError:true)
     }
     
     def restoreVolumeToBuffer(ProdBuffer aPB, Double aVol){
-        def int i = 0
+        def int i = 11
         def CellVol cellVol = new CellVol(vol1:0, vol2:0) 
-        def PlannedVolume pv = aPB.plannedVolumes
+        def pv = aPB.plannedVolumes
         
-        while (aVol > 0.0 && i < 12) {
+        cellVol.vol2 = aVol 
+        while (cellVol.vol2 > 0.0 && i >= 0) {
             cellVol.vol1 = pv[i].volume
-            cellVol.vol2 = pv[i].initialVolume
-            pv[i] = fillCellVolume(pv[i].volume,aVol,pv[i].initialVolume)
+            pv[i].volume = fillCellVolume(cellVol,pv[i].initialVolume)
+            i = i - 1
         }
-        if (aPB.volumeInStock > 0.0) {
-            volumeInStock = tapCellVolume(aPB.volumeInStock, aVol)
+println("RestoreVolumeToBuffer cellVol.vol2: "+cellVol.vol2)
+println("RestoreVolumeToBuffer InStock: "+aPB.volumeInStock)
+        if (cellVol.vol2 > 0.0) {
+            aPB.volumeInStock = aPB.volumeInStock + cellVol.vol2
         }
+println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         aPB.save(failOnError:true)
     }
     
     def rejectOffer(ProdBuffer aPB, Double aVol) {
         aPB.volumeOffered = aPB.volumeOffered - aVol
         aPB.volumeAvailable = aPB.volumeAvailable + aVol
+        println("Rejected: Volume offered: "+aPB.volumeOffered+" volumeAvailabel: "+aPB.volumeAvailable)
         aPB.save(flush:true, failOnError:true)
         restoreVolumeToBuffer(aPB, aVol)
     }
@@ -172,7 +193,7 @@ class ProdBufferService {
         if (aPB.status =='Active') {
             def offerList = OfferDetail.findAllByMillOfferID(aPB.id)  
             for (od in offerList) {
-                if (od.orderHeader.status == 'Active') {
+                if (od.offerHeader.status == 'Active') {
                     offerTotal = offerTotal + od.volumeOffered
                 }
             }
@@ -183,9 +204,10 @@ class ProdBufferService {
     def Double getTotalOrderVolume(ProdBuffer aPB) {
         def Double orderTotal = 0.0
         if (aPB.status =='Active') {
+            def offerList = OfferDetail.findAllByMillOfferID(aPB.id)  
             for (od in offerList) {
-                if (od.orderHeader.status == 'Sold') {
-                    offerTotal = offerTotal + od.volumeOffered
+                if (od.offerHeader.status == 'Sold') {
+                    orderTotal = orderTotal + od.volumeOffered
                 }
             }
         }
@@ -197,7 +219,7 @@ class ProdBufferService {
         if (aPB.status =='Active') {
             def plannedList = aPB.plannedVolumes
             for (pv in plannedList) {
-                plannedTotal = plannedTotal + pv.quantity
+                plannedTotal = plannedTotal + pv.initialVolume
             }
         }
         return plannedTotal
@@ -333,17 +355,4 @@ class ProdBufferService {
             
     }
 
-    
-    def fillWeekList(ProdBuffer aPB, Double[] volList) {
-        aPB.availW01 = Math.max(volList[0],0.0)
-        aPB.availW02 = Math.max(volList[1],0.0)
-        aPB.availW03 = Math.max(volList[2],0.0)
-        aPB.availW04 = Math.max(volList[3],0.0)
-        aPB.availW05 = Math.max(volList[4],0.0)
-        aPB.availW06 = Math.max(volList[5],0.0)
-        aPB.availW07 = Math.max(volList[6],0.0)
-        aPB.availW08 = Math.max(volList[7],0.0)
-        aPB.availW09 = Math.max(volList[8],0.0)
-        aPB.availW10 = Math.max(volList[9],0.0)
-    }
 }

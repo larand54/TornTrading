@@ -80,6 +80,17 @@ class ProdBufferController {
             respond prodBuffer.errors, view:'edit'
             return
         }
+        
+        if (prodBuffer.isDirty('volumeInStock')) {
+            // If inStock changed manually - adjust volume available accordingly
+            def newVol = prodBuffer.volumeInStock
+            def oldVol = prodBuffer.getPersistentValue('volumeInStock')
+            def diffVol = newVol - oldVol
+            println(">>> IsDirty! newVol: "+newVol+" oldVol: "+ oldVol)
+            if (newVol != oldVol) {
+                prodBuffer.volumeAvailable = prodBuffer.volumeAvailable + diffVol
+            }
+        }
 
         println('UPDATE SAVE: '+params.id)
         prodBuffer.save flush:true

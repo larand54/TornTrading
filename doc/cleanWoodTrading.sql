@@ -1,3 +1,4 @@
+use tt_portal_utv
 delete from dbo.wt_planned_volume
 truncate table dbo.wt_planned_volume
 delete from dbo.LOBuffertv2

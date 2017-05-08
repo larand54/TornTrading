@@ -148,7 +148,11 @@ class ProdBuffer {
     
     def beforeInsert() {
         status = "Active"
-        volumeInitial = volumeInStock
+        // Set volume available only if InStock is set manually
+        if (  volumeInStock > 0) {
+              volumeAvailable = volumeAvailable + volumeInStock
+              volumeInitial = volumeInStock
+          }
         for (int i=0; i<12; i++) {
             def pv = new PlannedVolume(week:i+1 as Integer, volume:0 as Double)
             addToPlannedVolumes(pv)
@@ -157,21 +161,13 @@ class ProdBuffer {
     }
     
     def beforeUpdate() {
-        def oldVolume =  getPersistentValue('volumeInStock')
-        println("BeforeUpdate -- oldVolume: "+ oldVolume+" volumeInstock: "+volumeInStock+" VolumeInitial: "+volumeInitial)
-        if (oldVolume != volumeInStock && oldVolume!=volumeInitial){
-            println("Error detected!")
-            this.errors.rejectValue('volumeInStock','failedVolume.error')
-            return false
-        }
+    
     }
     
     def afterUpdate() {
         
     }
     
-    
-        
     def int getCurrentWeek() {
 	Date date = new Date()
 	def calendar = date.toCalendar()

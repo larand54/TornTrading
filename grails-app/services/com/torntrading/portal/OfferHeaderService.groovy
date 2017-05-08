@@ -10,6 +10,9 @@ class OfferHeaderService {
         def result = true
         for (od in aOH.offerDetails) {
             result = result && (od.volumeOffered > 0.01)
+            def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
+            println(">>> Available: "+pb.volumeAvailable+"  Offered: "+od.volumeOffered)
+            result = result && pb.volumeAvailable >= od.volumeOffered
         }
         return result
     }
@@ -23,7 +26,14 @@ class OfferHeaderService {
     def soldOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.soldOfferVolume(pb, od.volumeOffered, od.weekStart as Integer)  
+            prodBufferService.soldOfferVolume(pb, od.volumeOffered)  
+        }
+    }
+    
+    def rejectOfferVolume(OfferHeader aOH) {
+        for (OfferDetail od in aOH.offerDetails) {
+            def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
+            prodBufferService.rejectOffer(pb, od.volumeOffered)  
         }
     }
 }

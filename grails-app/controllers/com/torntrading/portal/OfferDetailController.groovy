@@ -10,6 +10,7 @@ import grails.plugin.springsecurity.annotation.Secured
 class OfferDetailController {
     def prodBufferService
     def offerDetailService
+    def offerHeaderService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -72,6 +73,7 @@ class OfferDetailController {
         if ((status == 'Sold') || (status == 'Rejected')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Offer can not be changed (Sold/Rejected)'
+            respond offerDetail.errors, view:'edit'
             return
         }
         
@@ -79,21 +81,34 @@ class OfferDetailController {
         if (pb == null) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Offer not created! Connected product does not exist!'
+            respond offerDetail.errors, view:'edit'
             return            
         }
         
+        def Double volumeChange = offerDetailService.getVolumeChange(offerDetail)
+        if (Math.abs(volumeChange) > 0.0) {
+            if (offerHeaderService.allOfferDetailsVolumeOK(offerDetail.offerHeader)) {
+                println("Volume OK! " + volumeChange)
+                if (offerDetail.offerHeader.status == 'Active') {
+                    prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)
+                }
+            } else {
+                println("Volume NOT OK! " + volumeChange)
+                transactionStatus.setRollbackOnly()
+                flash.message = 'Offer not updated! Volume set to high!'
+                respond offerDetail.errors, view:'edit'
+                return                            
+            }
+            
+        }
         
         offerDetail.choosedCert = params.availableCert
         
         offerDetail.save flush:true
-    
+
         
-        def Double volumeChange = offerDetailService.getVolumeChange(offerDetail)
-        if (Math.abs(volumeChange) > 0.0) {
-            if (offerDetail.offerHeader.status == 'Active') {
-                prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)
-            }
-        }
+        
+    
         
         System.out.println("OfferDetailUpdated, oldVolume: "+offerDetail.oldVolume+" Volume offered: "+ offerDetail.volumeOffered)
         request.withFormat {
