@@ -22,7 +22,6 @@
                 <thead>
                     <tr>
                         <g:sortableColumn property="id" title='Id' />
-                        <g:sortableColumn property="offerType" title="Type" />
                         <g:sortableColumn property="company" title="Customer" />
                         <g:sortableColumn property="sawMill" title='Mill' />
                         <g:sortableColumn property="dateCreated" title='Created' />
@@ -34,7 +33,6 @@
                     <g:each in="${offerHeaderList}" status="i" var="oh"> 
                         <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
                             <td><g:link action="edit" id="${oh.id}">${oh.id}</g:link></td>
-                            <td>${oh.offerType}</td>
                             <td>${oh.company}</td>
                             <td>${oh.sawMill}</td>
                             <td><g:formatDate format="yyyy-MM-dd HH:mm" date="${oh.dateCreated}"/></td>

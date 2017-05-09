@@ -20,7 +20,6 @@ class OfferDetail {
     BigDecimal          priceCW         // tillägg för ControllWood
     BigDecimal          pricePEFC       // tillägg för PEFC
     BigDecimal          endPrice        // kundens slutpris
-    BigDecimal          agentFee = 0.03//grailsApplication.config.getProperty('woodtrading.pricing.agentFee')
     double		volumeOffered
     String		weekStart
     String		weekEnd
@@ -29,9 +28,6 @@ class OfferDetail {
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
     double              oldVolume   // Volym angiven före uppdatering
-    static transients = ['agentFee']
-//    double              diff        // Ändrad volym vid uppdatering
-//    static transients = ['oldVolume', 'diff']
 
 	
     def beforeInsert() {
@@ -40,14 +36,12 @@ class OfferDetail {
         println("Antal cert: "+ certList.size())
         if (certList.size() == 1) {
             choosedCert = certList[0]
+        }
             endPrice = getCertPrice(choosedCert)
             println("Cert: "+certList[0]+" certPris: "+endPrice)
-            markup = agentFee * endPrice
+            markup = offerHeader.agentFee * 0.01 * endPrice
             endPrice = endPrice + markup
-        } else {
-            markup = 0.0 
-            endPrice = 0.0
-        }
+
         if (offerType == null) {offerType = 'o'}
     }
     
@@ -61,10 +55,9 @@ class OfferDetail {
         else if (choosedCert == 'UC')   endPrice = priceUC
         else if (choosedCert == 'CW')   endPrice = priceCW
         println("Choose cert UPDATE: "+choosedCert)
-        if (markup != null) {
-            if ((markup == 0 || choosedCert != oldCert) && endPrice > 0) markup = endPrice * agentFee // 3% default
-            endPrice = endPrice + markup
-        }
+        
+        markup = endPrice * offerHeader.agentFee * 0.01
+        endPrice = endPrice + markup
     }
     
     static mapping	= {

@@ -16,6 +16,7 @@
             <td>Deliveryterms: <g:select class="elements" name="termsOfDelivery" from="${offerHeader.constrainedProperties.termsOfDelivery.inList}"
                 value="${offerHeader?.termsOfDelivery}" required="N"/></td>
             <td>Freight <g:field class="elements" type="number decimal" name="freight"  value="${fieldValue(bean: offerHeader, field: 'freight')}" style="width: 6em"/>   
+            <td>Fee(%) <g:field class="elements" min="0" max="25" type="number" name="agentFee"  value="${fieldValue(bean: offerHeader, field: 'agentFee')}" style="width: 4em"/>   
             
         </tr>
     </table>

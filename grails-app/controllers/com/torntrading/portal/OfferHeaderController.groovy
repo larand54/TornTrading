@@ -97,7 +97,7 @@ class OfferHeaderController {
             return            
         }
 
-        if (params.status == 'New') {
+        if (params.status == 'New' && oldStatus != 'New') {
             transactionStatus.setRollbackOnly()
             flash.message = 'You can not back status to New!'
             respond offerHeader.errors, view:'edit'
@@ -111,13 +111,18 @@ class OfferHeaderController {
             return            
         }
 
-        if (params.status == 'Active' && oldStatus != 'Active' && !volumeOk) {
+        if (params.status == 'Active' && oldStatus == 'New' && !volumeOk) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Volume is 0 or more than available - status can not be set active!'
             respond offerHeader.errors, view:'edit'
             return            
-        } else if (params.status == 'Active' && oldStatus != 'Active') {
-          offerHeaderService.addOfferVolume(offerHeader)
+        } else if (params.status == 'Active' && oldStatus == 'New') {
+            offerHeaderService.addOfferVolume(offerHeader)
+            offerHeaderService.setEndPrices(offerHeader)
+        }
+
+        if (params.status == 'New' && oldStatus == 'New') {
+            offerHeaderService.setEndPrices(offerHeader)
         }
 
         if (params.status == 'Sold' && oldStatus == 'Active' && volumeOk) {

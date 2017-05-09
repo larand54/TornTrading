@@ -26,33 +26,42 @@
         </colgroup>
         <thead>
             <tr>
-                <th colspan="9">In Stock</th>
-                <th colspan="12">Planned Production for sale</th>
+                <th id="is_header1" colspan="9">In Stock</th>
+                <th id="pv_header1" colspan="12">Planned Production for sale</th>
             </tr>
+            
             <tr>
-                <th>Dim [mm]</th>
-                <th>Length</th>
-                <th>Volume</th>
-                <th>KD</th>
-                <th>Grade</th>
-                <th id="nocenter">FSC</th>
-                <th id="nocenter">PEFC</th>
-                <th id="nocenter">Un Certified</th>
-                <th id="nocenter">Ctrl Wood</th> 
+                <th id="is_center">Dim [mm]</th>
+                <th id="is_center">Length</th>
+                <th id="is_center">KD</th>
+                <th id="is_center">Grade</th>
+                <th id="is_center">FSC</th>
+                <th id="is_center">PEFC</th>
+                <th id="is_center">Un Certified</th>
+                <th id="is_center">Ctrl Wood</th> 
+                <th id="is_center">Volume</th>
                 <g:each in="${prodBuffer.plannedVolumes}" status="j" var="pv">
-                    <th>${myTag.weekNo(offset: j+1)}</th>            
+                    <th id="pv_center">${myTag.weekNo(offset: j+1)}</th>            
                 </g:each>
             </tr>
+            
         </thead>
         <tbody>
             <g:each in="${offerHeader.offerDetails}" status="i" var="od">
                 <tr>
-                    <td>${od?.dimension}</td>
-                    <td>${od?.lengthDescr}</td>
-                    <td>${od?.volumeOffered}</td>
-                    <td>${od?.kd}</td>
-                    <td>${od?.grade}</td>
+                    
+                    <td id="is_center">${od?.dimension}</td>
+                    <td id="is_center">${od?.lengthDescr}</td>
+                    <td id="is_center">${od?.kd}</td>
+                    <td id="is_center">${od?.grade}</td>
+                        <td id="is_center"><g:if test="${od?.priceFSC > 0.1}"><div id="cert_img">X</div></g:if></td>
+                        <td id="is_center"><g:if test="${od?.pricePEFC > 0.1}"><div id="cert_img">X</div></g:if></td>
+                        <td id="is_center"><g:if test="${od?.priceUC > 0.1}"><div id="cert_img">X</div></g:if></td>
+                        <td id="is_center"><g:if test="${od?.priceCW > 0.1}"><div id="cert_img">X</div></g:if></td>
+                    <td id="is_center">${od?.volumeOffered}</td>
 
+            
+<!--
                     <g:if test="${imageBytes!= null}">
                         <td><g:if test="${od?.priceFSC > 0.1}"><rendering:inlinePng bytes="${imageBytes}" /></g:if></td>
                         <td><g:if test="${od?.pricePEFC > 0.1}"><rendering:inlinePng bytes="${imageBytes}" /></g:if></td>
@@ -65,9 +74,11 @@
                         <td><g:if test="${od?.priceUC > 0.1}"><asset:image src="checkOut16x16.png" width="16" height="16"/></g:if></td>
                         <td><g:if test="${od?.priceCW > 0.1}"><asset:image src="checkOut16x16.png" width="16" height="16"/></g:if></td>
                     </g:else>
+-->
                     <g:each in="${prodBuffer.plannedVolumes}" status="j" var="pv">
-                        <td>${pv.volume}</td>
+                        <td id="pv_center">${pv.volume}</td>
                     </g:each>
+                    
                 </tr>
             </g:each>
         </tbody>

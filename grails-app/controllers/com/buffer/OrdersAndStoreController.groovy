@@ -27,9 +27,9 @@ class OrdersAndStoreController {
         // Update woodtrading status with new week and correct volumelist on weekchange
         int id = 1
         WtStatus wts = WtStatus.get(id)?:new WtStatus(id:1).save(failOnError:true)
-////        def WtStatus wts = WtStatus.findOrSaveById( id )
+        ////        def WtStatus wts = WtStatus.findOrSaveById( id )
         prodBufferService.checkWeekStatus()
-// prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
+        // prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
         def List<String> millList = getMills()
         def List<ProdBuffer> pbl = getBufferList()
         def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
@@ -215,35 +215,22 @@ class OrdersAndStoreController {
         }
     }
     
-    def handleCertprices(ProdBuffer pb, OfferDetail ofd) {
+    def int checkCertPrices(ProdBuffer pb) {
         int count=0
-        String cert
-        BigDecimal price
         if (pb.priceFSC?pb.priceFSC:0 > 0) {
             count = count + 1
-            price = pb.priceFSC
-            cert = 'FSC'
         }
         if (pb.pricePEFC?pb.pricePEFC:0 > 0) {
             count = count + 1
-            price = pb.pricePEFC
-            cert = 'PEFC'
         }
         if (pb.priceUC?pb.priceUC:0 > 0) {
             count = count + 1
-            price = pb.priceUC
-            cert = 'UC'
         }
         if (pb.priceCW?pb.priceCW:0 > 0) {
             count = count + 1
-            price = pb.priceCW
-            cert = 'CW'
         }
         
-        if (count == 1){            // Bara ett cert kan väljas
-            ofd.endPrice = price
-            ofd.choosedCert = cert
-        }
+        return count
     }
     
     def createOfferDetail(OfferHeader ofh, int id, String offerType) {
@@ -291,10 +278,9 @@ class OrdersAndStoreController {
             cert = 'CW'
         }
         
-        if (count == 1){
-            ofd.endPrice = price
-            ofd.choosedCert = cert
-        }
+        ofd.endPrice = price
+        ofd.choosedCert = cert
+        ofd.markup = ofd.endPrice * 0.01 * ofh.agentFee
         ofd.dimension = pb.dimension
         ofd.weekStart = pb.weekStart
         ofd.millOfferID = id
@@ -324,7 +310,11 @@ class OrdersAndStoreController {
                     return null
                 }
                 mill = nextMill
-                  
+                if (checkCertPrices(pb) == 0) {
+                    flash.message = "No prices are set! Can not create offer!" 
+                    return null            
+                }
+                     
                 //createOfferFromBuffer(value)
             }
         }

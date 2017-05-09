@@ -111,10 +111,12 @@ class StocknoteController {
     
     def createPDF() {
         def file = assetResourceLocator.findAssetForURI( 'Checkout16x16.png' )
+        assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes
         def OfferHeader offerHeader = OfferHeader.get(params.id)
         def millId = offerHeader.offerDetails.millOfferID
         def ProdBuffer prodBuffer = ProdBuffer.get(millId)
         println(">>> Offerheader: "+offerHeader.sawMill)
-        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: file.getByteArray(), prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
+//        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
     }
 }

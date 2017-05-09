@@ -5,7 +5,7 @@
         <td>
             <fieldset>
                 <legend>Product specificationes</legend>
-                Species:  <g:select name="species" from="${offerDetail?.constrainedProperties.species.inList}" value="${offerDetail?.species}"/>
+                Wood:  <g:select name="species" from="${offerDetail?.constrainedProperties.species.inList}" value="${offerDetail?.species}"/>
                 Dimension:  <g:field class="elements" type="text" name="dimension" required="y" value="${offerDetail?.dimension}" size="60"/>
                 Length:     <g:field class="elements" type="text" name="lengthDescr"  required="Y" value="${offerDetail?.lengthDescr}" size="30"/>
                 Grade:  <g:select name="grade" from="${offerDetail?.constrainedProperties.grade.inList}" value="${offerDetail?.grade}"/>
@@ -15,21 +15,31 @@
     </tr>
 </table>
 <table>
+        <colgroup>
+            <col width="5%"/>
+            <col width="20%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="40%"/>
+        </colgroup>
     <tr>
-        <td>
             <fieldset>
                 <legend>Prices</legend>
-                markup <g:field class="elements" type="number decimal" name="markup"  value="${fieldValue(bean: offerDetail, field: 'markup')}" style="width: 6em"/>
-                <g:select name="availableCert" from="${offerDetail.availableCert}" value="${offerDetail.choosedCert}" />    
-                
-                priceFSC: ${offerDetail.priceFSC}
-                priceUC: ${offerDetail.priceUC}
-                priceCW: ${offerDetail.priceCW}
-                pricePEFC: ${offerDetail.pricePEFC}
-                endPrice: ${offerDetail.endPrice}
-
             </fieldset>
-        </td>
+        <td></td>
+        <td> markup <g:field class="elements" type="number decimal" name="markup"  value="${fieldValue(bean: offerDetail, field: 'markup')}" style="width: 6em"/>
+                <g:select name="availableCert" from="${offerDetail.availableCert}" value="${offerDetail.choosedCert}" />    
+        </td>        
+        <td> FSC: ${offerDetail.priceFSC}</td>
+        <td> UC: ${offerDetail.priceUC}</td>
+        <td> CW: ${offerDetail.priceCW}</td>
+        <td> PEFC: ${offerDetail.pricePEFC}</td>
+        <td> EndPrice: ${offerDetail.endPrice}</td>
+
+
     </tr>
 </table>
 <fieldset class="form">

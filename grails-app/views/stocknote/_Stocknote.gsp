@@ -36,6 +36,21 @@
             div.header_detail {
                 font-size:  1.5em;
                 font-weight: bold;
+                margin-left: 24em;
+            }
+            #is_center {
+                background-color: #dddddd;
+                text-align: center; 
+            }
+            #pv_center {
+                background-color: #eeeeee;
+                text-align: center; 
+            }
+            #is_header1 {
+              background-color: #cccccc;  
+            }
+            #pv_header1 {
+              background-color: #dddddd;  
             }
         </style>    
     </head>
@@ -43,7 +58,7 @@
         <div id="report-Stocknote" class="content scaffold-show" role="main">
             <table style="width:75%">
                 <tr>
-                <td class="StocknoteTitle">Stocknote</td>
+                <td class="StocknoteTitle">In Stock and planned production</td>
                 <td class="StocknoteSpec">    ${this.offerHeader.sawMill}</td>
                 <td class="StocknoteSpec">    ${this.offerHeader.species}</td>
                 </tr>

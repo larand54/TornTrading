@@ -82,10 +82,10 @@ class BootStrap {
                 it.clear()
             }
 
-            assert User.count() == 12
+/*            assert User.count() == 12
             assert Role.count() == 4
             assert UserRole.count() == 12
-
+*/
         }
 	if (Environment.current == Environment.PRODUCTION) {
             Locale.setDefault( new Locale("en", "GB"));

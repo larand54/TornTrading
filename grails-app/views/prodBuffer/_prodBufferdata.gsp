@@ -46,5 +46,45 @@
             </fieldset> -->
         </td>
     </tr>    
-    </tr>
+</tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <fieldset>
+                <legend>Planned production</legend>
+                <table>
+                    <thead>
+                    <th>${myTag.weekNo(offset: 1)}</th>
+                    <th>${myTag.weekNo(offset: 2)}</th>
+                    <th>${myTag.weekNo(offset: 3)}</th>
+                    <th>${myTag.weekNo(offset: 4)}</th>
+                    <th>${myTag.weekNo(offset: 5)}</th>
+                    <th>${myTag.weekNo(offset: 6)}</th>
+                    <th>${myTag.weekNo(offset: 7)}</th>
+                    <th>${myTag.weekNo(offset: 8)}</th>
+                    <th>${myTag.weekNo(offset: 9)}</th>
+                    <th>${myTag.weekNo(offset:10)}</th>
+                    <th>${myTag.weekNo(offset:11)}</th>
+                    <th>${myTag.weekNo(offset:12)}</th>
+                    </thead>
+                    <tbody>
+                        <tr> 
+                            <g:if test="${motherview=='create'}">
+                                <g:each status="i" in="${(0..11)}" var="j">
+                                    <td><g:field class="plannedVolume" type="number decimal" name="vol${i+1}" required="y" value="0.0" size="4"/></td>
+                                </g:each>
+                            </g:if>
+                            <g:else>
+                                <g:each in="${plannedVolumes}" status="i" var="pv">
+                                    <td><g:field class="plannedVolume" type="number decimal" name="vol${i+1}" required="y" value="${pv.volume}" size="4"/></td>
+                                </g:each>
+                            </g:else>
+
+                        </tr>
+                    </tbody>    
+            </fieldset>
+        </td>
+    </tr>    
+</tr>
 </table>

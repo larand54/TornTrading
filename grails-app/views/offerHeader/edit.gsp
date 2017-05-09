@@ -43,7 +43,7 @@
                 <table style="width:100%">
                     <thead>
                         <tr>
-                            <g:sortableColumn property="${offerHeader.offerDetails.species}" title='Species' />
+                            <g:sortableColumn property="${offerHeader.offerDetails.species}" title='Wood' />
                             <g:sortableColumn property="${offerHeader.offerDetails.dimension}" title='Dimension' />
                             <g:sortableColumn property="${offerHeader.offerDetails.lengthDescr}" title='Length' />
                             <g:sortableColumn property="${offerHeader.offerDetails.volumeOffered}" title='Volume' />

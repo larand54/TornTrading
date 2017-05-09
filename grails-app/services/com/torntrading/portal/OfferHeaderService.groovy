@@ -36,4 +36,16 @@ class OfferHeaderService {
             prodBufferService.rejectOffer(pb, od.volumeOffered)  
         }
     }
+    
+    def setEndPrices(OfferHeader aOH) {
+        for (od in aOH.offerDetails) {
+            if (od.endPrice > 0.01) {
+                println("OfferHeaderService - endPrice before: "+od.endPrice)
+                od.markup = od.endPrice * 0.01 * aOH.agentFee
+                od.endPrice = od.endPrice + od.markup
+                println("OfferHeaderService - endPrice after: "+od.endPrice)
+                od.save(failOnError:true)
+            }
+        }
+    }
 }

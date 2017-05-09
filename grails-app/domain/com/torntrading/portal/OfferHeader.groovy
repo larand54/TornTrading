@@ -15,7 +15,8 @@ class OfferHeader {
     String 		status
     String              offerType
     String              species         // Används av stocknota
-    BigDecimal          freight         // Fraktkostnad   
+    BigDecimal          freight         // Fraktkostnad
+    Integer             agentFee  = 3      //%
     Date		dateCreated
     int                 createdBy 
 
@@ -39,6 +40,7 @@ class OfferHeader {
         contactPerson                              sqltype: 'char', length: 50
         contactPhone     column: "contactPhone",   sqltype: 'char', length: 25
         contactEmail     column: "contactEmail",   sqltype: "char", length: 100
+        agentFee         column: "agentFee",       sqltype: "int"
 
     }
     static constraints = {

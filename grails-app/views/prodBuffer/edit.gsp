@@ -108,67 +108,10 @@
                 <g:hiddenField name="version" value="${this.prodBuffer?.version}" />
                 <g:hiddenField name="pid" value="${this.prodBuffer?.id}" />
                 <fieldset class="form">
-                    <g:render template="prodBufferdata" model="[prodBuffer:prodBuffer]"/>
+                    <g:render template="prodBufferdata" model="[prodBuffer:prodBuffer, motherview:'edit']"/>
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
-                </fieldset>
-            </g:form>
-            <g:form resource="${this.prodBuffer}" method="DELETE">
-                <fieldset class="buttons">
-                    <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-<span id="delete_prod" data-id="${this.prodBuffer?.id}">Delete</span>
-                </fieldset>
-            </g:form>
-
-<div id="resultdiv"></div>
-
-<g:form name="myForm">
-
-    <g:hiddenField name="id" value="${this.prodBuffer?.id}" />
-
-    <div class="btn-group" role="group">
-        <button type="button" name="myUpdate" id="myUpdate" value="Update" class="itemAction btn btn-primary">Update</button>
-        <button type="button" name="myDelete" id="myDelete" value="Delete" class="itemAction btn btn-danger">Delete</button>
-    </div>
-
-</g:form>
-            <g:form resource="${this.prodBuffer}" method="PUT">
-                <table>
-                    <tr>
-                        <td>
-                            <fieldset>
-                                <legend>Planned production</legend>
-                                <table>
-                                    <thead>
-                                    <th>${myTag.weekNo(offset: 1)}</th>
-                                    <th>${myTag.weekNo(offset: 2)}</th>
-                                    <th>${myTag.weekNo(offset: 3)}</th>
-                                    <th>${myTag.weekNo(offset: 4)}</th>
-                                    <th>${myTag.weekNo(offset: 5)}</th>
-                                    <th>${myTag.weekNo(offset: 6)}</th>
-                                    <th>${myTag.weekNo(offset: 7)}</th>
-                                    <th>${myTag.weekNo(offset: 8)}</th>
-                                    <th>${myTag.weekNo(offset: 9)}</th>
-                                    <th>${myTag.weekNo(offset:10)}</th>
-                                    <th>${myTag.weekNo(offset:11)}</th>
-                                    <th>${myTag.weekNo(offset:12)}</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <g:each in="${plannedVolumes}" status="i" var="pv">
-                                                <td><g:field class="plannedVolume" type="number decimal" name="vol${i+1}" required="y" value="${pv.volume}" size="4"/></td>
-                                               <!-- <td><g:hiddenField class="elements" type="text" name="weekStart" value="${myTag.yearWeekNo(offset: i)}" size="4"/></td>-->
-                                            </g:each>
-                                        </tr>
-                                    </tbody>    
-                            </fieldset>
-                        </td>
-                    </tr>    
-                    </tr>
-                </table>
-                <fieldset class="buttons">
-                    <input class="addVolume" type="button" value="${message(code: 'default.button.update.label', default: 'AddVolume')}" />
                 </fieldset>
             </g:form>
         </div>

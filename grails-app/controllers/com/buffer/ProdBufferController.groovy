@@ -48,6 +48,7 @@ class ProdBufferController {
         }
 
         prodBuffer.save flush:true
+        addVolumes(prodBuffer)
 
         request.withFormat {
             form multipartForm {
@@ -92,6 +93,8 @@ class ProdBufferController {
             }
         }
 
+        addVolumes(prodBuffer)
+        
         println('UPDATE SAVE: '+params.id)
         prodBuffer.save flush:true
 
@@ -105,65 +108,58 @@ class ProdBufferController {
         }
     }
 
-    @Transactional
-    def addVolume(ProdBuffer prodBuffer) {
-        prodBuffer = ProdBuffer.get(params.pid)
+    def addVolumes(ProdBuffer prodBuffer) {
         def pvl = prodBuffer.plannedVolumes
-        
-//        def PlannedVolume p = prodBuffer.find{plannedVolumes.week==5}
-//        println("&&& Volume: "+p.volume)
-        def Double totalVolChange = params.Vol1.toDouble() + params.Vol2.toDouble() + params.Vol3.toDouble() + 
-                    params.Vol4.toDouble() + params.Vol5.toDouble() + params.Vol6.toDouble() + params.Vol7.toDouble() +
-                    params.Vol8.toDouble() + params.Vol9.toDouble() + params.Vol10.toDouble() + params.Vol11.toDouble() + params.Vol12.toDouble()
+        def Double totalVolChange = params.vol1.toDouble() + params.vol2.toDouble() + params.vol3.toDouble() + 
+                    params.vol4.toDouble() + params.vol5.toDouble() + params.vol6.toDouble() + params.vol7.toDouble() +
+                    params.vol8.toDouble() + params.vol9.toDouble() + params.vol10.toDouble() + params.vol11.toDouble() + params.vol12.toDouble()
                     
         for (pv in pvl) {
             totalVolChange = totalVolChange - pv.volume 
         }
         
-        pvl[0].volume = params.Vol1.toDouble()
-        println("XXXX Volume: "+pvl[0].volume)
+        pvl[0].volume = params.vol1.toDouble()
+        println("XXXX volume: "+pvl[0].volume)
         pvl[0].save(failOnError:true)
 
-        pvl[1].volume = params.Vol2.toDouble()
-        println("XXXX Volume: "+pvl[1].volume)
+        pvl[1].volume = params.vol2.toDouble()
+        println("XXXX volume: "+pvl[1].volume)
         pvl[1].save(failOnError:true)
 
-        pvl[2].volume = params.Vol3.toDouble()
+        pvl[2].volume = params.vol3.toDouble()
         pvl[2].save(failOnError:true)
 
-        pvl[3].volume = params.Vol4.toDouble()
+        pvl[3].volume = params.vol4.toDouble()
         pvl[3].save(failOnError:true)
 
-        pvl[4].volume = params.Vol5.toDouble()
+        pvl[4].volume = params.vol5.toDouble()
         pvl[4].save(failOnError:true)
 
-        pvl[5].volume = params.Vol6.toDouble()
+        pvl[5].volume = params.vol6.toDouble()
         pvl[5].save(failOnError:true)
 
-        pvl[6].volume = params.Vol7.toDouble()
+        pvl[6].volume = params.vol7.toDouble()
         pvl[6].save(failOnError:true)
 
-        pvl[7].volume = params.Vol8.toDouble()
+        pvl[7].volume = params.vol8.toDouble()
         pvl[7].save(failOnError:true)
 
-        pvl[8].volume = params.Vol9.toDouble()
+        pvl[8].volume = params.vol9.toDouble()
         pvl[8].save(failOnError:true)
 
-        pvl[9].volume = params.Vol10.toDouble()
+        pvl[9].volume = params.vol10.toDouble()
         pvl[9].save(failOnError:true)
 
-        pvl[10].volume = params.Vol11.toDouble()
+        pvl[10].volume = params.vol11.toDouble()
         pvl[10].save(failOnError:true)
 
-        pvl[11].volume = params.Vol12.toDouble()
+        pvl[11].volume = params.vol12.toDouble()
         pvl[11].save(failOnError:true)
 
         println(">>>> VolumeList: "+pvl)
-        prodBufferService.addPlannedVolume(prodBuffer, totalVolChange)
-        flash.message = 'Volumes updated' 
-        notFound()
-        return
+        prodBufferService.addPlannedVolume(prodBuffer, totalVolChange)        
     }
+    
     
     @Transactional
     def delete(ProdBuffer prodBuffer) {
