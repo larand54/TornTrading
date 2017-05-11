@@ -25,6 +25,7 @@ class OfferHeader {
         createdBy = getUserID()
         status = 'New'
         if (offerType == null) {offerType = 'o'}
+        termsOfDelivery = 'CIP'
     }
     static mapping	= {
         offerDetails sort: "sawMill"
@@ -64,7 +65,7 @@ class OfferHeader {
                 city()
                 status(inList: ["New", "Active", "Sold", "Rejected"])
 		dateCreated()
-                termsOfDelivery(inList: ['Fritt leverantören', 'Fritt kunden'])
+                termsOfDelivery(inList: ['CIP', 'DAP', 'CPT', 'EXW'])
 
                 sawMill         nullable:true
                 termsOfDelivery nullable:true

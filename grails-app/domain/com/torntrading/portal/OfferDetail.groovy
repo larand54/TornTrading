@@ -37,7 +37,7 @@ class OfferDetail {
         if (certList.size() == 1) {
             choosedCert = certList[0]
         }
-            endPrice = getCertPrice(choosedCert)
+            endPrice = getCertPrice(choosedCert) * volumeOffered
             println("Cert: "+certList[0]+" certPris: "+endPrice)
             markup = offerHeader.agentFee * 0.01 * endPrice
             endPrice = endPrice + markup
@@ -55,7 +55,7 @@ class OfferDetail {
         else if (choosedCert == 'UC')   endPrice = priceUC
         else if (choosedCert == 'CW')   endPrice = priceCW
         println("Choose cert UPDATE: "+choosedCert)
-        
+        endPrice =  endPrice * volumeOffered 
         markup = endPrice * offerHeader.agentFee * 0.01
         endPrice = endPrice + markup
     }

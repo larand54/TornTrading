@@ -87,7 +87,7 @@ class OfferDetailController {
         
         def Double volumeChange = offerDetailService.getVolumeChange(offerDetail)
         if (Math.abs(volumeChange) > 0.0) {
-            if (offerHeaderService.allOfferDetailsVolumeOK(offerDetail.offerHeader)) {
+            if (offerHeaderService.okToAddVolume(pb, volumeChange)) {
                 println("Volume OK! " + volumeChange)
                 if (offerDetail.offerHeader.status == 'Active') {
                     prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)

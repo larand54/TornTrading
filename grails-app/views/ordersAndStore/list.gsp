@@ -19,6 +19,9 @@
             .offers {
             color: #ff0000
             }
+            #deletep{
+                background-image: url(../images/skin/database_delete.png);
+            }
             </</style>
         <script type="text/javascript">
             function availableProducts(){
@@ -68,7 +71,6 @@
                         <g:else>
                             <g:select name="sawMill" from="${millList}" value="All" onchange="availableProducts(sawMill)" optionValue="All" optionKey="All"/>
                         </g:else>
-
                     </div>
                     <g:render template="AvailableProductData" model="[prodBuffer:prodBuffer]"/>
                     <div class="pagination">

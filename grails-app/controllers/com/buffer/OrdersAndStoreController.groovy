@@ -71,7 +71,6 @@ class OrdersAndStoreController {
         def us = user.getUserSettings()
         //        def mill = (us != null) ? us.supplierName :''
         def roles = springSecurityService.getPrincipal().getAuthorities()
-        System.out.println("Unathorized: "+roles) 
         for(def role in roles){ if((role.getAuthority() == "ROLE_ADMIN") || (role.getAuthority() == "ROLE_SALES")){
                 //SpringSecurityUtils.ifAnyGranted( ROLE_ADMIN, ROLE_SALES) {     
                 def List<OfferDetail> offerDetails = getOfferList()
@@ -166,7 +165,7 @@ class OrdersAndStoreController {
             println("Products: "+products)
             for( mill in params.list('sawMill')) {
                 println("mill: "+mill)
-                def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'Fritt kunden', volumeUnit: 'AM3', currency: 'SEK', sawMill:mill).save(failOnError: true)
+                def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'CIP', volumeUnit: 'AM3', currency: 'SEK', sawMill:mill).save(failOnError: true)
                 ofh.offerType='s'
                 ofh.species=params.species
                 for (pb in products) {
@@ -294,6 +293,8 @@ class OrdersAndStoreController {
         def ProdBuffer pb
         def String mill = null
         def String nextMill=null
+        def String species=null
+        def String nextSpecies=null
         def Integer millId=null
         def Integer nextMillId=null
         def int error = 0
@@ -303,12 +304,21 @@ class OrdersAndStoreController {
                 int clientNo
                 pb = ProdBuffer.get(id)
                 nextMill = pb.sawMill
+                nextSpecies = pb.species
+                if (( species != null) && (nextSpecies != species)) {
+                    flash.message='Could not create offer due to Mixed wood!'
+                    error = id
+                    return null
+                }
+
+                
                 System.out.println("Verk: " + nextMill)
                 if (( mill != null) && (nextMill != mill)) {
                     flash.message='Could not create offer due to Mixed sawmills!'
                     error = id
                     return null
                 }
+                species = nextSpecies
                 mill = nextMill
                 if (checkCertPrices(pb) == 0) {
                     flash.message = "No prices are set! Can not create offer!" 
@@ -322,7 +332,63 @@ class OrdersAndStoreController {
         def Supplier supplier = Supplier.findBySearchName(mill)
         def int clientNo = supplier.clientNo
         System.out.println(">>> SawMill: "+ supplier.searchName+" ClientNo: "+ supplier.clientNo)
-        def OfferHeader ofh = new OfferHeader(sawMill: mill, termsOfDelivery: 'Fritt kunden', volumeUnit: pb.volumeUnit, currency: pb.currency).save(failOnError: true)
+        def OfferHeader ofh = new OfferHeader(sawMill: mill, species: pb.species, termsOfDelivery: 'CIP', volumeUnit: pb.volumeUnit, currency: pb.currency).save(failOnError: true)
         return ofh
+    }
+    
+    def deleteProducts() {
+        int count=0
+        for( n in params.list('toOffer')) {
+            if (n.isInteger()) {
+                int value = n as Integer
+                deleteProductWithOffers(ProdBuffer.get(params.prodID))
+                count = count +1
+            }
+        }
+            redirect action:"list", method:"GET"
+                }        
+    
+    def deleteProduct() {
+       deleteProductWithOffers(ProdBuffer.get(params.prodID)) 
+       redirect action:"list", method:"GET"
+    }    
+    
+    def deleteProductWithOffers(ProdBuffer aPB) {
+       println("Delete product: "+params.prodID) 
+       // Check connected offers
+       def offers = OfferDetail.findAllByMillOfferID(params.prodID)
+       // if any connected offer having status not "new" - abandon this delete
+       def statusOk = true
+       for (od in offers) {
+           def status = od.offerHeader.status
+           if (status != 'New') {
+               statusOk = false
+               flash.message= "Deletion abanded due to connected offers"
+               break
+           }
+       }
+       if (statusOk) {
+            // delete all connected offers
+            // First create a list of offer headers
+            def  ohs = []
+            for (od in offers) {
+                ohs.add(od.offerHeader)
+            }
+            // remove duplicates
+            ohs = ohs.unique()
+            // Now, just delete the offerdetails
+            for (od in offers) {
+                od.delete flush:true
+            }
+            // delete product
+            aPB.delete flush:true
+           
+            // Now, delete all offerheaders that are empty
+            for (oh in ohs) {
+                if (oh.offerDetails.isEmpty()) {
+                    oh.delete flush: true
+                }
+            }
+       } 
     }
 }

@@ -17,12 +17,18 @@ class OfferHeaderService {
         return result
     }
     
+    def boolean okToAddVolume(ProdBuffer aPB, Double aVolChange) {
+        println(">>> Available: "+aPB.volumeAvailable+"  Offered: "+aVolChange)
+        return aPB.volumeAvailable >= aVolChange        
+    }
+    
     def addOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
             prodBufferService.addOfferVolume(pb, od.volumeOffered, od.weekStart as Integer)  
         }
     }
+    
     def soldOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)

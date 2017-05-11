@@ -49,13 +49,6 @@
             <td>
                 Volume : <g:field class="elements" type="number decimal" name="volumeOffered" min="1" max="10000" required="Y" value="${fieldValue(bean: offerDetail, field: 'volumeOffered')}" style="width: 6em"/>
             </td>
-        <td>
-            <fieldset>
-                <legend>Delivery period, week</legend>
-                From: <g:field class="elements" type="text" name="weekStart" value="${offerDetail?.weekStart}" size="4"/>
-                To: <g:field class="elements" type="text" name="weekEnd"  value="${offerDetail?.weekEnd}" size="4"/>
-            </fieldset>
-        </td>
 
         </tr>
     </table>

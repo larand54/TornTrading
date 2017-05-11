@@ -1,7 +1,28 @@
 <div id="divToUpdate">
     <table>
+        <colgroup>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="1%"/>
+            <col width="83%"/>
+        </colgroup>
         <thead>
-            <tr><g:sortableColumn property='toOffer' title='x' />
+            <tr><g:sortableColumn property='delete' title='Del' />
+                <g:sortableColumn property='toOffer' title='Offer' />
                 <g:sortableColumn property="id" title='Id' />
                 <g:sortableColumn property="sawMill" title='Mill' />
                 <g:sortableColumn property="species" title='Species' />
@@ -36,6 +57,12 @@
 
             <g:each in="${prodBuffer}" status="i" var="pb"> 
                 <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
+<td>
+    <g:link action="deleteProduct" controller="ordersAndStore" params="[prodID:pb.id]"
+        onclick="return confirm('Are you sure?')">
+        X
+    </g:link>
+</td>
                     <td><g:checkBox name="toOffer" value="${pb.id}" checked="false"  /></td>
                     <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
                     <td>${pb.sawMill}</td>
