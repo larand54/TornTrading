@@ -13,10 +13,14 @@
 
     </li>
 -->    <li >
+    <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
         <a href="/offerHeader/index">Offers</a>
+    </sec:ifAnyGranted>
     </li>
     <li>
+    <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
         <a href="/stocknote/index">Stock notes</a>
+    </sec:ifAnyGranted>
     </li>
     <li>
         <a href="/ordersAndStore/list">Available volumes</a>

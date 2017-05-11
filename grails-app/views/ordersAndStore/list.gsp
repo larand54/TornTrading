@@ -52,7 +52,9 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><a class="create" href="${createLink(uri: '/ordersAndStore/add_prodBuffer')}"><g:message code="prodBuffer.create.label"/></a></li>
-                <li><a class="create" href="${createLink(uri: '/ordersAndStore/createStocknotes')}"><g:message code="stockNote.create.label"/></a></li>
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                    <li><a class="create" href="${createLink(uri: '/ordersAndStore/createStocknotes')}"><g:message code="stockNote.create.label"/></a></li>
+                </sec:ifAnyGranted>    
             </ul>
         </div>
         <g:set var="entityName" value='Product' />
@@ -77,9 +79,11 @@
                         <g:paginate total="${prodBufferCount ?: 0}" /> 
                     </div>
 
-                    <fieldset class="buttons">
-                        <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
-                    </fieldset>
+                    <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                        <fieldset class="buttons">
+                            <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
+                        </fieldset>
+                    </sec:ifAnyGranted>    
                 </g:form>
             </div>
         </div>

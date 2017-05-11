@@ -21,8 +21,11 @@
             <col width="83%"/>
         </colgroup>
         <thead>
-            <tr><g:sortableColumn property='delete' title='Del' />
-                <g:sortableColumn property='toOffer' title='Offer' />
+            <tr>
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                    <g:sortableColumn property='delete' title='Del' />
+                    <g:sortableColumn property='toOffer' title='Offer' />
+                </sec:ifAnyGranted>    
                 <g:sortableColumn property="id" title='Id' />
                 <g:sortableColumn property="sawMill" title='Mill' />
                 <g:sortableColumn property="species" title='Species' />
@@ -57,13 +60,15 @@
 
             <g:each in="${prodBuffer}" status="i" var="pb"> 
                 <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
-<td>
-    <g:link action="deleteProduct" controller="ordersAndStore" params="[prodID:pb.id]"
-        onclick="return confirm('Are you sure?')">
-        X
-    </g:link>
-</td>
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                    <td>
+                        <g:link action="deleteProduct" controller="ordersAndStore" params="[prodID:pb.id]"
+                            onclick="return confirm('Are you sure?')">
+                        X
+                        </g:link>
+                    </td>
                     <td><g:checkBox name="toOffer" value="${pb.id}" checked="false"  /></td>
+                </sec:ifAnyGranted>    
                     <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
                     <td>${pb.sawMill}</td>
                     <td>${pb.species}</td>
