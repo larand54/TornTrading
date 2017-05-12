@@ -66,6 +66,7 @@ class OrdersAndStoreController {
         System.out.println("Authorized: "+roles)             
         }     
          */
+        if (params.sort) redirect controller: "ordersAndStore", action: "list"
         def User user
         user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
@@ -110,8 +111,9 @@ class OrdersAndStoreController {
         System.out.println(" getOfferList>>>" + params)
         def int id = params.id.toInteger()
         System.out.println(" getOfferList>>>ID: " + id)
-        def ol = OfferDetail.list()
-        return ol.findAll({it.millOfferID==id})
+        return OfferDetail.createCriteria().list( params ) {eq ( "millOfferID", id ) && eq ( "offerType", 'o' )}
+//        def ol = OfferDetail.list()
+//        return ol.findAll({it.millOfferID==id})
     }
     def List<ProdBuffer> getBufferList() {
         System.out.println(" GetBufferList>>>" + params)
@@ -158,16 +160,23 @@ class OrdersAndStoreController {
     
     @Transactional
     def createStocknote() {
-        println("XXXX CreateStocknotes-- XXXX")
-        int count=0
+        println("XXXX CreateStocknotes-- XXXX "+" params.species:"+params.species)
+        println("YYYY Params: "+params)
         if (params.sawMill != null) {
-            def List<ProdBuffer> products = ProdBuffer.createCriteria().list( params ) { eq ( "species", "${params.species}" ) &&  eq ("status", "active")}//findAll(status=='Active',species==params('species'))
-            println("Products: "+products)
-            for( mill in params.list('sawMill')) {
+            int count
+            int total=0
+            int mc=0
+            for (mill in params.list("sawMill")) {
+                def String species = params.list("species")[mc]
+                println("Mill: "+mill+" Species: "+species)
+        
+                def List<ProdBuffer> products = ProdBuffer.createCriteria().list( params ) {eq ( "sawMill", "${mill}" ) && eq ( "species", "${species}" ) &&  eq ("status", "Active")}//findAll(status=='Active',species==params('species'))
+                println("Products: "+products)
                 println("mill: "+mill)
                 def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'CIP', volumeUnit: 'AM3', currency: 'SEK', sawMill:mill).save(failOnError: true)
                 ofh.offerType='s'
-                ofh.species=params.species
+                ofh.species=species
+                count = 0
                 for (pb in products) {
                     println("Sawmill: "+pb.sawMill+" mill: "+mill)
                     if (pb.sawMill==mill && pb.volumeAvailable > 0.1) {
@@ -175,19 +184,22 @@ class OrdersAndStoreController {
                         count = count +1
                     }
                 }
+                mc = mc + 1
+                total = total + count
             }
-            if (count <= 0) {
+            if (total <= 0) {
                 transactionStatus.setRollbackOnly()
                 flash.message = "No product found within criteria so no Stocknote created" 
-                redirect action:"list", method:"GET"
+                println("OrderAndStore, Create Stocknote, No product found!")
+            } else {
+                def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
+                flash.message = "${total} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
+                println("OrderAndStore, Create Stocknote, OK")
             }
-        
-
-            def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
-            flash.message = "${count} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
             redirect action:"list", method:"GET"
         } else {
             //flash.message = "Could not create offer due to systemerror" 
+            println("OrderAndStore, Create Stocknote, System error!")
             redirect action:"list", method:"GET"
             
         }
@@ -345,29 +357,29 @@ class OrdersAndStoreController {
                 count = count +1
             }
         }
-            redirect action:"list", method:"GET"
-                }        
+        redirect action:"list", method:"GET"
+    }        
     
     def deleteProduct() {
-       deleteProductWithOffers(ProdBuffer.get(params.prodID)) 
-       redirect action:"list", method:"GET"
+        deleteProductWithOffers(ProdBuffer.get(params.prodID)) 
+        redirect action:"list", method:"GET"
     }    
     
     def deleteProductWithOffers(ProdBuffer aPB) {
-       println("Delete product: "+params.prodID) 
-       // Check connected offers
-       def offers = OfferDetail.findAllByMillOfferID(params.prodID)
-       // if any connected offer having status not "new" - abandon this delete
-       def statusOk = true
-       for (od in offers) {
-           def status = od.offerHeader.status
-           if (status != 'New') {
-               statusOk = false
-               flash.message= "Deletion abanded due to connected offers"
-               break
-           }
-       }
-       if (statusOk) {
+        println("Delete product: "+params.prodID) 
+        // Check connected offers
+        def offers = OfferDetail.findAllByMillOfferID(params.prodID)
+        // if any connected offer having status not "new" - abandon this delete
+        def statusOk = true
+        for (od in offers) {
+            def status = od.offerHeader.status
+            if (status != 'New') {
+                statusOk = false
+                flash.message= "Deletion abanded due to connected offers"
+                break
+            }
+        }
+        if (statusOk) {
             // delete all connected offers
             // First create a list of offer headers
             def  ohs = []
@@ -389,6 +401,6 @@ class OrdersAndStoreController {
                     oh.delete flush: true
                 }
             }
-       } 
+        } 
     }
 }

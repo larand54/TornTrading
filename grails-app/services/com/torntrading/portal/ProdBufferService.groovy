@@ -157,7 +157,7 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         aPB.volumeOffered = aPB.volumeOffered + aVol
         aPB.volumeAvailable = aPB.volumeAvailable - aVol
         aPB.save(flush:true, failOnError:true)
-            if (aVol > 0) {
+        if (aVol > 0) {
             retrieveVolumeFromBuffer(aPB, aVol)
         } else if (aVol < -0.01) {
             restoreVolumeToBuffer(aPB, -aVol)

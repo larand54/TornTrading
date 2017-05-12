@@ -113,10 +113,14 @@ class StocknoteController {
         def file = assetResourceLocator.findAssetForURI( 'Checkout16x16.png' )
         assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes
         def OfferHeader offerHeader = OfferHeader.get(params.id)
-        def millId = offerHeader.offerDetails.millOfferID
-        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
-        println(">>> Offerheader: "+offerHeader.sawMill)
+        for (od in offerHeader.offerDetails) {
+            od.plannedVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes 
+        }
+        
+//        def millId = offerHeader.offerDetails.millOfferID
+//        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
+//        println(">>> Offerheader: "+offerHeader.sawMill)
 //        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
-        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
     }
 }

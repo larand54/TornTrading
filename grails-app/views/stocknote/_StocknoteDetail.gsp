@@ -40,8 +40,8 @@
                 <th id="is_center">Un Certified</th>
                 <th id="is_center">Ctrl Wood</th> 
                 <th id="is_center">Volume</th>
-                <g:each in="${prodBuffer.plannedVolumes}" status="j" var="pv">
-                    <th id="pv_center">${myTag.weekNo(offset: j+1)}</th>            
+                <g:each var="week" in="${(0..11)}">
+                    <th id="pv_center">${myTag.weekNo(offset: week+1)}</th>            
                 </g:each>
             </tr>
             
@@ -75,7 +75,8 @@
                         <td><g:if test="${od?.priceCW > 0.1}"><asset:image src="checkOut16x16.png" width="16" height="16"/></g:if></td>
                     </g:else>
 -->
-                    <g:each in="${prodBuffer.plannedVolumes}" status="j" var="pv">
+                    
+                    <g:each in="${od.plannedVolumes}" status="j" var="pv">
                         <td id="pv_center">${pv.volume}</td>
                     </g:each>
                     

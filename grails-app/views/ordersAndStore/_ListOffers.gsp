@@ -5,7 +5,7 @@
         <table style="width:100%">
             <thead>
                 <tr>
-                    <g:sortableColumn property="millOfferId" title='MOID' />
+                    <g:sortableColumn property="millOfferId" title='Prod' />
                     <g:sortableColumn property="species" title='Species' />
                     <g:sortableColumn property="dimension" title='Dimension' />
                     <g:sortableColumn property="lengthDescr" title='Length' />
@@ -18,8 +18,7 @@
                     <g:sortableColumn property="pricePEFC" title='PEFC' />
                     <g:sortableColumn property="priceUC" title='UC' />
                     <g:sortableColumn property="priceCW" title='CW' />
-                    <g:sortableColumn property="weekStart" title='Start' />
-                    <g:sortableColumn property="weekEnd" title='End' />
+                    <g:sortableColumn property="status" title='Status' />
                 </tr>
             </thead>
             <tbody>
@@ -38,8 +37,7 @@
                         <td>${od?.pricePEFC}</td>
                         <td>${od?.priceUC}</td>
                         <td>${od?.priceCW}</td>
-                        <td>${od?.weekStart}</td>
-                        <td>${od?.weekEnd}</td>
+                        <td>${od?.offerHeader.status}</td>
                     </tr>
                 </g:each>
             </tbody>

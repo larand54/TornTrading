@@ -4,6 +4,8 @@ class OfferDetail {
 
     def springSecurityService
     static belongsTo = [offerHeader: OfferHeader]
+    static hasMany = [plannedVolumes: PlannedVolume]
+    static transients = ['plannedVolumes']
     String              offerType            // ('o') - Offert, ('s') - Stocknota
     String              grade
     String              kd
@@ -46,7 +48,7 @@ class OfferDetail {
     }
     
     def beforeUpdate() {
-        oldVolume =  getPersistentValue('volumeOffered')
+//        oldVolume =  getPersistentValue('volumeOffered')
         def oldCert = getPersistentValue('choosedCert')
         def certList = getAvailableCert()
         if (certList.size() == 1)       choosedCert = certList[0]
@@ -58,6 +60,10 @@ class OfferDetail {
         endPrice =  endPrice * volumeOffered 
         markup = endPrice * offerHeader.agentFee * 0.01
         endPrice = endPrice + markup
+        oldVolume = volumeOffered
+    }
+    
+    def afterUpdate() {
     }
     
     static mapping	= {

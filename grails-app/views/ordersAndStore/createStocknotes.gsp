@@ -32,7 +32,7 @@
                         <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
                             <td><g:checkBox name="sawMill" value="${sm}" checked="false"  /></td>
                             <td>${sm}</td>
-                            <td>Species:  <g:select name="species" from="${['RedWood','WhiteWood']}"/> </td>
+                            <td>Wood:  <g:select name="species" from="${['Redwood','Whitewood']}"/> </td>
                         </tr>
                     </g:each>
                     </table>
