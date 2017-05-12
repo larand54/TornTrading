@@ -15,7 +15,7 @@
             <td>Products:</td><td id="sum_right">${offerHeader.offerDetails.sum{it.endPrice}}</td><td></td>
         </tr>
         <tr>
-            <td></td><td>Shipment:</td><td id="sum_right">${offerHeader.freight}</td><td></td>
+            <td></td><td>Shipment:</td><td id="sum_right">${offerHeader?.freight}</td><td></td>
         </tr>
         <tr><td></td><td></td><td></td><td></td></tr>
         <tr>

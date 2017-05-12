@@ -17,6 +17,14 @@ class OfferHeaderService {
         return result
     }
     
+    def Boolean volumeOkToSell(OfferHeader aOH) {
+         def result = true
+        for (od in aOH.offerDetails) {
+            result = result && (od.volumeOffered > 0.01)
+        }
+        return result
+    }
+    
     def boolean okToAddVolume(ProdBuffer aPB, Double aVolChange) {
         println(">>> Available: "+aPB.volumeAvailable+"  Offered: "+aVolChange)
         return aPB.volumeAvailable >= aVolChange        

@@ -125,7 +125,7 @@ class OfferHeaderController {
             offerHeaderService.setEndPrices(offerHeader)
         }
 
-        if (params.status == 'Sold' && oldStatus == 'Active' && volumeOk) {
+        if (params.status == 'Sold' && oldStatus == 'Active' && offerHeaderService.volumeOkToSell(offerHeader)) {
           offerHeaderService.soldOfferVolume(offerHeader)  
         } else if (params.status == 'Sold') {
             transactionStatus.setRollbackOnly()
@@ -190,6 +190,11 @@ class OfferHeaderController {
     def report() {
         println "Report params: "+params
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+        if (offerHeader.freight == null) {
+            flash.message = 'Shipment not entered!'
+            respond offerHeader.errors, view:'edit'
+            return
+        }
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
         renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader],   filename: "offertrapport-"+params.id+".pdf")

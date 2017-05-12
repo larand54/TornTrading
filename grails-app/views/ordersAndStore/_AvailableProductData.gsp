@@ -31,17 +31,17 @@
                 <g:sortableColumn property="species" title='Species' />
                 <g:sortableColumn property="dimension" title='Dimension' />
                 <g:sortableColumn property="length" title='Length' />
-                <g:sortableColumn property="volumeInStock" title='InStock' />
-                <g:sortableColumn property="volumeOnOrder" title='Sold' />
-                <g:sortableColumn property="volumeOffered" title='Offer' />
-                <g:sortableColumn property="volumeAvailable" title='Avail' />
-                <g:sortableColumn property="volumeUnit" title='Unit' />
                 <g:sortableColumn property="currency" title='Cur' />
                 <g:sortableColumn property="kd" title='KD' />
                 <g:sortableColumn property="priceFSC" title='FSC' />
                 <g:sortableColumn property="priceFSC" title='PEFC' />
                 <g:sortableColumn property="priceFSC" title='CW' />
                 <g:sortableColumn property="priceFSC" title='UC' />
+                <g:sortableColumn property="volumeInStock" title='InStock' />
+                <g:sortableColumn property="volumeOnOrder" title='Sold' />
+                <g:sortableColumn property="volumeOffered" title='Offer' />
+                <g:sortableColumn property="volumeAvailable" title='Avail' />
+                <g:sortableColumn property="volumeUnit" title='Unit' />
                 <g:sortableColumn property="availW01" title="${myTag.weekNo(offset: "1")}" />
                 <g:sortableColumn property="availW02" title="${myTag.weekNo(offset: "2")}" />
                 <g:sortableColumn property="availW03" title="${myTag.weekNo(offset: "3")}" />
@@ -74,17 +74,17 @@
                     <td>${pb.species}</td>
                     <td>${pb.dimension}</td>
                     <td>${pb.length}</td>
-                    <td>${pb.volumeInStock}</td>
-                    <td>${pb.volumeOnOrder}</td>
-                    <td><div id="${pb.id}" class="offers" >${pb.volumeOffered}</div></td>
-                    <td>${pb.volumeAvailable}</td>
-                    <td>${pb.volumeUnit}</td>
                     <td>${pb.currency}</td>
                     <td>${pb.kd}</td>
                     <td>${pb.priceFSC}</td>
                     <td>${pb.pricePEFC}</td>
                     <td>${pb.priceCW}</td>
                     <td>${pb.priceUC}</td>
+                    <td>${pb.volumeInStock}</td>
+                    <td>${pb.volumeOnOrder}</td>
+                    <td><div id="${pb.id}" class="offers" >${pb.volumeOffered}</div></td>
+                    <td>${pb.volumeAvailable}</td>
+                    <td>${pb.volumeUnit}</td>
                     <g:each in="${pb.plannedVolumes}" status="j" var="pv">
                         <td>${pv.volume}</td>
                     </g:each>
