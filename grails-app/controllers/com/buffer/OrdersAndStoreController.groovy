@@ -29,7 +29,7 @@ class OrdersAndStoreController {
         WtStatus wts = WtStatus.get(id)?:new WtStatus(id:1).save(failOnError:true)
         ////        def WtStatus wts = WtStatus.findOrSaveById( id )
         prodBufferService.checkWeekStatus()
-        // prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
+        //prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
         def List<String> millList = getMills()
         def List<ProdBuffer> pbl = getBufferList()
         def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
@@ -402,5 +402,23 @@ class OrdersAndStoreController {
                 }
             }
         } 
+    }
+    
+    // only for testing
+    def testNewWeek() {
+        def List<ProdBuffer> pList = ProdBuffer.executeQuery("FROM ProdBuffer PB WHERE PB.status='Active' ORDER BY PB.id" )
+        for (p in pList) {
+            println("PB: "+p.id+" InStock:"+p.volumeInStock+" -> ")
+            for (int i = 0; i<12; i++) print(", "+p.plannedVolumes[i].volume)
+            println("")
+            prodBufferService.weekAdjustVolumes(p)
+            println("PB: "+p.id+" InStock:"+p.volumeInStock+" -> ")
+            for (int i = 0; i<12; i++) {
+                print(", "+p.plannedVolumes[i].volume)
+            }
+            println("\n--------------------------------------------------------------")
+            prodBufferService.updateAvailableVolumes(p)
+        }
+        redirect action:"list", method:"GET"
     }
 }

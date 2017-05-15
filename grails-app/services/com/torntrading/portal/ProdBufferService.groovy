@@ -46,20 +46,18 @@ class ProdBufferService {
         def weekListSize = 12
         def  pv = aP.plannedVolumes
         for (int i=0; i< weekListSize-1; i++) {
-            println("AdjustVolumes, I: "+i)
+//            println("AdjustVolumes, I: "+i)
             if (i==0) {
-                aP.volumeInStock = aP.volumeInStock + pv[1].volume
-                aP.volumeInitial = aP.volumeInitial + pv[1].initialVolume
-            } else {
-               pv[i].volume = pv[i+1].volume
-               pv[i].initialVolume = pv[i+1].initialVolume
-               pv[i].week = pv[i+1].week
-               pv[i].save(flush:true, failOnError:true)
+                aP.volumeInStock = aP.volumeInStock + pv[0].volume
+                aP.volumeInitial = aP.volumeInitial + pv[0].initialVolume
             }
+            pv[i].volume = pv[i+1].volume
+            pv[i].initialVolume = pv[i+1].initialVolume
+            pv[i].save(flush:true, failOnError:true)
         }
         pv[weekListSize-1].volume = 0
         pv[weekListSize-1].initialVolume = 0
-        pv[weekListSize-1].week = 0
+        pv[weekListSize-1].save(flush:true, failOnError:true)
     }
     
     // denna funktion skall ej användas då det inte fungerar säkert efter veckoskift
