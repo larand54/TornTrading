@@ -2,6 +2,7 @@ package com.torntrading.portal
 
 import static org.springframework.http.HttpStatus.*
 import com.buffer.ProdBuffer
+import grails.converters.JSON
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -14,6 +15,46 @@ class OfferDetailController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def updatePrice() {
+        def OfferDetail od
+        if (params.id != null){
+            od = OfferDetail.get(params.id)
+        }
+        if (params.availableCert) {
+            od.choosedCert = params.availableCert
+        } else if (params.adjustPrice) {
+            od.priceAdjust = params.adjustPrice.toBigDecimal()
+        } else if (params.volumeOffered) {
+            if (changeVolumeOffered(od, params.volumeOffered.toDouble()) )
+            od.volumeOffered = params.volumeOffered.toDouble()
+            else {
+                render ([message: 'Offer not updated! Volume set to high!'] as JSON)
+            }            
+        } else {}
+        od.save(flush: true, failOnError: true)
+        //      render template: "OfferDData", model: [offerDetail:od] 
+        render { div ( od.endPrice ) }
+    }
+    
+    def boolean changeVolumeOffered(OfferDetail od, Double newVolume) {
+        def Double volumeChange = offerDetailService.getVolumeChangeFromForm(od, newVolume)
+        ProdBuffer pb = ProdBuffer.findById(od.millOfferID)
+        if (Math.abs(volumeChange) > 0.0) {
+            if (offerHeaderService.okToAddVolume(pb, volumeChange)) {
+                println("Volume OK! " + volumeChange)
+                if (od.offerHeader.status == 'Active') {
+                    prodBufferService.addOfferVolume(pb, volumeChange, od.weekStart as Integer)
+                }
+                return true
+            } else {
+                println("Volume NOT OK! " + volumeChange)
+                return false                            
+            }
+            
+        }
+
+    }
+    
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond OfferDetail.findAll(offerType=='o'), model:[offerDetailCount: OfferDetail.count()]
@@ -149,4 +190,5 @@ class OfferDetailController {
             '*'{ render status: NOT_FOUND }
         }
     }
+    
 }

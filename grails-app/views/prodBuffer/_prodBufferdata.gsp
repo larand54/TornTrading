@@ -9,8 +9,8 @@
             <fieldset>
                 <legend>Product specifications</legend>
                 Wood:  <g:select name="species" from="${prodBuffer?.constrainedProperties.species.inList}" value="${prodBuffer?.species}"/> 
-                Dimension:  <g:field class="elements" type="text" name="dimension"  value="${prodBuffer?.dimension}" size="60"/>
-                Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="30"/>
+                Dimension:  <g:field class="elements" type="text" name="dimension"  value="${prodBuffer?.dimension}" size="150", maxlength="150"/>
+                Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="255", maxlength="255"/>
                 KD:     <g:field class="elements" type="text" name="kd"   value="${prodBuffer?.kd}" size="2"/>
                 Grade:  <g:select name="grade" from="${prodBuffer?.constrainedProperties.grade.inList}" value="${prodBuffer?.grade}"/>
             </fieldset>

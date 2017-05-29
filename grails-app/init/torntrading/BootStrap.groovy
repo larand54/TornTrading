@@ -5,7 +5,7 @@ import com.torntrading.portal.*
 import com.torntrading.security.Role
 import com.torntrading.security.User
 import com.torntrading.security.UserRole
-import com.torntrading.portal.UserSettings
+import com.torntrading.security.UserSettings
 
 
 class BootStrap {
@@ -159,7 +159,7 @@ class BootStrap {
         // Update woodtrading status with new week and correct volumelist on weekchange
         int id = 1
         def wts = WtStatus.findById(1)?:new WtStatus(id:id).save(failOnError:true)
-//        prodBufferService.checkWeekStatus()
+        
         def destroy = {
         }
     }

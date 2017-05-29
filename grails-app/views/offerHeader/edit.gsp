@@ -4,6 +4,12 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'offerHeader.label', default: 'Offer')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
+        <style>
+            #Totalize {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <g:render template="/menue"/>
@@ -46,11 +52,11 @@
                             <g:sortableColumn property="${offerHeader.offerDetails.species}" title='Wood' />
                             <g:sortableColumn property="${offerHeader.offerDetails.dimension}" title='Dimension' />
                             <g:sortableColumn property="${offerHeader.offerDetails.lengthDescr}" title='Length' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.volumeOffered}" title='Volume' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.kd}" title='KD' />
+                            <g:sortableColumn property="${offerHeader.offerDetails.volumeOffered}" title='Volume(m3)' />
+                            <g:sortableColumn property="${offerHeader.offerDetails.kd}" title='KD(%)' />
                             <g:sortableColumn property="${offerHeader.offerDetails.grade}" title='Grade' />
                             <g:sortableColumn property="${offerHeader.offerDetails.choosedCert}" title='Cert' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.markup}" title='Markup' />
+                            <g:sortableColumn property="${offerHeader.offerDetails.markup}" title='Agent fee' />
                             <g:sortableColumn property="${offerHeader.offerDetails.endPrice}" title='End price' />
                             <g:sortableColumn property="${offerHeader.offerDetails.priceFSC}" title='Price FSC' />
                             <g:sortableColumn property="${offerHeader.offerDetails.pricePEFC}" title='Price PEFC' />
@@ -76,6 +82,15 @@
                                 <td>${od?.priceCW}</td>
                             </tr>
                         </g:each>
+                        <div id="Totalize">
+                            <tr></tr>
+                            <g:if test="offerHeader.freight != null">
+                                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td id="Totalize">Total incl freight:</td><td id="Totalize">${offerHeader.offerDetails.sum{it.endPrice}+offerHeader.freight}</td></tr>
+                            </g:if>
+                            <g:else>
+                                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td id="Totalize">Total incl freight:</td><td id="Totalize">${offerHeader.offerDetails.sum{it.endPrice}}</td></tr>
+                            </g:else>
+                        </div>
                     </tbody>
                 </table>
             </fieldset>

@@ -55,7 +55,7 @@ class ProdBuffer {
         id              column: "id",              type:        'integer'
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	dimension 	column: "dimension",        sqltype:	"char", length: 150
-	length  	column: "Length",          sqltype:	"char", length: 25
+	length  	column: "Length",          sqltype:	"char", length: 255
 	currency 	column: "currency",        sqltype:	"char", length: 3
         priceFSC        column: "price_fsc"
         pricePEFC       column: "price_pefc"

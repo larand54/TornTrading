@@ -17,6 +17,7 @@ class OfferDetail {
     
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
     BigDecimal          markup          // Prispåslag
+    BigDecimal          priceAdjust = 0.0     // manuell justering av priset från valt cert
     BigDecimal          priceFSC        // tillägg för FSC
     BigDecimal          priceUC         // tillägg för UnControlled wood 
     BigDecimal          priceCW         // tillägg för ControllWood
@@ -39,11 +40,7 @@ class OfferDetail {
         if (certList.size() == 1) {
             choosedCert = certList[0]
         }
-            endPrice = getCertPrice(choosedCert) * volumeOffered
-            println("Cert: "+certList[0]+" certPris: "+endPrice)
-            markup = offerHeader.agentFee * 0.01 * endPrice
-            endPrice = endPrice + markup
-
+        calculateEndprice()
         if (offerType == null) {offerType = 'o'}
     }
     
@@ -57,10 +54,9 @@ class OfferDetail {
         else if (choosedCert == 'UC')   endPrice = priceUC
         else if (choosedCert == 'CW')   endPrice = priceCW
         println("Choose cert UPDATE: "+choosedCert)
-        endPrice =  endPrice * volumeOffered 
-        markup = endPrice * offerHeader.agentFee * 0.01
-        endPrice = endPrice + markup
+        calculateEndPrice()
         oldVolume = volumeOffered
+        println("EndPrice at domain: "+endPrice)
     }
     
     def afterUpdate() {
@@ -109,6 +105,7 @@ class OfferDetail {
                 oldVolume       nullable:true
                 kd              nullable:true
                 grade           nullable:true
+                priceAdjust     nullable:true
                 endPrice        nullable:true
                 priceFSC        nullable:true
                 pricePEFC       nullable:true
@@ -141,5 +138,12 @@ class OfferDetail {
        if (cert=='PEFC') return pricePEFC 
        if (cert=='CW') return priceCW 
        if (cert=='UC') return priceUC 
+    }
+    
+    def calculateEndPrice() {
+            endPrice = getCertPrice(choosedCert) + priceAdjust
+            endPrice = endPrice * volumeOffered
+            markup = offerHeader.agentFee * 0.01 * endPrice
+            endPrice = endPrice + markup
     }
 }

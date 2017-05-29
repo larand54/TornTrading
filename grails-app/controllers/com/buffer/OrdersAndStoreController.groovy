@@ -1,6 +1,6 @@
 package com.buffer
 
-import com.torntrading.portal.UserSettings
+import com.torntrading.security.UserSettings
 import com.torntrading.portal.WtStatus
 import com.torntrading.security.Role
 import com.torntrading.security.User

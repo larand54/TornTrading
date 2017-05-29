@@ -9,10 +9,10 @@
                     <g:sortableColumn property="species" title='Species' />
                     <g:sortableColumn property="dimension" title='Dimension' />
                     <g:sortableColumn property="lengthDescr" title='Length' />
-                    <g:sortableColumn property="volumeOffered" title='Volume' />
-                    <g:sortableColumn property="kd" title='KD' />
+                    <g:sortableColumn property="volumeOffered" title='Volume(m3)' />
+                    <g:sortableColumn property="kd" title='KD(%)' />
                     <g:sortableColumn property="choosedCert" title='Cert' />
-                    <g:sortableColumn property="markup" title='Markup' />
+                    <g:sortableColumn property="markup" title='Agent fee' />
                     <g:sortableColumn property="endPrice" title='Price' />
                     <g:sortableColumn property="priceFSC" title='FSC' />
                     <g:sortableColumn property="pricePEFC" title='PEFC' />

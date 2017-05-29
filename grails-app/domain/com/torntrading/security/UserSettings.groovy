@@ -1,5 +1,4 @@
-package com.torntrading.portal
-import com.torntrading.security.User
+package com.torntrading.security
 
 class UserSettings {
     int id

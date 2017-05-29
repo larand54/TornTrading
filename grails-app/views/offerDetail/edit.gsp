@@ -4,6 +4,43 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'offerDetail.label', default: 'OfferDetail')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
+        
+        <script>
+            $(document).ready(function(){
+                $( document ).on('change', '.availableCert', function ( event ){ 
+                    $.ajax({
+                        url: '${g.createLink( controller:'offerDetail', action:'updatePrice' )}',
+                        data: {availableCert:this.value, id:this.id},
+                        type: 'get'
+                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
+                });
+            });
+        </script>
+        
+        <script>
+            $(document).ready(function(){
+                $( document ).on('change', '.adjustPrice', function ( event ){ 
+                    $.ajax({
+                        url: '${g.createLink( controller:'offerDetail', action:'updatePrice' )}',
+                        data: {adjustPrice:this.value, id:this.id},
+                        type: 'get'
+                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function(){
+                $( document ).on('change', '.volumeOffered', function ( event ){ 
+                    $.ajax({
+                        url: '${g.createLink( controller:'offerDetail', action:'updatePrice' )}',
+                        data: {volumeOffered:this.value, id:this.id},
+                        type: 'get'
+                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
+                });
+            });
+        </script>
+
     </head>
     <body>
         <g:render template="/menue"/>
@@ -11,7 +48,8 @@
         <div class="nav" role="navigation">
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <g:link url="${request.getHeader('referer')}">Back</g:link>            
+                <li> <a href = <g:createLink controller="offerHeader" action="edit" id="${this.offerDetail.offerHeader.id}"/>> OfferHeader</a></li>
+ <!--               <g:link url="${request.getHeader('referer')}">Back</g:link>            -->
                 </ul>
             </div>
             <div id="edit-offerDetail" class="content scaffold-edit" role="main">

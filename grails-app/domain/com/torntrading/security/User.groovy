@@ -2,7 +2,7 @@ package com.torntrading.security
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import com.torntrading.portal.UserSettings
+
 
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)

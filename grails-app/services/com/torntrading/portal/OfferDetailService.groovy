@@ -16,4 +16,16 @@ class OfferDetailService {
         } else return 0.0
 
     }
+
+    def Double getVolumeChangeFromForm(OfferDetail aOD, Double aNewVolume) {
+        if ((aNewVolume > 0.0001) || (aOD.volumeOffered > 0.0001)){
+            double diff = aNewVolume - aOD.volumeOffered
+            if (Math.abs(diff) > 0.0001) {
+                return diff
+            } else {
+                return 0.0
+            }
+        } else return 0.0
+
+    }
 }

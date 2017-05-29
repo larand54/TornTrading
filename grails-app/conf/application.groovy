@@ -37,3 +37,21 @@ grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.databasemigration.updateOnStartFilename = 'changelog.groovy'
 grails.plugin.databasemigration.updateOnStart = false
 //grails.plugin.databasemigration.updateOnStartContexts = ['WoodTrading']
+
+        // Config mail-plugin
+        println("############  SMTP - CONFIGURATION #############")
+        grails {
+            mail {
+                    host = "smtp.gmail.com"
+                    'default' {
+                        from = "caves700@gmail.com"
+                    }
+                port = 465
+                username = "caves700@gmail.com"
+                password = "iX1gPuk9"
+                props = ["mail.smtp.auth":"true",
+                    "mail.smtp.socketFactory.port":"465",
+                    "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                    "mail.smtp.socketFactory.fallback":"false"]
+            }
+        }

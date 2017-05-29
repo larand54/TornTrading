@@ -10,9 +10,8 @@
     <table style="width:50%">
         <tr>
             
-            <td>Sawmill:   <g:field class="elements" type="text" name="sawMill" required="y" value="${offerHeader?.sawMill}" size="24"/></td>
-            <td>Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${offerHeader?.volumeUnit}" size="2"/></td>
-            <td>Currency : <g:field class="elements" type="text" name="currency" required="y" value="${offerHeader?.currency}" size="2"/></td>
+            <td>Sawmill:   <g:field class="elements" type="text" name="sawMill" readonly="y" value="${offerHeader?.sawMill}" size="24"/></td>
+            <td>Currency : <g:field class="elements" type="text" name="currency" readonly="y" value="${offerHeader?.currency}" size="2"/></td>
             <td>Deliveryterms: <g:select class="elements" name="termsOfDelivery" from="${offerHeader.constrainedProperties.termsOfDelivery.inList}"
                 value="${offerHeader?.termsOfDelivery}" required="N"/></td>
             <td>Freight <g:field class="elements" type="number decimal" name="freight" required="Y" value="${fieldValue(bean: offerHeader, field: 'freight')}" style="width: 6em"/>   

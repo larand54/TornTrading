@@ -1,4 +1,4 @@
-package com.torntrading.portal
+package com.torntrading.security
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
