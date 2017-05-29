@@ -37,7 +37,7 @@ grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.databasemigration.updateOnStartFilename = 'changelog.groovy'
 grails.plugin.databasemigration.updateOnStart = false
 //grails.plugin.databasemigration.updateOnStartContexts = ['WoodTrading']
-
+/*
         // Config mail-plugin
         println("############  SMTP - CONFIGURATION #############")
         grails {
@@ -55,3 +55,4 @@ grails.plugin.databasemigration.updateOnStart = false
                     "mail.smtp.socketFactory.fallback":"false"]
             }
         }
+*/

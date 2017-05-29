@@ -64,8 +64,8 @@ dependencies {
     compile 'org.liquibase:liquibase-core:3.5.3'
     compile 'org.grails.plugins:rendering:2.0.3'
     runtime "org.springframework:spring-test:4.2.1.RELEASE"
-compile 'org.grails.plugins:mail:2.0.0.RC6'
 /*    compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
+compile 'org.grails.plugins:mail:2.0.0.RC6'
 
 compile 'org.grails.plugins:hibernate4:5.0.4'
 
@@ -75,8 +75,8 @@ compile 'org.grails:grails-datastore-gorm:5.0.4.RELEASE'
 compile 'org.grails:grails-datastore-simple:5.0.4.RELEASE'
 compile 'org.grails:grails-datastore-gorm-hibernate4:5.0.4.RELEASE'
 compile 'org.grails:grails-datastore-gorm-hibernate-core:5.0.4.RELEASE'
-
 */
+
 //    compile "org.grails.plugins:spring-security-rest:1.5.4"
 }
 
