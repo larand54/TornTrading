@@ -65,6 +65,7 @@
                     <div class="message" role="status">${flash.message}</div>
                 </g:if>
                 <g:form action="createOffer">
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                     <div id="selectMill">
                         Select mill:
                         <g:if test="selectedMill">
@@ -74,6 +75,7 @@
                             <g:select name="sawMill" from="${millList}" value="All" onchange="availableProducts(sawMill)" optionValue="All" optionKey="All"/>
                         </g:else>
                     </div>
+                </sec:ifAnyGranted>
                     <g:render template="AvailableProductData" model="[prodBuffer:prodBuffer]"/>
                     <div class="pagination">
                         <g:paginate total="${prodBufferCount ?: 0}" /> 

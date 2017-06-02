@@ -15,7 +15,7 @@ class OfferHeader {
     String 		status
     String              offerType
     String              species         // Används av stocknota
-    BigDecimal          freight         // Fraktkostnad
+    BigDecimal          freight  = 0.0  // Fraktkostnad
     Integer             agentFee  = 3      //%
     Date		dateCreated
     int                 createdBy 

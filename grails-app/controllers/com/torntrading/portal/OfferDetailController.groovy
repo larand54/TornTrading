@@ -20,20 +20,33 @@ class OfferDetailController {
         if (params.id != null){
             od = OfferDetail.get(params.id)
         }
+        String status =  od.offerHeader.status 
+        if ((status == 'Sold') || (status == 'Rejected')) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Offer can not be changed (Sold/Rejected)'
+            redirect(action:"edit", id:params.id)
+        } else {
         if (params.availableCert) {
             od.choosedCert = params.availableCert
         } else if (params.adjustPrice) {
             od.priceAdjust = params.adjustPrice.toBigDecimal()
         } else if (params.volumeOffered) {
+            println("Before: volumeOffered: "+params.volumeOffered)
+            params.volumeOffered.replaceAll("\\s","") // remove whitespace that can occure when size > 999 e.g. 1 279
+            println("After: volumeOffered: "+params.volumeOffered)
             if (changeVolumeOffered(od, params.volumeOffered.toDouble()) )
             od.volumeOffered = params.volumeOffered.toDouble()
             else {
-                render ([message: 'Offer not updated! Volume set to high!'] as JSON)
+                flashMessage='Offer not updated! Volume set to high!'
+                redirect(action:"edit", id:params.id)
+               //render ([message: 'Offer not updated! Volume set to high!'] as JSON)
             }            
-        } else {}
+        } else {} 
         od.save(flush: true, failOnError: true)
         //      render template: "OfferDData", model: [offerDetail:od] 
         render { div ( od.endPrice ) }
+        
+        }
     }
     
     def boolean changeVolumeOffered(OfferDetail od, Double newVolume) {

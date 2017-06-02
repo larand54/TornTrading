@@ -9,9 +9,9 @@
             <fieldset>
                 <legend>Product specifications</legend>
                 Wood:  <g:select name="species" from="${prodBuffer?.constrainedProperties.species.inList}" value="${prodBuffer?.species}"/> 
-                Dimension:  <g:field class="elements" type="text" name="dimension"  value="${prodBuffer?.dimension}" size="150", maxlength="150"/>
-                Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="255", maxlength="255"/>
-                KD:     <g:field class="elements" type="text" name="kd"   value="${prodBuffer?.kd}" size="2"/>
+                Dimension:  <g:field class="elements" type="text" name="dimension"  value="${prodBuffer?.dimension}" size="100", maxlength="150"/>
+                Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="40", maxlength="255"/>
+                KD(%):     <g:field class="elements" type="text" name="kd"   value="${prodBuffer?.kd}" size="2"/>
                 Grade:  <g:select name="grade" from="${prodBuffer?.constrainedProperties.grade.inList}" value="${prodBuffer?.grade}"/>
             </fieldset>
         </td>
@@ -19,8 +19,8 @@
     <tr>
         <td>
             <fieldset>
-                <legend>Volumes</legend>
-                Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${myTag.userVolumeUnit()}" size="2"/>
+                <legend>Volumes(m3)</legend>
+<!--                Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${myTag.userVolumeUnit()}" size="2"/>-->
                 In stock : <g:field class="elements" type="number decimal" name="volumeInStock" min="1" max="10000" required="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeInStock')}" style="width: 6em"/>
                 Available volume : <g:field class="elements" type="number decimal" name="volumeAvailable" readonly="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeAvailable')}" style="width: 6em"/>
             </fieldset>
@@ -52,7 +52,7 @@
     <tr>
         <td>
             <fieldset>
-                <legend>Planned production</legend>
+                <legend>Planned production(m3)</legend>
                 <table>
                     <thead>
                     <th>${myTag.weekNo(offset: 1)}</th>

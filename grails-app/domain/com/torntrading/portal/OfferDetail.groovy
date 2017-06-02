@@ -40,7 +40,7 @@ class OfferDetail {
         if (certList.size() == 1) {
             choosedCert = certList[0]
         }
-        calculateEndprice()
+        calculateEndPrice()
         if (offerType == null) {offerType = 'o'}
     }
     

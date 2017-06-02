@@ -122,5 +122,3 @@ environments:
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
             password: Avoc3nt
-#            password: mulan2010
-#            password: woods2011

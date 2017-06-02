@@ -33,7 +33,7 @@
             <tr>
                 <th id="is_center">Dim [mm]</th>
                 <th id="is_center">Length</th>
-                <th id="is_center">KD</th>
+                <th id="is_center">KD(%)</th>
                 <th id="is_center">Grade</th>
                 <th id="is_center">FSC</th>
                 <th id="is_center">PEFC</th>

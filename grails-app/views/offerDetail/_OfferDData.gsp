@@ -27,7 +27,7 @@
             <col width="8%"/>
             <col width="8%"/>
             <col width="8%"/>
-            <col width="41%"/>
+            <col width="5%"/>
         </colgroup>
         <tr> 
             <td>Certificate:</td>
@@ -40,8 +40,9 @@
             <td> UC: ${offerDetail.priceUC}</td>
             <td> CW: ${offerDetail.priceCW}</td>
             <td> PEFC: ${offerDetail.pricePEFC}</td>
+            <td>EndPrice:</td>
             <td>  
-                EndPrice:  <div id="updatePrice">    ${offerDetail.endPrice} </div>
+                  <div id="updatePrice">    ${offerDetail.endPrice} </div>
             </td>
 
 
