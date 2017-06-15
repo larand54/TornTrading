@@ -11,6 +11,9 @@
         <div class="nav" role="navigation">
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                    <li><a class="create" href="${createLink(uri: '/ordersAndStore/createStocknotes')}"><g:message code="stockNote.create.label"/></a></li>
+                </sec:ifAnyGranted>    
             </ul>
         </div>
         <div id="list-offerHeader" class="content scaffold-list" role="main">

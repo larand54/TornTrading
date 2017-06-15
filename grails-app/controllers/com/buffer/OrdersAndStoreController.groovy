@@ -196,7 +196,7 @@ class OrdersAndStoreController {
                 flash.message = "${total} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
                 println("OrderAndStore, Create Stocknote, OK")
             }
-            redirect action:"list", method:"GET"
+            redirect controller:"stocknote", action:"index"
         } else {
             //flash.message = "Could not create offer due to systemerror" 
             println("OrderAndStore, Create Stocknote, System error!")
@@ -289,6 +289,7 @@ class OrdersAndStoreController {
             cert = 'CW'
         }
         
+        price = price?price:0.0
         ofd.endPrice = price
         ofd.choosedCert = cert
         ofd.markup = ofd.endPrice * 0.01 * ofh.agentFee

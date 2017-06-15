@@ -7,6 +7,18 @@
         
         <script>
             $(document).ready(function(){
+                $( document ).on('change', '.useWeeklyVolumes', function ( event ){ 
+                    $.ajax({
+                        url: '${g.createLink( controller:'offerDetail', action:'useWeeklyVolumes' )}',
+                        data: {ckbWeeklyVolumes:this.checked, id:this.id},
+                        type: 'get'
+                    }).success( function ( data ) { $( '#nono' ).html( data );     });
+                });
+            });
+        </script>
+        
+        <script>
+            $(document).ready(function(){
                 $( document ).on('change', '.availableCert', function ( event ){ 
                     $.ajax({
                         url: '${g.createLink( controller:'offerDetail', action:'updatePrice' )}',

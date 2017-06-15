@@ -4,8 +4,9 @@ class OfferDetail {
 
     def springSecurityService
     static belongsTo = [offerHeader: OfferHeader]
-    static hasMany = [plannedVolumes: PlannedVolume]
-    static transients = ['plannedVolumes']
+    static hasMany = [offerPlannedVolumes: OfferPlannedVolume, plannedVolumes: PlannedVolume]
+    static transients = ['plannedVolumes', 'inStock']
+    SortedSet offerPlannedVolumes
     String              offerType            // ('o') - Offert, ('s') - Stocknota
     String              grade
     String              kd
@@ -14,6 +15,8 @@ class OfferDetail {
     String              choosedCert
     String              species
     String              sawMill
+    
+    Boolean             useWeeklyVolumes = false   // Användning av volymer fördelade på olika veckor
     
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
     BigDecimal          markup          // Prispåslag
@@ -24,6 +27,8 @@ class OfferDetail {
     BigDecimal          pricePEFC       // tillägg för PEFC
     BigDecimal          endPrice        // kundens slutpris
     double		volumeOffered
+    double              fromStock       // Volym allokerad från befintligt lager
+    double              inStock         // Befintligt lager
     String		weekStart
     String		weekEnd
     Date		dateCreated
@@ -42,6 +47,14 @@ class OfferDetail {
         }
         calculateEndPrice()
         if (offerType == null) {offerType = 'o'}
+        
+        fromStock = 0.0
+        for (int i=0; i<12; i++) {
+            def ov = new OfferPlannedVolume(week:i+1 as Integer, volume:0 as Double)
+            addToOfferPlannedVolumes(ov)
+            println("Add offerplanned volume record: "+i)
+        }
+
     }
     
     def beforeUpdate() {
@@ -79,6 +92,7 @@ class OfferDetail {
         grade            column: 'grade',          sqltype: 'char'
         kd               column: 'kd',             sqltype: 'char', length: 4
         oldVolume       column: 'oldVolume',       sqlType:     'float' 
+        fromStock       column: 'from_stock',      sqlType:     'float' 
 
     }
     static constraints = {
@@ -103,6 +117,7 @@ class OfferDetail {
                 weekEnd         nullable:true
                 volumeOffered   nullable:true
                 oldVolume       nullable:true
+                fromStock       nullable:true
                 kd              nullable:true
                 grade           nullable:true
                 priceAdjust     nullable:true
@@ -141,7 +156,7 @@ class OfferDetail {
     }
     
     def calculateEndPrice() {
-            endPrice = getCertPrice(choosedCert) + priceAdjust
+            endPrice = getCertPrice(choosedCert)?:0.0 + priceAdjust
             endPrice = endPrice * volumeOffered
             markup = offerHeader.agentFee * 0.01 * endPrice
             endPrice = endPrice + markup

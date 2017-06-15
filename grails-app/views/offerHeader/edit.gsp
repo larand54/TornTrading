@@ -48,19 +48,19 @@
                 <table style="width:100%">
                     <thead>
                         <tr>
-                            <g:sortableColumn property="${offerHeader.offerDetails.species}" title='Wood' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.dimension}" title='Dimension' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.lengthDescr}" title='Length' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.volumeOffered}" title='Volume(m3)' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.kd}" title='KD(%)' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.grade}" title='Grade' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.choosedCert}" title='Cert' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.markup}" title='Agent fee' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.endPrice}" title='End price' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.priceFSC}" title='Price FSC' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.pricePEFC}" title='Price PEFC' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.priceUC}" title='Price UC' />
-                            <g:sortableColumn property="${offerHeader.offerDetails.priceCW}" title='Price CW' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.species}" title='Wood' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.dimension}" title='Dimension' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.lengthDescr}" title='Length' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.volumeOffered}" title='Volume(m3)' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.kd}" title='KD(%)' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.grade}" title='Grade' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.choosedCert}" title='Cert' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.markup}" title='Agent fee' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.endPrice}" title='End price' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.priceFSC}" title='Price FSC' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.pricePEFC}" title='Price PEFC' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.priceUC}" title='Price UC' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.priceCW}" title='Price CW' />
                         </tr>
                     </thead>
                     <tbody>

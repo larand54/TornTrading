@@ -107,11 +107,14 @@ class OfferDetailController {
     }
 
     def edit(OfferDetail offerDetail) {
-        respond offerDetail
+        offerDetail.plannedVolumes = ProdBuffer.get(offerDetail.millOfferID).plannedVolumes
+        offerDetail.inStock = ProdBuffer.get(offerDetail.millOfferID).volumeInStock
+        respond offerDetail, model:[offerPlannedVolumes:offerDetail.offerPlannedVolumes]
     }
 
     @Transactional
     def update(OfferDetail offerDetail) {
+        println("Update - Params: "+params)
         if (offerDetail == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -137,6 +140,19 @@ class OfferDetailController {
             flash.message = 'Offer not created! Connected product does not exist!'
             respond offerDetail.errors, view:'edit'
             return            
+        }
+        
+        if (offerDetail.useWeeklyVolumes) {
+            def Double offerVolume = offerDetailService.addWeekVolumes(offerDetail, params)
+            if (offerVolume >= 0.0) {
+                offerDetail.volumeOffered = offerVolume
+            } else {
+                println("offerDetailController - Error volume calc: "+ offerVolume)
+                transactionStatus.setRollbackOnly()
+                flash.message = 'Offered volume not available!'
+                respond offerDetail.errors, view:'edit'
+                return                            
+            }
         }
         
         def Double volumeChange = offerDetailService.getVolumeChange(offerDetail)
@@ -174,6 +190,7 @@ class OfferDetailController {
         }
     }
 
+    
     @Transactional
     def delete(OfferDetail offerDetail) {
 
@@ -202,6 +219,34 @@ class OfferDetailController {
             }
             '*'{ render status: NOT_FOUND }
         }
+    }
+    
+    def useWeeklyVolumes() {
+        println("useWeeklyVolumes - params: "+params)
+        def boolean ckb = params.ckbWeeklyVolumes.toBoolean()
+        def od = OfferDetail.get(params.id)
+        od.useWeeklyVolumes = ckb
+        od.save(flush:true)
+        if (od.useWeeklyVolumes) {
+            od.volumeOffered = 0.0
+            od.plannedVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes
+            od.inStock = ProdBuffer.get(od.millOfferID).volumeInStock
+            println("useWeeklyVolumes - ON: ")
+        } else {
+            println("useWeeklyVolumes - OFF: ")
+            od.inStock = 0.0
+            od.volumeOffered = 0.0
+            for (odv in od.offerPlannedVolumes) {
+                odv.volume = 0.0
+            }
+            OfferPlannedVolume.withSession {
+                it.flush()
+                it.clear()
+            }
+            od.save(flush:true)
+        }
+
+        render(template: "OfferDData", model:[offerDetail:od,offerPlannedVolumes:od.offerPlannedVolumes])
     }
     
 }

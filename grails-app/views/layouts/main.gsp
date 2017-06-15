@@ -10,6 +10,7 @@
 
     <asset:stylesheet src="application.css"/>
     <asset:javascript src="application.js"/>
+    <asset:javascript src="fxHeader_0.6.js"/>
 
     <g:layoutHead/>
 </head>

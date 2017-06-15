@@ -134,7 +134,7 @@ class OfferHeaderController {
             return            
         }
 
-        if (params.status == 'Rejected' && oldStatus == 'Active') {
+        if (params.status == 'Rejected' && oldStatus in ['Active', 'New']) {
           offerHeaderService.rejectOfferVolume(offerHeader)  
         } else if (params.status == 'Rejected') {
             transactionStatus.setRollbackOnly()

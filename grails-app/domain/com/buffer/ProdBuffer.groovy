@@ -161,7 +161,9 @@ class ProdBuffer {
     }
     
     def beforeUpdate() {
-    
+        if (volumeInitial == 0.0) {
+            volumeInitial = volumeInStock
+        }
     }
     
     def afterUpdate() {

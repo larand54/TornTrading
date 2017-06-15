@@ -1,5 +1,5 @@
 <div id="divToUpdate">
-    <table>
+    <table id="products" width="100%">
         <colgroup>
             <col width="1%"/>
             <col width="1%"/>

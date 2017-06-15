@@ -114,7 +114,11 @@ class StocknoteController {
         assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes
         def OfferHeader offerHeader = OfferHeader.get(params.id)
         for (od in offerHeader.offerDetails) {
+            println("OfferDetail1 dim: "+od.dimension+ offerHeader.offerDetails.count)          
+        }
+        for (od in offerHeader.offerDetails) {
             od.plannedVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes 
+            println("OfferDetail dim: "+od.dimension)
         }
         
 //        def millId = offerHeader.offerDetails.millOfferID

@@ -9,12 +9,15 @@
             margin-left: 170px;
             }
         </style>
+<!---->
         <style type="text/css">
             table {
             display: block;
             overflow-x: auto;
-            }
+            overflow-y: scroll;
+            height: 30em;
         </style>
+
         <style>
             .offers {
             color: #ff0000
@@ -22,7 +25,8 @@
             #deletep{
                 background-image: url(../images/skin/database_delete.png);
             }
-            </</style>
+        </style>
+        
         <script type="text/javascript">
             function availableProducts(){
             $.ajax({
@@ -52,9 +56,6 @@
             <ul>
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><a class="create" href="${createLink(uri: '/ordersAndStore/add_prodBuffer')}"><g:message code="prodBuffer.create.label"/></a></li>
-                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
-                    <li><a class="create" href="${createLink(uri: '/ordersAndStore/createStocknotes')}"><g:message code="stockNote.create.label"/></a></li>
-                </sec:ifAnyGranted>    
             </ul>
         </div>
         <g:set var="entityName" value='Product' />
@@ -77,10 +78,10 @@
                     </div>
                 </sec:ifAnyGranted>
                     <g:render template="AvailableProductData" model="[prodBuffer:prodBuffer]"/>
-                    <div class="pagination">
+<!--                    <div class="pagination">
                         <g:paginate total="${prodBufferCount ?: 0}" /> 
                     </div>
-
+-->
                     <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                         <fieldset class="buttons">
                             <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
@@ -94,5 +95,13 @@
         <div id="offerList"></div>
 
         </div>
+<!--        <script type="text/javascript">
+
+            $( document ).ready( function() {
+                fxheaderInit('products',200,1,29);
+                fxheader();
+            });
+        </script>
+-->
     </body>
 </html>

@@ -47,7 +47,7 @@
             
         </thead>
         <tbody>
-            <g:each in="${offerHeader.offerDetails}" status="i" var="od">
+            <g:each in="${offerHeader.offerDetails.sort{it.dimension}}" status="i" var="od">
                 <tr>
                     
                     <td id="is_center">${od?.dimension}</td>
@@ -77,7 +77,7 @@
 -->
                     
                     <g:each in="${od.plannedVolumes}" status="j" var="pv">
-                        <td id="pv_center">${pv.volume}</td>
+                        <td id="pv_center">${pv.volume ?: ''}</td>
                     </g:each>
                     
                 </tr>

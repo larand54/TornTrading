@@ -22,7 +22,7 @@
                 <legend>Volumes(m3)</legend>
 <!--                Volumeunit:<g:field class="elements" type="text" name="volumeUnit" required="y" value="${myTag.userVolumeUnit()}" size="2"/>-->
                 In stock : <g:field class="elements" type="number decimal" name="volumeInStock" min="1" max="10000" required="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeInStock')}" style="width: 6em"/>
-                Available volume : <g:field class="elements" type="number decimal" name="volumeAvailable" readonly="Y" value="${fieldValue(bean: prodBuffer, field: 'volumeAvailable')}" style="width: 6em"/>
+                Available volume : <g:field class="elements" type="number decimal" name="volumeAvailable" readonly="Y" value="${prodBuffer?.volumeAvailable}" style="width: 6em"/>
             </fieldset>
         </td>
     </tr>
