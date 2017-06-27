@@ -117,7 +117,7 @@ class StocknoteController {
             println("OfferDetail1 dim: "+od.dimension+ offerHeader.offerDetails.count)          
         }
         for (od in offerHeader.offerDetails) {
-            od.plannedVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes 
+            od.availableVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes 
             println("OfferDetail dim: "+od.dimension)
         }
         

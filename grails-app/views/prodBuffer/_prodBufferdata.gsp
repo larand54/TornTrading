@@ -30,7 +30,7 @@
         <td>
             <fieldset>
                 <legend>Prices</legend>
-                Valuta : <g:field class="elements" type="text" name="currency"  value="${myTag.userCurrency()}" size="2"/>
+                Valuta : <g:field class="elements" type="text" name="currency"  value="EUR" maxlength="3" size="2"/>
                 Price FSC:<g:field class="elements" type="number decimal" name="priceFSC"   value="${fieldValue(bean: prodBuffer, field: 'priceFSC')}" style="width: 6em"/>
                 Price PEFC:<g:field class="elements" type="number decimal" name="pricePEFC"  value="${fieldValue(bean: prodBuffer, field: 'pricePEFC')}" style="width: 6em"/>
                 Price CW:<g:field class="elements" type="number decimal" name="priceCW"  value="${fieldValue(bean: prodBuffer, field: 'priceCW')}" style="width: 6em"/>

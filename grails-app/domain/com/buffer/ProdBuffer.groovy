@@ -93,7 +93,7 @@ class ProdBuffer {
     static constraints = {
         status(inList:["Active","Finished","Cancelled"])
         species(inList:["Redwood", "Whitewood"])
-        grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)"])
+        grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)", "C24"])
         
         sawMill                 nullable: true
         status                  nullable: true

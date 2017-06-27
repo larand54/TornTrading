@@ -33,7 +33,7 @@ class OfferHeaderService {
     def addOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.addOfferVolume(pb, od.volumeOffered, od.weekStart as Integer)  
+            prodBufferService.addOfferVolume(pb, od)  
         }
     }
     
@@ -47,7 +47,7 @@ class OfferHeaderService {
     def rejectOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.rejectOffer(pb, od.volumeOffered)  
+            prodBufferService.rejectOffer(pb, od)  
         }
     }
     

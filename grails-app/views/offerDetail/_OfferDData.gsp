@@ -103,8 +103,8 @@
                                 <tr> 
                                     <td> Available </td>
                                     <td>${offerDetail.inStock} </td>
-                                    <g:each status="i" in="${offerDetail.plannedVolumes}" var="pv">
-                                        <td>${pv?.volume}</td>
+                                    <g:each status="i" in="${offerDetail.availableVolumes}" var="av">
+                                        <td>${av?.volume}</td>
                                     </g:each>
                                 </tr>
                                 <tr>
@@ -112,16 +112,15 @@
                                     <g:if test="${motherview=='create'}">
                                         <td><g:field  type="number decimal" name="fromStock"  value="${fieldValue(bean: offerDetail, field: 'fromStock')}" size="4"/></td>
                                         <g:each status="i" in="${(0..11)}" var="j">
-                                            <td><g:field type="number decimal" name="vol${i+1}" value="0.0" size="4"/></td>
+                                            <td><g:formatNumber number="${0.0}" /></td>
                                         </g:each>
                                     </g:if>
                                     <g:else>
-                                        <td><g:field  type="number decimal" name="fromStock"  value="${fieldValue(bean: offerDetail, field: 'fromStock')}" size="4"/></td>
+                                        <td><g:field  type="number decimal" name="fromStock" value="${fieldValue(bean: offerDetail, field: 'fromStock')}" size="4"/></td>
                                         <g:each in="${offerPlannedVolumes}" status="i" var="ov">
                                             <td><g:field  type="number decimal" name="vol${i+1}" value="${ov?.volume}" size="4"/></td>
                                         </g:each>
                                     </g:else>
-
                                 </tr>
                             </tbody> 
                         </table>

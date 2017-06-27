@@ -76,7 +76,7 @@
                     </g:else>
 -->
                     
-                    <g:each in="${od.plannedVolumes}" status="j" var="pv">
+                    <g:each in="${od.availableVolumes}" status="j" var="pv">
                         <td id="pv_center">${pv.volume ?: ''}</td>
                     </g:each>
                     

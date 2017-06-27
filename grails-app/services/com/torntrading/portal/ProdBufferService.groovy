@@ -8,7 +8,7 @@ import grails.transaction.Transactional
     
 @Transactional
 class ProdBufferService {
-    
+    def offerDetailService
     // Hjälp klass för att hantera veckobyten med volymer
     class CellVol {
         Double vol1
@@ -37,6 +37,7 @@ class ProdBufferService {
                 weekAdjustVolumes(p)
                 updateAvailableVolumes(p)
             }
+            offerDetailService.weekAdjust()
         }
         wtStatus.weekUpdated = cWeek
         wtStatus.save(failOnError:true)
@@ -151,7 +152,7 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         restoreVolumeToBuffer(aPB, aVol)
     }
     
-    def addOfferVolume(ProdBuffer aPB, Double aVol, Integer aWeek) {
+    def addOfferVolume(ProdBuffer aPB, Double aVol) {
         aPB.volumeOffered = aPB.volumeOffered + aVol
         aPB.volumeAvailable = aPB.volumeAvailable - aVol
         aPB.save(flush:true, failOnError:true)

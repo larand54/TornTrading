@@ -3,10 +3,8 @@ package com.torntrading.portal
 class OfferDetail {
 
     def springSecurityService
-    static belongsTo = [offerHeader: OfferHeader]
-    static hasMany = [offerPlannedVolumes: OfferPlannedVolume, plannedVolumes: PlannedVolume]
-    static transients = ['plannedVolumes', 'inStock']
-    SortedSet offerPlannedVolumes
+    def offerDetailService
+    
     String              offerType            // ('o') - Offert, ('s') - Stocknota
     String              grade
     String              kd
@@ -15,7 +13,6 @@ class OfferDetail {
     String              choosedCert
     String              species
     String              sawMill
-    
     Boolean             useWeeklyVolumes = false   // Användning av volymer fördelade på olika veckor
     
     // Priser -- Notera! Endast en av de 4 olika certifieringarna får ha ett prispåslag Vilket kontrolleras i controllern.
@@ -36,11 +33,20 @@ class OfferDetail {
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
     double              oldVolume   // Volym angiven före uppdatering
+    SortedSet offerPlannedVolumes
+    SortedSet availableVolumes
+    static belongsTo = [offerHeader: OfferHeader]
+    static hasMany = [offerPlannedVolumes: OfferPlannedVolume, availableVolumes: OfferWeeklyAvailableVolume]
 
-	
+//    static transients = ['endPriceM3']
     def beforeInsert() {
         createdBy = getUserID()
+        dateCreated = new Date()
+
+        
+        //println(offerDetailService.getWeekAsTitle(dateCreated,0))
         def certList = getAvailableCert()
+        println("DateCreated: "+ dateCreated)
         println("Antal cert: "+ certList.size())
         if (certList.size() == 1) {
             choosedCert = certList[0]
@@ -49,10 +55,17 @@ class OfferDetail {
         if (offerType == null) {offerType = 'o'}
         
         fromStock = 0.0
+        inStock = 0.0
         for (int i=0; i<12; i++) {
             def ov = new OfferPlannedVolume(week:i+1 as Integer, volume:0 as Double)
             addToOfferPlannedVolumes(ov)
             println("Add offerplanned volume record: "+i)
+        }
+        println("Add available volume record: ")
+        for (int i=0; i<12; i++) {
+            def oav = new OfferWeeklyAvailableVolume(week:i+1 as Integer, volume:0 as Double)
+            addToAvailableVolumes(oav)
+            println("Add available volume record: "+i+" - "+oav.week)
         }
 
     }
@@ -105,12 +118,12 @@ class OfferDetail {
 		dimension()
 		lengthDescr()
                 kd()
-                grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)"])
+                grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)", "C24"])
                 species(inList:["Redwood", "Whitewood"])
 		volumeOffered()
 		weekStart()
 		weekEnd()
-		dateCreated()
+		dateCreated()   
                 millOfferID     nullable:true
                 requestID       nullable:true
                 weekStart       nullable:true
@@ -156,7 +169,7 @@ class OfferDetail {
     }
     
     def calculateEndPrice() {
-            endPrice = getCertPrice(choosedCert)?:0.0 + priceAdjust
+            endPrice = (getCertPrice(choosedCert)?:0.0) + priceAdjust
             endPrice = endPrice * volumeOffered
             markup = offerHeader.agentFee * 0.01 * endPrice
             endPrice = endPrice + markup

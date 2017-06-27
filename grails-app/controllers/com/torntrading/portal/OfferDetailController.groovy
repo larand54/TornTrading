@@ -16,6 +16,7 @@ class OfferDetailController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def updatePrice() {
+        println("OfferDeatilController.updatePrice, params: "+params)
         def OfferDetail od
         if (params.id != null){
             od = OfferDetail.get(params.id)
@@ -30,6 +31,7 @@ class OfferDetailController {
             od.choosedCert = params.availableCert
         } else if (params.adjustPrice) {
             od.priceAdjust = params.adjustPrice.toBigDecimal()
+            println("OfferDeatilController.updatePrice - adjustPrice: "+od.priceAdjust)
         } else if (params.volumeOffered) {
             println("Before: volumeOffered: "+params.volumeOffered)
             params.volumeOffered.replaceAll("\\s","") // remove whitespace that can occure when size > 999 e.g. 1 279
@@ -56,7 +58,7 @@ class OfferDetailController {
             if (offerHeaderService.okToAddVolume(pb, volumeChange)) {
                 println("Volume OK! " + volumeChange)
                 if (od.offerHeader.status == 'Active') {
-                    prodBufferService.addOfferVolume(pb, volumeChange, od.weekStart as Integer)
+                    prodBufferService.addOfferVolume(pb, volumeChange)
                 }
                 return true
             } else {
@@ -95,6 +97,12 @@ class OfferDetailController {
             respond offerDetail.errors, view:'create'
             return
         }
+            println("Add available volume record: ")
+        for (int i=0; i<12; i++) {
+            def oav = new OfferWeeklyAvailableVolume(week:i+1 as Integer, volume:0 as Double)
+            offerDetail.addToAvailableVolumes(oav).save(flush:true)
+            println("Add available volume record: "+i)
+        }
         offerDetail.save flush:true
 
         request.withFormat {
@@ -107,9 +115,17 @@ class OfferDetailController {
     }
 
     def edit(OfferDetail offerDetail) {
-        offerDetail.plannedVolumes = ProdBuffer.get(offerDetail.millOfferID).plannedVolumes
+/*        offerDetail.plannedVolumes = ProdBuffer.get(offerDetail.millOfferID).plannedVolumes
         offerDetail.inStock = ProdBuffer.get(offerDetail.millOfferID).volumeInStock
-        respond offerDetail, model:[offerPlannedVolumes:offerDetail.offerPlannedVolumes]
+*/
+println("OfferDetailController-EDIT-Count1: "+offerDetail.offerPlannedVolumes.count)
+println("OfferDetailController-EDIT-Count2: "+offerDetail.availableVolumes.count)
+        if(offerDetail.useWeeklyVolumes) {
+            prodBufferService.checkWeekStatus()
+            offerDetailService.setAvailableVolumes(offerDetail)
+        }
+       
+        respond offerDetail, model:[offerPlannedVolumes:offerDetail.offerPlannedVolumes, availableVolumes:offerDetail.availableVolumes]
     }
 
     @Transactional
@@ -123,7 +139,9 @@ class OfferDetailController {
 
         if (offerDetail.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond offerDetail.errors, view:'edit'
+//            respond offerDetail.errors, view:'edit'
+                redirect controller: "offerDetail", action:"edit", id:params.id
+
             return
         }
         String status =  offerDetail.offerHeader.status 
@@ -143,6 +161,7 @@ class OfferDetailController {
         }
         
         if (offerDetail.useWeeklyVolumes) {
+            println("OfferDetailController.update, fromStock: "+params.fromStock)
             def Double offerVolume = offerDetailService.addWeekVolumes(offerDetail, params)
             if (offerVolume >= 0.0) {
                 offerDetail.volumeOffered = offerVolume
@@ -150,7 +169,7 @@ class OfferDetailController {
                 println("offerDetailController - Error volume calc: "+ offerVolume)
                 transactionStatus.setRollbackOnly()
                 flash.message = 'Offered volume not available!'
-                respond offerDetail.errors, view:'edit'
+                redirect controller: "offerDetail", action:"edit", id:params.id
                 return                            
             }
         }
@@ -160,7 +179,7 @@ class OfferDetailController {
             if (offerHeaderService.okToAddVolume(pb, volumeChange)) {
                 println("Volume OK! " + volumeChange)
                 if (offerDetail.offerHeader.status == 'Active') {
-                    prodBufferService.addOfferVolume(pb, volumeChange, offerDetail.weekStart as Integer)
+                    prodBufferService.addOfferVolume(pb, volumeChange)
                 }
             } else {
                 println("Volume NOT OK! " + volumeChange)
@@ -229,8 +248,9 @@ class OfferDetailController {
         od.save(flush:true)
         if (od.useWeeklyVolumes) {
             od.volumeOffered = 0.0
-            od.plannedVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes
-            od.inStock = ProdBuffer.get(od.millOfferID).volumeInStock
+//            od.plannedVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes
+//            od.inStock = ProdBuffer.get(od.millOfferID).volumeInStock
+              offerDetailService.setAvailableVolumes(od)
             println("useWeeklyVolumes - ON: ")
         } else {
             println("useWeeklyVolumes - OFF: ")
@@ -246,7 +266,7 @@ class OfferDetailController {
             od.save(flush:true)
         }
 
-        render(template: "OfferDData", model:[offerDetail:od,offerPlannedVolumes:od.offerPlannedVolumes])
+        render(template: "OfferDData", model:[offerDetail:od,offerPlannedVolumes:od.offerPlannedVolumes,availableVolumes: OfferWeeklyAvailableVolume])
     }
     
 }

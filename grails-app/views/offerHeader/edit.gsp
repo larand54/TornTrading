@@ -57,10 +57,7 @@
                             <g:sortableColumn property="${offerHeader.offerDetails?.choosedCert}" title='Cert' />
                             <g:sortableColumn property="${offerHeader.offerDetails?.markup}" title='Agent fee' />
                             <g:sortableColumn property="${offerHeader.offerDetails?.endPrice}" title='End price' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.priceFSC}" title='Price FSC' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.pricePEFC}" title='Price PEFC' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.priceUC}" title='Price UC' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.priceCW}" title='Price CW' />
+                            <g:sortableColumn property="${offerHeader.offerDetails?.endPrice}" title='Price m3' />
                         </tr>
                     </thead>
                     <tbody>
@@ -75,10 +72,7 @@
                                 <td>${od?.choosedCert}</td>
                                 <td>${od?.markup}</td>
                                 <td>${od?.endPrice}</td>
-                                <td>${od?.priceFSC}</td>
-                                <td>${od?.pricePEFC}</td>
-                                <td>${od?.priceUC}</td>
-                                <td>${od?.priceCW}</td>
+                                <td><g:endPriceM3 offerDetail="${od}"></g:endPriceM3> </td>
                             </tr>
                         </g:each>
                         <div id="Totalize">

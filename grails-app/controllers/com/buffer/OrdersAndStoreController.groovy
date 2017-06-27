@@ -8,6 +8,7 @@ import com.torntrading.security.UserRole
 import com.torntrading.legacy.Supplier
 import com.torntrading.portal.OfferDetail
 import com.torntrading.portal.OfferHeader
+import com.torntrading.portal.OfferWeeklyAvailableVolume
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
@@ -250,6 +251,7 @@ class OrdersAndStoreController {
         
         def OfferDetail ofd
         ofd = new OfferDetail(offerHeader: ofh)
+        ofd.dateCreated = new Date()             // Varför behövs detta helt plötsligt? Har fungerat sedan start utan
         offerType?ofd.offerType=offerType:null
         
         if (offerType=='s') {
@@ -304,6 +306,8 @@ class OrdersAndStoreController {
     def OfferHeader createOfferHeader() {
         // Check all is same sawmill and grab sawmill name and id
         def ProdBuffer pb
+        def String currency = null
+        def String nextCurrency = null
         def String mill = null
         def String nextMill=null
         def String species=null
@@ -316,8 +320,11 @@ class OrdersAndStoreController {
                 int id = n as Integer
                 int clientNo
                 pb = ProdBuffer.get(id)
+                
                 nextMill = pb.sawMill
                 nextSpecies = pb.species
+                nextCurrency = pb.currency
+                
                 if (( species != null) && (nextSpecies != species)) {
                     flash.message='Could not create offer due to Mixed wood!'
                     error = id
@@ -331,8 +338,18 @@ class OrdersAndStoreController {
                     error = id
                     return null
                 }
+                
+                System.out.println("Currency: " + nextCurrency)
+                if (( mill != null) && (nextCurrency != currency)) {
+                    flash.message='Could not create offer due to Mixed currency!'
+                    error = id
+                    return null
+                }
+                
+                
                 species = nextSpecies
                 mill = nextMill
+                currency = nextCurrency
                 if (checkCertPrices(pb) == 0) {
                     flash.message = "No prices are set! Can not create offer!" 
                     return null            
