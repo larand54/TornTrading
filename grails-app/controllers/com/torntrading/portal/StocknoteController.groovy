@@ -17,10 +17,10 @@ class StocknoteController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-/*        def List<OfferHeader> offerHeader = OfferHeader.findAllByOfferType('s')
+        /*        def List<OfferHeader> offerHeader = OfferHeader.findAllByOfferType('s')
         println("Stocknotes: "+offerHeader)
         [offerHeader:offerHeader]
-*/
+         */
         def offerHeader = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "s" )}
         respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount]
     }
@@ -73,7 +73,7 @@ class StocknoteController {
                 redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
                 //redirect offerHeader
             }
-//               redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
+            //               redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
 
             //            '*'{ respond offerHeader, [status: OK] }
         }
@@ -110,6 +110,7 @@ class StocknoteController {
     }
     
     def createPDF() {
+        println("createPDF, Stocknote params: "+params)
         def file = assetResourceLocator.findAssetForURI( 'Checkout16x16.png' )
         assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes
         def OfferHeader offerHeader = OfferHeader.get(params.id)
@@ -117,14 +118,41 @@ class StocknoteController {
             println("OfferDetail1 dim: "+od.dimension+ offerHeader.offerDetails.count)          
         }
         for (od in offerHeader.offerDetails) {
-            od.availableVolumes = ProdBuffer.get(od.millOfferID).plannedVolumes 
+            od.availableVolumes = null
+            def List<PlannedVolume> pvl = ProdBuffer.get(od.millOfferID).plannedVolumes.toList()
+            ProdBuffer.get(od.millOfferID).plannedVolumes.each { PlannedVolume pv ->
+                od.addToAvailableVolumes(new OfferWeeklyAvailableVolume(week:pv.week, volume:pv.volume))
+            }
             println("OfferDetail dim: "+od.dimension)
         }
         
-//        def millId = offerHeader.offerDetails.millOfferID
-//        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
-//        println(">>> Offerheader: "+offerHeader.sawMill)
-//        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
+        //        def millId = offerHeader.offerDetails.millOfferID
+        //        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
+        //        println(">>> Offerheader: "+offerHeader.sawMill)
+        //        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
         renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
+    }
+    def createPolishPDF() {
+        println("createPDF, Stocknote params: "+params)
+        def file = assetResourceLocator.findAssetForURI( 'Checkout16x16.png' )
+        assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes
+        def OfferHeader offerHeader = OfferHeader.get(params.id)
+        for (od in offerHeader.offerDetails) {
+            println("OfferDetail1 dim: "+od.dimension+ offerHeader.offerDetails.count)          
+        }
+        for (od in offerHeader.offerDetails) {
+            od.availableVolumes = null
+            def List<PlannedVolume> pvl = ProdBuffer.get(od.millOfferID).plannedVolumes.toList()
+            ProdBuffer.get(od.millOfferID).plannedVolumes.each { PlannedVolume pv ->
+                od.addToAvailableVolumes(new OfferWeeklyAvailableVolume(week:pv.week, volume:pv.volume))
+            }
+            println("OfferDetail dim: "+od.dimension)
+        }
+        
+        //        def millId = offerHeader.offerDetails.millOfferID
+        //        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
+        //        println(">>> Offerheader: "+offerHeader.sawMill)
+        //        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote_polish", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
     }
 }

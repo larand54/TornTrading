@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <meta name="layout" content="main" />
+        <g:set var="entityName" value="${message(code: 'stocknote.Report.label', default: 'Stocknote Report')}" />
+        <title><g:message code="default.stocknote.report.label" args="[entityName]" /></title>
+        <style type="text/css">
+            @page {
+                size: A4 landscape; //210mm 297mm; // A4 format 
+                @bottom-center { content: element(footer);} // if you want footer
+                @top-center { content: element(header); } // if you want header
+            }
+
+            div.break {
+                page-break-after:always;
+            }
+            .StocknoteTitle {
+                font-size: 1.8em;
+                font-weight: bold;
+                vertical-align: bottom
+            }
+            .StocknoteSpec {
+                font-size: 1.2em;
+                font-weight: bold;
+                vertical-align: bottom
+            }
+            div.row {
+                position: relative;
+                clear: both;
+            }
+            table.tborder, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            div.header_detail {
+                font-size:  1.5em;
+                font-weight: bold;
+                margin-left: 24em;
+            }
+            #is_center {
+                background-color: #dddddd;
+                text-align: center; 
+            }
+            #pv_center {
+                background-color: #eeeeee;
+                text-align: center; 
+            }
+            #is_header1 {
+              background-color: #cccccc;  
+            }
+            #pv_header1 {
+              background-color: #dddddd;  
+            }
+        </style>    
+    </head>
+    <body>
+        <div id="report-Stocknote" class="content scaffold-show" role="main">
+            <table style="width:75%">
+                <tr>
+                <td class="StocknoteTitle">Stan magazyunu i plan produkcji</td>
+                <td class="StocknoteSpec">    ${this.offerHeader.sawMill}</td>
+                <g:if test="${this.offerHeader.species} == 'Redwood'">
+                    <td class="StocknoteSpec">Sosna</td>
+                </g:if>
+                <g:elseif test="${this.offerHeader.species} == 'Whitewood'">
+                    <td class="StocknoteSpec">Świerk</td>
+                </g:elseif>
+                <g:else>
+                    <td class="StocknoteSpec">    ${this.offerHeader.species}</td>
+                </g:else>
+                </tr>
+            </table>
+            <g:if test="${flash.message}">
+                <div class="message" role="status">${flash.message}</div>
+            </g:if>
+            <g:hasErrors bean="${this.offerHeader}">
+                <ul class="errors" role="alert">
+                    <g:eachError bean="${this.offerHeader}" var="error">
+                        <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
+                        </g:eachError>
+                </ul>
+            </g:hasErrors>
+            <g:render template="StocknoteHeader_polish" model="[offerHeader:offerHeader]"/>
+
+            <g:render template="StocknoteDetail_polish" model="[offerDetail:offerDetail]"/>
+
+<!--            <div class="break"/>-->
+        </div>
+    </body>
+</html>
