@@ -24,7 +24,6 @@
     </thead>
     <tbody>
         <tr>
-
             <td>${offerHeader?.currency}</td>
             <td>${offerHeader?.termsOfDelivery}</td>
             <td id="sum_right">${offerHeader?.freight}</td>

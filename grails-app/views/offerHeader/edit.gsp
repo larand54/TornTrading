@@ -62,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <g:each in="${offerHeader.offerDetails}" status="i" var="od">
+                        <g:each in="${offerHeader.offerDetails.sort{it.dimension}}" status="i" var="od">
                             <tr>
                                 <td>${od?.species}</td>
                                 <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.dimension?.encodeAsHTML()}</g:link></td>

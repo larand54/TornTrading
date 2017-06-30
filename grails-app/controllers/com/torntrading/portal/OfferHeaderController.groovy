@@ -12,6 +12,7 @@ import com.torntrading.portal.OfferDetail
 class OfferHeaderController {
     def offerHeaderService
     def prodBufferService
+    def springSecurityService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -195,6 +196,8 @@ class OfferHeaderController {
     def report() {
         println "Report params: "+params
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+        def currentUser = springSecurityService.currentUser
+        def us = currentUser.userSettings
         if (offerHeader.freight == null) {
             flash.message = 'Shipment not entered!'
             respond offerHeader.errors, view:'edit'
@@ -202,12 +205,14 @@ class OfferHeaderController {
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader],   filename: "offertrapport-"+params.id+".pdf")
+        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us],   filename: "offertrapport-"+params.id+".pdf")
 //        notFound()
     }
     def reportpolish() {
         println "Report params: "+params
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+        def currentUser = springSecurityService.currentUser
+        def us = currentUser.userSettings
         if (offerHeader.freight == null) {
             flash.message = 'Shipment not entered!'
             respond offerHeader.errors, view:'edit'
@@ -215,7 +220,7 @@ class OfferHeaderController {
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader],   filename: "offertrapport-"+params.id+".pdf")
+        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us],   filename: "offertrapport-"+params.id+".pdf")
 //        notFound()
     }
 }

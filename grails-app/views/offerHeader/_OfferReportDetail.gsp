@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            <g:each in="${offerHeader.offerDetails}" status="i" var="od">
+            <g:each in="${offerHeader.offerDetails.sort{it.dimension}}" status="i" var="od">
                 <tr>
                     <td id="is_center">${od?.dimension}</td>
                     <td id="is_center">${od?.lengthDescr}</td>

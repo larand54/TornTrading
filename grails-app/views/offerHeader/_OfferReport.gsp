@@ -15,6 +15,13 @@ div.break {
   page-break-after:always;
 }
 
+div.summary {
+    page-break-inside: avoid;
+}
+div.contact {
+    page-break-inside: avoid;
+}
+
 #sum_right {
                 text-align: right; 
             }
