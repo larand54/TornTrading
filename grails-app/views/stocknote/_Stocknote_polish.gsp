@@ -64,7 +64,7 @@
                     <td class="StocknoteSpec">Sosna</td>
                 </g:if>
                 <g:elseif test="${this.offerHeader.species} == 'Whitewood'">
-                    <td class="StocknoteSpec">Świerk</td>
+                    <td class="StocknoteSpec">Swierk</td>
                 </g:elseif>
                 <g:else>
                     <td class="StocknoteSpec">    ${this.offerHeader.species}</td>

@@ -27,21 +27,21 @@
         <thead>
             <tr>
                 <th id="is_header1" colspan="9">Na Magazynie</th>
-                <th id="pv_header1" colspan="12">Planowana produkcja na sprzedaż</th>
+                <th id="pv_header1" colspan="12">Planowana produkcja na sprzedaz</th>
             </tr>
             
             <tr>
                 <th id="is_center">Wymiar (mm)</th>
-                <th id="is_center">Długość</th>
-                <th id="is_center">Wilgotność (%)</th>
+                <th id="is_center">Dlugosc</th>
+                <th id="is_center">Wilgotnosc (%)</th>
                 <th id="is_center">Klasa</th>
                 <th id="is_center">FSC</th>
                 <th id="is_center">PEFC</th>
                 <th id="is_center">Un Certified</th>
                 <th id="is_center">Ctrl Wood</th> 
-                <th id="is_center">Ilość (m3)</th>
+                <th id="is_center">Ilosc (m3)</th>
                 <g:each var="week" in="${(0..11)}">
-                    <th id="pv_center">${myTag.weekNo(offset: week+1)}</th>            
+                    <th id="pv_center">${myTag.weekNo_polish(offset: week+1)}</th>            
                 </g:each>
             </tr>
             

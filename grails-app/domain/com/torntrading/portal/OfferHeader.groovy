@@ -19,6 +19,7 @@ class OfferHeader {
     Integer             agentFee  = 3      //%
     Date		dateCreated
     int                 createdBy 
+    Date                validUntil
 
     static hasMany =[offerDetails: OfferDetail]
     def beforeInsert() {
@@ -82,6 +83,7 @@ class OfferHeader {
                 offerType       nullable:true
                 freight         nullable:true
                 species         nullable:true
+                validUntil      nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?

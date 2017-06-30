@@ -7,7 +7,7 @@
 </fieldset>
 <fieldset class="form">
     <legend>Delivery</legend>
-    <table style="width:50%">
+    <table style="width:70%">
         <tr>
             
             <td>Sawmill:   <g:field class="elements" type="text" name="sawMill" readonly="y" value="${offerHeader?.sawMill}" size="24"/></td>
@@ -16,7 +16,8 @@
                 value="${offerHeader?.termsOfDelivery}" required="N"/></td>
             <td>Freight <g:field class="elements" type="number decimal" name="freight" required="Y" value="${fieldValue(bean: offerHeader, field: 'freight')}" style="width: 6em"/>   
             <td>Fee(%) <g:field class="elements" min="0" max="25" type="number" name="agentFee"  value="${fieldValue(bean: offerHeader, field: 'agentFee')}" style="width: 4em"/>   
-            
+            <td>Valid until:<g:datePicker name="offerValidDate" value="${offerHeader.validUntil}" precision="day" default="${new Date().plus(30)}"/></td>
+
         </tr>
     </table>
 </fieldset>

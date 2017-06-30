@@ -12,6 +12,13 @@ class TimeTagLib {
         def week = calendar.get(Calendar.WEEK_OF_YEAR)
         out  << String.format("W%02d", week)
     }
+    def weekNo_polish = {attrs, body ->
+        Date date = new Date()
+        def calendar = date.toCalendar()
+        calendar.add(Calendar.DATE,7*(attrs.offset as int))
+        def week = calendar.get(Calendar.WEEK_OF_YEAR)
+        out  << String.format("T%02d", week)
+    }
     def yearWeekNo = {attrs, body ->
         Date date = new Date()
         def calendar = date.toCalendar()

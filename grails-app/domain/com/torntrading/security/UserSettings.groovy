@@ -6,6 +6,12 @@ class UserSettings {
     String supplierName
     String currency
     String volumeUnit
+    String name
+    String company
+    String email
+    String tel
+    String phone
+    String mobile
    
     static belongsTo = [user : User]
     static mapping = {
@@ -23,6 +29,12 @@ class UserSettings {
         currency        nullable:true
         volumeUnit      nullable:true
         supplierName    nullable:true
+        name            nullable:true
+        company         nullable:true
+        email           nullable:true
+        tel             nullable:true
+        phone           nullable:true
+        mobile          nullable:true
 
     }
 }

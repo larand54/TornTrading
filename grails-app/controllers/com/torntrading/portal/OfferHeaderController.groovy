@@ -2,6 +2,8 @@ package com.torntrading.portal
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+import sun.util.calendar.LocalGregorianCalendar.Date
+
 import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.portal.OfferDetail
 
@@ -65,6 +67,7 @@ class OfferHeaderController {
 
     @Transactional
     def update(OfferHeader offerHeader) {
+        println("offerHeaderController, params: "+params)
         if (offerHeader == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -90,7 +93,7 @@ class OfferHeaderController {
             return            
         }
 
-        if (params.status == 'Active' && oldStatus != 'New') {
+        if (params.status == 'Active' && (oldStatus != 'New') && (oldStatus != 'Active')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'You can not back status to active!'
             respond offerHeader.errors, view:'edit'
@@ -142,6 +145,8 @@ class OfferHeaderController {
             respond offerHeader.errors, view:'edit'
             return            
         }
+        println("OfferHeaderController - date: "+params.offerValidDate)
+        offerHeader.validUntil = params.date('offerValidDate', 'yyyy-MM-dd')
         offerHeader.save flush:true
 
         request.withFormat {
@@ -198,6 +203,19 @@ class OfferHeaderController {
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
         renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader],   filename: "offertrapport-"+params.id+".pdf")
+//        notFound()
+    }
+    def reportpolish() {
+        println "Report params: "+params
+        def OfferHeader offerHeader = OfferHeader.get(params.id)
+        if (offerHeader.freight == null) {
+            flash.message = 'Shipment not entered!'
+            respond offerHeader.errors, view:'edit'
+            return
+        }
+        println(">>> Offerheader: "+offerHeader.sawMill)
+//        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
+        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader],   filename: "offertrapport-"+params.id+".pdf")
 //        notFound()
     }
 }

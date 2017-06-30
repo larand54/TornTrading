@@ -19,6 +19,7 @@
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
                 <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
                 <li><a class="print" href="${createLink(action:'report', params:[id:this.offerHeader.id])}"><g:message code="default.offer.report.label"/></a></li>
+                <li><a class="print" href="${createLink(action:'reportpolish', params:[id:this.offerHeader.id])}"><g:message code="default.offer.report.polish.label"/></a></li>
             </ul>
             </div>
             <div id="edit-offerHeader" class="content scaffold-edit" role="main">

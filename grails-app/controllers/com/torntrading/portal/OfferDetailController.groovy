@@ -118,14 +118,12 @@ class OfferDetailController {
 /*        offerDetail.plannedVolumes = ProdBuffer.get(offerDetail.millOfferID).plannedVolumes
         offerDetail.inStock = ProdBuffer.get(offerDetail.millOfferID).volumeInStock
 */
-println("OfferDetailController-EDIT-Count1: "+offerDetail.offerPlannedVolumes.count)
-println("OfferDetailController-EDIT-Count2: "+offerDetail.availableVolumes.count)
         if(offerDetail.useWeeklyVolumes) {
             prodBufferService.checkWeekStatus()
             offerDetailService.setAvailableVolumes(offerDetail)
         }
-       
-        respond offerDetail, model:[offerPlannedVolumes:offerDetail.offerPlannedVolumes, availableVolumes:offerDetail.availableVolumes]
+        def ProdBuffer pb = ProdBuffer.get(offerDetail.millOfferID)
+        respond offerDetail, model:[offerPlannedVolumes:offerDetail.offerPlannedVolumes, availableVolumes:offerDetail.availableVolumes, prodBuffer:pb]
     }
 
     @Transactional
@@ -161,6 +159,7 @@ println("OfferDetailController-EDIT-Count2: "+offerDetail.availableVolumes.count
         }
         
         if (offerDetail.useWeeklyVolumes) {
+            offerDetailService.checkOldVolumesAndCorrect(offerDetail)
             println("OfferDetailController.update, fromStock: "+params.fromStock)
             def Double offerVolume = offerDetailService.addWeekVolumes(offerDetail, params)
             if (offerVolume >= 0.0) {
@@ -265,8 +264,8 @@ println("OfferDetailController-EDIT-Count2: "+offerDetail.availableVolumes.count
             }
             od.save(flush:true)
         }
-
-        render(template: "OfferDData", model:[offerDetail:od,offerPlannedVolumes:od.offerPlannedVolumes,availableVolumes: OfferWeeklyAvailableVolume])
+       def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
+        render(template: "OfferDData", model:[offerDetail:od,offerPlannedVolumes:od.offerPlannedVolumes,availableVolumes: OfferWeeklyAvailableVolume, prodBuffer:pb])
     }
     
 }

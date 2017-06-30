@@ -108,12 +108,18 @@ class UserController {
         }
 
         user.us = new UserSettings(supplierName:params.sawMill, currency:params.currency, volumeUnit:'AM3')
+        user.us.name = params.uName
+        user.us.company = params.uCompany
+        user.us.email = params.uEmail
+        user.us.tel = params.uTel
+        user.us.phone = params.uPhone
+        user.us.mobile = params.uMobile
         user.us.save flush:true
         user.save flush:true
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), user.id])
-                redirect user
+                redirect controller: "user", action: "edit", id: "${user.id}"
             }
             '*' { respond user, [status: CREATED] }
         }
@@ -141,15 +147,22 @@ class UserController {
 
         user.us.supplierName = params.sawMill
         user.us.currency = params.currency
+        user.us.name = params.uName
+        user.us.company = params.uCompany
+        user.us.email = params.uEmail
+        user.us.tel = params.uTel
+        user.us.phone = params.uPhone
+        user.us.mobile = params.uMobile
         user.us.save flush:true
         user.save flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label', default: 'User'), user.id])
-                redirect user
+                redirect controller: "user", action: "edit", id: "${user.id}"
             }
-            '*'{ respond user, [status: OK] }
+            redirect controller: "user", action: "edit", id: "${user.id}"
+//            '*'{ respond user, [status: OK] }
         }
     }
 

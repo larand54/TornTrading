@@ -46,7 +46,7 @@ class OfferDetailService {
     }
     
     def setAvailableVolumes(OfferDetail aOD) {
-        println("setAvailableVolumes - volume: ")
+        //        println("setAvailableVolumes - volume: ")
         def pb = ProdBuffer.get(aOD.millOfferID)
         aOD.inStock = pb.volumeInStock
         def oav = aOD.availableVolumes
@@ -54,23 +54,23 @@ class OfferDetailService {
         for (pv in pvl) {
             def ov = oav.find {it.week==pv.week}
             ov.volume = pv.volume
-            println("setAvailableVolumes - volume: "+pv.volume+" - "+ov.week+" - "+pv.week+" OF.Vol: "+ov.volume)
+            //            println("setAvailableVolumes - volume: "+pv.volume+" - "+ov.week+" - "+pv.week+" OF.Vol: "+ov.volume)
         }
 
     }
     
     def Double addWeekVolumes( OfferDetail aOD, params) {
-        println("AddWeeklyVolumes - params: "+params)
+        //        println("AddWeeklyVolumes - params: "+params)
         Double[] totAvailableVolumeAtWeek = new Double[12]// Totalt tillgänglig volym för vecka
         Double[] usedVolumeAtWeek = new Double[12]     // Offeread volym för vecka
 
-        println("addWeekVolumes - volumeInStock:: "+aOD.inStock)
+        //        println("addWeekVolumes - volumeInStock:: "+aOD.inStock)
         def Double volumeInStock = new Double(aOD.inStock)
         def availableVolume = volumeInStock
         def avl = aOD.availableVolumes
         int i = 0
         for (av in avl) {
-            println("addWeekVolumes - volume: "+av.volume)
+            //            println("addWeekVolumes - volume: "+av.volume)
             availableVolume = availableVolume + av.volume
             totAvailableVolumeAtWeek[i] = availableVolume
             i++
@@ -78,55 +78,55 @@ class OfferDetailService {
         Double[] uVol = new Double[12]
         if (params.vol1 == '') uVol[0] = 0
         else
-            uVol[0] = params.vol1.toDouble()
+        uVol[0] = params.vol1.toDouble()
             
         if (params.vol2 == '') uVol[1] = 0
         else
-            uVol[1] = params.vol2.toDouble()
+        uVol[1] = params.vol2.toDouble()
         
         if (params.vol3 == '') uVol[2] = 0
         else
-            uVol[2] = params.vol3.toDouble()
+        uVol[2] = params.vol3.toDouble()
 
         if (params.vol4 == '') uVol[3] = 0
         else
-            uVol[3] = params.vol4.toDouble()
+        uVol[3] = params.vol4.toDouble()
         
         if (params.vol5 == '') uVol[4] = 0
         else
-            uVol[4] = params.vol5.toDouble()
+        uVol[4] = params.vol5.toDouble()
         
         if (params.vol6 == '') uVol[5] = 0
         else
-            uVol[5] = params.vol6.toDouble()
+        uVol[5] = params.vol6.toDouble()
         
         if (params.vol7 == '') uVol[6] = 0
         else
-            uVol[6] = params.vol7.toDouble()
+        uVol[6] = params.vol7.toDouble()
         
         if (params.vol8 == '') uVol[7] = 0
         else
-            uVol[7] = params.vol8.toDouble()
+        uVol[7] = params.vol8.toDouble()
         
         if (params.vol9 == '') uVol[8] = 0
         else
-            uVol[8] = params.vol9.toDouble()
+        uVol[8] = params.vol9.toDouble()
         
         if (params.vol10 == '') uVol[9] = 0
         else
-            uVol[9] = params.vol10.toDouble()
+        uVol[9] = params.vol10.toDouble()
         
         if (params.vol11 == '') uVol[10] = 0
         else
-            uVol[10] = params.vol11.toDouble()
+        uVol[10] = params.vol11.toDouble()
         
         if (params.vol12 == '') uVol[11] = 0
         else
-            uVol[11] = params.vol12.toDouble()
+        uVol[11] = params.vol12.toDouble()
 
         Double usedVolume = aOD.fromStock
-        println("addWeekVolumes - FromStock: "+usedVolume)
-        println("addWeekVolumes - InStock: "+volumeInStock)
+        //        println("addWeekVolumes - FromStock: "+usedVolume)
+        //        println("addWeekVolumes - InStock: "+volumeInStock)
         
         if (usedVolume > volumeInStock) {
             return -1.0
@@ -141,9 +141,10 @@ class OfferDetailService {
                 } 
 
             }
-            println("addWeekVolumes - uVol: "+uVol[i]+" Index: "+i)
+            /*            println("addWeekVolumes - uVol: "+uVol[i]+" Index: "+i)
             println("addWeekVolumes - avai: "+totAvailableVolumeAtWeek[i])
             println("addWeekVolumes - Stock: "+volumeInStock)
+             */
         }
         println("addWeekVolumes - uVol: "+usedVolume)
         
@@ -178,5 +179,22 @@ class OfferDetailService {
         opv[weekListSize-1].volume = 0
         opv[weekListSize-1].save(flush:true, failOnError:true)
     }
-
+    
+    def checkOldVolumesAndCorrect(OfferDetail aOD) {
+        if (aOD.oldVolume > 0.001) {
+            println("OfferDetailService.CheckOldVolumesAndCorrect - oldVolume: "+aOD.oldVolume)
+            def weekListSize = 12
+            def  opv = aOD.offerPlannedVolumes
+            def  oav = aOD.availableVolumes
+        
+            aOD.inStock = aOD.inStock + aOD.fromStock
+            for (int i=0; i< weekListSize; i++) {
+                oav[i].volume = oav[i].volume + opv[i].volume
+                opv[i].volume = 0.0
+                opv[i].save(failOnError:true)
+                oav[i].save(failOnError:true)
+            }
+        }
+    }
+ 
 }

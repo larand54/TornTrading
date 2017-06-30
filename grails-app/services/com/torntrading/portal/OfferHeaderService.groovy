@@ -33,7 +33,7 @@ class OfferHeaderService {
     def addOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.addOfferVolume(pb, od)  
+            prodBufferService.addOfferVolume(pb, od.volumeOffered)  
         }
     }
     

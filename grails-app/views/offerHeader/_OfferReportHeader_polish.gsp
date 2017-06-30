@@ -1,12 +1,12 @@
 <h3>
     <table style="width:50%">
         <tr>
-            <td>Offer no: ${offerHeader?.id}</td>
-            <td>Valid until: <g:formatDate format="yyyy-MM-dd" date="${offerHeader?.validUntil}"/></td>
+            <td>Oferta nr : ${offerHeader?.id}</td>
+            <td>Wazna do: <g:formatDate format="yyyy-MM-dd" date="${offerHeader?.validUntil}"/></td>
         </tr>
     </table>
 </h3>
-<h2> Delivery </h2>
+<h2> Dostawa </h2>
 <table style="width:100%">
     <colgroup>
         <col width="20%"/>
@@ -16,11 +16,11 @@
     </colgroup>
     <thead>
         <tr>
-            <th>Currency</th>
-            <th>Terms of delivery (Incoterms)</th>
-            <th id="sum_right">Shipment</th>
+            <th>Waluta</th>
+            <th>Warunki dostawy (Incoterms)</th>
+            <th id="sum_right">Wysylka</th>
             <th></th>
-        </tr>
+    </tr>
     </thead>
     <tbody>
         <tr>
