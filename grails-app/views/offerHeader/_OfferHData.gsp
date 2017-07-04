@@ -7,7 +7,7 @@
 </fieldset>
 <fieldset class="form">
     <legend>Delivery</legend>
-    <table style="width:70%">
+    <table style="width:100%">
         <tr>
             
             <td>Sawmill:   <g:field class="elements" type="text" name="sawMill" readonly="y" value="${offerHeader?.sawMill}" size="24"/></td>
