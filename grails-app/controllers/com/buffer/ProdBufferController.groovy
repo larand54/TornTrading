@@ -126,41 +126,53 @@ class ProdBufferController {
         }
         
         pvl[0].volume = params.vol1.toDouble()
+        pvl[0].initialVolume = pvl[0].volume
         println("XXXX volume: "+pvl[0].volume)
         pvl[0].save(failOnError:true)
 
         pvl[1].volume = params.vol2.toDouble()
+        pvl[1].initialVolume = pvl[1].volume
         println("XXXX volume: "+pvl[1].volume)
         pvl[1].save(failOnError:true)
 
         pvl[2].volume = params.vol3.toDouble()
+        pvl[2].initialVolume = pvl[2].volume
         pvl[2].save(failOnError:true)
 
         pvl[3].volume = params.vol4.toDouble()
+        pvl[3].initialVolume = pvl[3].volume
         pvl[3].save(failOnError:true)
 
         pvl[4].volume = params.vol5.toDouble()
+        pvl[4].initialVolume = pvl[4].volume
         pvl[4].save(failOnError:true)
 
         pvl[5].volume = params.vol6.toDouble()
+        pvl[5].initialVolume = pvl[5].volume
         pvl[5].save(failOnError:true)
 
         pvl[6].volume = params.vol7.toDouble()
+        pvl[6].initialVolume = pvl[6].volume
         pvl[6].save(failOnError:true)
 
         pvl[7].volume = params.vol8.toDouble()
+        pvl[7].initialVolume = pvl[7].volume
         pvl[7].save(failOnError:true)
 
         pvl[8].volume = params.vol9.toDouble()
+        pvl[8].initialVolume = pvl[8].volume
         pvl[8].save(failOnError:true)
 
         pvl[9].volume = params.vol10.toDouble()
+        pvl[9].initialVolume = pvl[9].volume
         pvl[9].save(failOnError:true)
 
         pvl[10].volume = params.vol11.toDouble()
+        pvl[10].initialVolume = pvl[10].volume
         pvl[10].save(failOnError:true)
 
         pvl[11].volume = params.vol12.toDouble()
+        pvl[11].initialVolume = pvl[11].volume
         pvl[11].save(failOnError:true)
 
         println(">>>> VolumeList: "+pvl)

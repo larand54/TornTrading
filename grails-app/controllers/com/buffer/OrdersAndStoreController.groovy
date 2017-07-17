@@ -30,7 +30,7 @@ class OrdersAndStoreController {
         WtStatus wts = WtStatus.get(id)?:new WtStatus(id:1).save(failOnError:true)
         ////        def WtStatus wts = WtStatus.findOrSaveById( id )
         prodBufferService.checkWeekStatus()
-        //prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
+//        prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
         def List<String> millList = getMills()
         def List<ProdBuffer> pbl = getBufferList()
         def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())

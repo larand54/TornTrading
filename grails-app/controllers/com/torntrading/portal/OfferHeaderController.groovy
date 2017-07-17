@@ -148,6 +148,7 @@ class OfferHeaderController {
         }
         println("OfferHeaderController - date: "+params.offerValidDate)
         offerHeader.validUntil = params.date('offerValidDate', 'yyyy-MM-dd')
+        offerHeader.info = params.info
         offerHeader.save flush:true
 
         request.withFormat {

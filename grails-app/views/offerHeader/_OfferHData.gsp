@@ -4,6 +4,7 @@
 <fieldset class="form">
     Set status: <g:select name="status" from="${offerHeader.constrainedProperties.status.inList}" 
     value="${offerHeader?.status}" required="Y"/>
+    Info: <g:textArea name="info" value="${offerHeader?.info}" rows="4" cols="125" maxlength="450" style="width:60em; height: 8em" />
 </fieldset>
 <fieldset class="form">
     <legend>Delivery</legend>

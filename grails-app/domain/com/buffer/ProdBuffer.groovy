@@ -156,7 +156,6 @@ class ProdBuffer {
         for (int i=0; i<12; i++) {
             def pv = new PlannedVolume(week:i+1 as Integer, volume:0 as Double)
             addToPlannedVolumes(pv)
-            println("Add planned volume record: "+i)
         }
     }
     
