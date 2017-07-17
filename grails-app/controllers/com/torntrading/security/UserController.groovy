@@ -168,7 +168,6 @@ class UserController {
 
     @Transactional
     def delete(User user) {
-
         if (user == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -178,14 +177,13 @@ class UserController {
         UserRole.removeAll(user)
 
         user.delete flush:true
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'user.label', default: 'User'), user.id])
+        redirect action:"index", method:"GET"
+    }
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'user.label', default: 'User'), user.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+    def deleteUser(User user) {
+        delete(user)
+        return
     }
 
     protected void notFound() {

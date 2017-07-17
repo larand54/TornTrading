@@ -35,6 +35,7 @@
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+                    <g:link class="delete" action="deleteUser" resource="${this.user}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"><g:message code="default.button.delete.label" args="[entityName]" default="Delete"/></g:link>
                 </fieldset>
             </g:form>
         </div>

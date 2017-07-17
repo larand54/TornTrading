@@ -99,9 +99,10 @@ class OrdersAndStoreController {
     def add_prodBuffer() {
         redirect(controller: "prodBuffer", action: "create", id: params.id)
     }
+    
     def List<String> getMills() {
         System.out.println("getMills <<<<")
-        ProdBuffer.executeQuery("SELECT DISTINCT sawMill FROM ProdBuffer")
+        ProdBuffer.executeQuery("SELECT DISTINCT sawMill FROM ProdBuffer WHERE sawMill is not NULL")
     }
     def List<String> getActiveAvailableMills() {
         System.out.println("getActiveAvailableMills <<<<")
@@ -207,6 +208,11 @@ class OrdersAndStoreController {
     }    
     
     def createOffer(String offerType){
+        if(params.toOffer==null) {
+            flash.message = "No product selected!" 
+            redirect action:"list", method:"GET" 
+            return
+        }
         int count=0
         def ofh = createOfferHeader()
         if (ofh != null) {
@@ -295,7 +301,7 @@ class OrdersAndStoreController {
         ofd.endPrice = price
         ofd.choosedCert = cert
         ofd.markup = ofd.endPrice * 0.01 * ofh.agentFee
-        ofd.dimension = pb.dimension
+        ofd.dimension = pb.dimension?:''
         ofd.weekStart = pb.weekStart
         ofd.millOfferID = id
         ofd.offerType = offerType

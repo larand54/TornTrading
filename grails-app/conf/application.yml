@@ -109,6 +109,7 @@ environments:
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
             password: woods2011
+
     test:
         dataSource:
             dbCreate: update
@@ -116,9 +117,19 @@ environments:
     production:
         dataSource:
             dbCreate: none
-#            url: jdbc:jtds:sqlserver://localhost:49678/tt_portal
+#            url: jdbc:jtds:sqlserver://localhost:1433/tt_portal_utv
             url: jdbc:jtds:sqlserver://192.168.225.11:1433/tt_sys
             driverClassName: net.sourceforge.jtds.jdbc.Driver
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
+#            password: woods2011
             password: Avoc3nt
+        server:
+            port:  8443                                 # The port to listen on
+            ssl:
+                enabled: true                           # Activate HTTPS mode on the server port
+            key-store: "D:/tomcat/keyStore/.keystore"         # e.g. /etc/tomcat7/keystore/tomcat.keystore
+            key-store-password: jO9YxprVlix2cdL32W7w    # e.g. changeit
+            key-alias: tomcat                           # e.g. tomcat
+            key-password: jO9YxprVlix2cdL32W7w
+

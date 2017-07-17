@@ -2,16 +2,18 @@
     Set status: <g:select name="status" from="${prodBuffer?.constrainedProperties.status.inList}" 
     value="${prodBuffer?.status}" required="Y"/>
 </fieldset>
-<input type="hidden" name="sawMill" value="${myTag.userCompany()}" />
+ <g:if test="${motherview=='create'}">
+     <input type="hidden" name="sawMill" value="${myTag.userCompany()}" />
+ </g:if>
 <table style="width:100%">
     <tr>
         <td>
             <fieldset>
                 <legend>Product specifications</legend>
                 Wood:  <g:select name="species" from="${prodBuffer?.constrainedProperties.species.inList}" value="${prodBuffer?.species}"/> 
-                Dimension:  <g:field class="elements" type="text" name="dimension"  value="${prodBuffer?.dimension}" size="100", maxlength="150"/>
-                Length:     <g:field class="elements" type="text" name="length"   value="${prodBuffer?.length}" size="40", maxlength="255"/>
-                KD(%):     <g:field class="elements" type="text" name="kd"   value="${prodBuffer?.kd}" size="2"/>
+                Dimension:  <g:field class="elements" type="text" name="dimension"  required="yes" value="${prodBuffer?.dimension}" size="100", maxlength="150"/>
+                Length:     <g:field class="elements" type="text" name="length"   required="yes" value="${prodBuffer?.length}" size="40", maxlength="255"/>
+                KD(%):     <g:field class="elements" type="text" name="kd"   required="yes" value="${prodBuffer?.kd}" size="2"/>
                 Grade:  <g:select name="grade" from="${prodBuffer?.constrainedProperties.grade.inList}" value="${prodBuffer?.grade}"/>
             </fieldset>
         </td>

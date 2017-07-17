@@ -69,7 +69,7 @@ class ProdBufferController {
 
     @Transactional
     def update(ProdBuffer prodBuffer) {
-        println('UPDATE: '+params.id)
+        println('UPDATE: '+params.id+' profBuffer.mill: '+prodBuffer.sawMill)
         if (prodBuffer == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -95,7 +95,7 @@ class ProdBufferController {
 
         addVolumes(prodBuffer)
         
-        println('UPDATE SAVE: '+params.id)
+        println('UPDATE SAVE: '+params.id+' profBuffer.mill: '+prodBuffer.sawMill)
         prodBuffer.save flush:true
 
         request.withFormat {
@@ -108,6 +108,13 @@ class ProdBufferController {
         }
     }
 
+    
+    def validateInput() {
+        flash.Message = 'Test'
+        respond
+    }
+    
+    
     def addVolumes(ProdBuffer prodBuffer) {
         def pvl = prodBuffer.plannedVolumes
         def Double totalVolChange = params.vol1.toDouble() + params.vol2.toDouble() + params.vol3.toDouble() + 

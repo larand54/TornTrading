@@ -37,41 +37,26 @@ class BootStrap {
             def salesRole = Role.findByAuthority('ROLE_SALES')?:new Role(authority: 'ROLE_SALES').save(failOnError:true)
             def supplierRole = Role.findByAuthority('ROLE_SUPPLIER')?:new Role(authority: 'ROLE_SUPPLIER').save(failOnError:true)
 
-            def testUser = User.findByUsername('me')?:new User(username: 'me', password: 'me').save(failOnError:true)
-            def guestUser = User.findByUsername('he')?:new User(username: 'he', password: 'he').save(failOnError:true)
             def salesUser = User.findByUsername('seller')?:new User(username: 'seller', password: 'sales2017').save(failOnError:true)
             def larandUser = User.findByUsername('larand')?:new User(username: 'larand', password: 'mulan2010').save(failOnError:true)
             def lmUser = User.findByUsername('lars')?:new User(username: 'lars', password: 'woods2011!').save(failOnError:true)
-            def supplierUser1 = User.findByUsername('supplier1')?:new User(username: 'supplier1', password: 'supplier1').save(failOnError:true)
-            def supplierUser2 = User.findByUsername('supplier2')?:new User(username: 'supplier2', password: 'supplier2').save(failOnError:true)
-            def supplierUser3 = User.findByUsername('supplier3')?:new User(username: 'supplier3', password: 'supplier3').save(failOnError:true)
             def borje = User.findByUsername('borje')?:new User(username: 'borje', password: 'borje').save(failOnError:true)
             def joakim = User.findByUsername('joakim')?:new User(username: 'joakim', password: 'joakim').save(failOnError:true)
             def woodfix = User.findByUsername('woodfix')?:new User(username: 'woodfix', password: 'woodfix').save(failOnError:true)
             def kSeger = User.findByUsername('kSeger')?:new User(username: 'kSeger', password: 'kSeger').save(failOnError:true)
             
 
-            def tus = UserSettings.findByUser(testUser)?:new UserSettings(user:testUser, supplierName:'Boda', currency:'USD', volumeUnit: 'PKG').save(failOnError:true) 
-            def gus = UserSettings.findByUser(guestUser)?:new UserSettings(user:guestUser, supplierName:'Boda2', currency:'GBP', volumeUnit: 'AM3').save(failOnError:true) 
             def sus = UserSettings.findByUser(salesUser)?:new UserSettings(user:salesUser, supplierName:'Boda', currency:'EUR', volumeUnit: 'AM3').save(failOnError:true) 
             def laus = UserSettings.findByUser(larandUser)?:new UserSettings(user:larandUser, supplierName:'Boda', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true) 
-            def lmus = UserSettings.findByUser(lmUser)?:new UserSettings(user:lmUser, supplierName:'Boda2', currency:'SEK', volumeUnit: 'PKG').save(failOnError:true) 
-            def userSettings1 = UserSettings.findByUser(supplierUser1)?:new UserSettings(user:supplierUser1, supplierName:'supplier1', currency:'USD', volumeUnit: 'PKG').save(failOnError:true) 
-            def userSettings2 = UserSettings.findByUser(supplierUser2)?:new UserSettings(user:supplierUser2, supplierName:'supplier2', currency:'EUR', volumeUnit: 'AM3').save(failOnError:true)
-            def userSettings3 = UserSettings.findByUser(supplierUser3)?:new UserSettings(user:supplierUser3, supplierName:'supplier3', currency:'GBP', volumeUnit: 'PKG').save(failOnError:true) 
+            def lmus = UserSettings.findByUser(lmUser)?:new UserSettings(user:lmUser, supplierName:'Boda', currency:'SEK', volumeUnit: 'PKG').save(failOnError:true) 
             def jous = UserSettings.findByUser(joakim)?:new UserSettings(user:joakim, supplierName:'Boda', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
             def bous = UserSettings.findByUser(borje)?:new UserSettings(user:borje, supplierName:'Boda', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
             def wf = UserSettings.findByUser(woodfix)?:new UserSettings(user:woodfix, supplierName:'WOODFIX AB', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
             def ks = UserSettings.findByUser(kSeger)?:new UserSettings(user:kSeger, supplierName:'Karl Segerström AB', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
 
-            UserRole.create testUser, adminRole
-            UserRole.create guestUser, userRole
             UserRole.create larandUser, adminRole
             UserRole.create lmUser, adminRole
             UserRole.create salesUser, salesRole
-            UserRole.create supplierUser1, supplierRole
-            UserRole.create supplierUser2, supplierRole
-            UserRole.create supplierUser3, supplierRole
             UserRole.create woodfix, supplierRole
             UserRole.create kSeger, supplierRole
             UserRole.create joakim, adminRole
@@ -109,43 +94,19 @@ class BootStrap {
             def salesRole = Role.findByAuthority('ROLE_SALES')?:new Role(authority: 'ROLE_SALES').save(failOnError:true)
             def supplierRole = Role.findByAuthority('ROLE_SUPPLIER')?:new Role(authority: 'ROLE_SUPPLIER').save(failOnError:true)
 
-            def testUser = User.findByUsername('me')?:new User(username: 'me', password: 'me').save(failOnError:true)
-            def guestUser = User.findByUsername('he')?:new User(username: 'he', password: 'he').save(failOnError:true)
-            def salesUser = User.findByUsername('seller')?:new User(username: 'seller', password: 'sales2017').save(failOnError:true)
             def larandUser = User.findByUsername('larand')?:new User(username: 'larand', password: 'mulan2010').save(failOnError:true)
             def lmUser = User.findByUsername('lars')?:new User(username: 'lars', password: 'woods2011!').save(failOnError:true)
-            def supplierUser1 = User.findByUsername('supplier1')?:new User(username: 'supplier1', password: 'supplier1').save(failOnError:true)
-            def supplierUser2 = User.findByUsername('supplier2')?:new User(username: 'supplier2', password: 'supplier2').save(failOnError:true)
-            def supplierUser3 = User.findByUsername('supplier3')?:new User(username: 'supplier3', password: 'supplier3').save(failOnError:true)
             def borje = User.findByUsername('borje')?:new User(username: 'borje', password: 'borje').save(failOnError:true)
             def joakim = User.findByUsername('joakim')?:new User(username: 'joakim', password: 'joakim').save(failOnError:true)
-            def woodfix = User.findByUsername('woodfix')?:new User(username: 'woodfix', password: 'woodfix').save(failOnError:true)
-            def kSeger = User.findByUsername('kSeger')?:new User(username: 'kSeger', password: 'kSeger').save(failOnError:true)
             
 
-            def tus = UserSettings.findByUser(testUser)?:new UserSettings(user:testUser, supplierName:'Boda', currency:'USD', volumeUnit: 'PKG').save(failOnError:true) 
-            def gus = UserSettings.findByUser(guestUser)?:new UserSettings(user:guestUser, supplierName:'Boda2', currency:'GBP', volumeUnit: 'AM3').save(failOnError:true) 
-            def sus = UserSettings.findByUser(salesUser)?:new UserSettings(user:salesUser, supplierName:'Boda', currency:'EUR', volumeUnit: 'AM3').save(failOnError:true) 
             def laus = UserSettings.findByUser(larandUser)?:new UserSettings(user:larandUser, supplierName:'Boda', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true) 
             def lmus = UserSettings.findByUser(lmUser)?:new UserSettings(user:lmUser, supplierName:'Boda2', currency:'SEK', volumeUnit: 'PKG').save(failOnError:true) 
-            def userSettings1 = UserSettings.findByUser(supplierUser1)?:new UserSettings(user:supplierUser1, supplierName:'supplier1', currency:'USD', volumeUnit: 'PKG').save(failOnError:true) 
-            def userSettings2 = UserSettings.findByUser(supplierUser2)?:new UserSettings(user:supplierUser2, supplierName:'supplier2', currency:'EUR', volumeUnit: 'AM3').save(failOnError:true)
-            def userSettings3 = UserSettings.findByUser(supplierUser3)?:new UserSettings(user:supplierUser3, supplierName:'supplier3', currency:'GBP', volumeUnit: 'PKG').save(failOnError:true) 
             def jous = UserSettings.findByUser(joakim)?:new UserSettings(user:joakim, supplierName:'Boda', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
             def bous = UserSettings.findByUser(borje)?:new UserSettings(user:borje, supplierName:'Boda', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
-            def wf = UserSettings.findByUser(woodfix)?:new UserSettings(user:woodfix, supplierName:'WOODFIX AB', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
-            def ks = UserSettings.findByUser(kSeger)?:new UserSettings(user:kSeger, supplierName:'Karl Segerström AB', currency:'SEK', volumeUnit: 'AM3').save(failOnError:true)
 
-            UserRole.create testUser, adminRole
-            UserRole.create guestUser, userRole
             UserRole.create larandUser, adminRole
             UserRole.create lmUser, adminRole
-            UserRole.create salesUser, salesRole
-            UserRole.create supplierUser1, supplierRole
-            UserRole.create supplierUser2, supplierRole
-            UserRole.create supplierUser3, supplierRole
-            UserRole.create woodfix, supplierRole
-            UserRole.create kSeger, supplierRole
             UserRole.create joakim, adminRole
             UserRole.create borje, adminRole
 

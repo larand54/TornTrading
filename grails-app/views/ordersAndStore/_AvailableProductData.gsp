@@ -22,8 +22,10 @@
         </colgroup>
         <thead>
             <tr>
-                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES,ROLE_SUPPLIER"> 
                     <g:sortableColumn property='delete' title='Del' />
+                </sec:ifAnyGranted>    
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                     <g:sortableColumn property='toOffer' title='Offer' />
                 </sec:ifAnyGranted>    
                 <g:sortableColumn property="id" title='Id' />
@@ -59,17 +61,19 @@
 
             <g:each in="${prodBuffer}" status="i" var="pb"> 
                 <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
-                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES, ROLE_SUPPLIER"> 
                     <td>
                         <g:link action="deleteProduct" controller="ordersAndStore" params="[prodID:pb.id]"
                             onclick="return confirm('Are you sure?')">
                         X
                         </g:link>
                     </td>
+                </sec:ifAnyGranted>    
+                <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                     <td><g:checkBox name="toOffer" value="${pb.id}" checked="false"  /></td>
                 </sec:ifAnyGranted>    
                     <td><g:link action="edit_prodbuffer" id="${pb.id}">${pb.id}</g:link></td>
-                    <td>${pb.sawMill}</td>
+                    <td>${pb.sawMill?:'UnDefined'}</td>
                     <td>${pb.species}</td>
                     <td>${pb.dimension}</td>
                     <td>${pb.length}</td>

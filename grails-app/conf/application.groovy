@@ -4,6 +4,11 @@ grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.torntradin
 grails.plugin.springsecurity.authority.className = 'com.torntrading.security.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/',               access: ['permitAll']],
+	[pattern: '/.well-known/**/acme-chalenge/**', access: ['permitAll']],
+        [pattern: '/AD2F6917563C3933684C2D3AD746575C.txt', access: ['permitAll']],
+	[pattern: '/test.txt', access: ['permitAll']],
+        [pattern: '/certVerification', access: ['permitAll']],
+	[pattern: '/textFile', access: ['permitAll']],
 	[pattern: '/error',          access: ['permitAll']],
 	[pattern: '/index',          access: ['permitAll']],
 	[pattern: '/index.gsp',      access: ['permitAll']],
