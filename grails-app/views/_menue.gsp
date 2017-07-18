@@ -12,7 +12,13 @@
         <a href="/request1/index">Request</a>
 
     </li>
--->    <li >
+-->
+    <li >
+    <sec:ifAnyGranted roles="ROLE_ADMIN"> 
+        <a href="/user">Users</a>
+    </sec:ifAnyGranted>
+    </li>
+    <li >
     <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
         <a href="/offerHeader/index">Offers</a>
     </sec:ifAnyGranted>

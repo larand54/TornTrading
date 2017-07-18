@@ -18,7 +18,7 @@ class OfferHeaderService {
     }
     
     def Boolean volumeOkToSell(OfferHeader aOH) {
-         def result = true
+        def result = true
         for (od in aOH.offerDetails) {
             result = result && (od.volumeOffered > 0.01)
         }
@@ -61,5 +61,32 @@ class OfferHeaderService {
                 od.save(failOnError:true)
             }
         }
+    }
+    
+    def String weeksOfDelivery(OfferHeader aOH) {
+        int yw = prodBufferService.getCurrentYearWeek()
+        int currentWeek = prodBufferService.getWeekFromYearWeek(yw)
+        int currentYear = prodBufferService.getYearFromYearWeek(yw)
+        FirstLastWeek flw = new FirstLastWeek()
+        for (OfferDetail od in aOH.offerDetails) {
+            if (od.useWeeklyVolumes) {
+                if (od.fromStock > 0.01) {
+                    flw.addWeek(0,currentWeek,currentYear)  
+                }
+                for(OfferPlannedVolume opv in od.offerPlannedVolumes) {
+                    int tempYw = yw + opv.week
+                    currentWeek = prodBufferService.getWeekFromYearWeek(tempYw)
+                    currentYear = prodBufferService.getYearFromYearWeek(tempYw)
+                    if (opv.volume > 0.001) {
+                        flw.addWeek(opv.week,currentWeek,currentYear)
+                    }
+                } 
+            } else {
+               currentWeek = prodBufferService.getWeekFromYearWeek(yw)
+               currentYear = prodBufferService.getYearFromYearWeek(yw)
+               flw.addWeek(opv.week,currentWeek,currentYear) 
+            }    
+        }
+        return flw.toString()
     }
 }

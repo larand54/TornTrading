@@ -4,7 +4,6 @@ class OfferHeader {
     def springSecurityService
     String              termsOfDelivery
     String              info
-    String              placeOfDelivery
     String              company
     String              country
     String              city
@@ -45,7 +44,6 @@ class OfferHeader {
         contactPhone     column: "contactPhone",   sqltype: 'char', length: 25
         contactEmail     column: "contactEmail",   sqltype: "char", length: 100
         info             column: "info",           sqltype: "char", length: 500
-        placeOfDelivery  column: "place_of_delivery",sqltype: "char", length: 50
         agentFee         column: "agentFee",       sqltype: "int"
 
     }
@@ -74,7 +72,6 @@ class OfferHeader {
 
                 sawMill         nullable:true
                 info            nullable:true
-                placeOfDelivery nullable:true
                 termsOfDelivery nullable:true
                 contactPhone    nullable:true
                 contactEmail    nullable:true

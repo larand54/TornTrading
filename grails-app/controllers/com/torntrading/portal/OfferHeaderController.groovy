@@ -13,11 +13,13 @@ class OfferHeaderController {
     def offerHeaderService
     def prodBufferService
     def springSecurityService
+    def assetResourceLocator
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         def offerHeader = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
+        for (oh in offerHeader) println("OfferHeaderController - index: "+ oh.id  +" deliveryweeks: " + offerHeaderService.weeksOfDelivery(oh))
         respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount]
     }
 
@@ -195,6 +197,7 @@ class OfferHeaderController {
     }
     
     def report() {
+        def file = assetResourceLocator.findAssetForURI( 'TornTrading-DalaTrading.png' )
         println "Report params: "+params
         def OfferHeader offerHeader = OfferHeader.get(params.id)
         def currentUser = springSecurityService.currentUser
@@ -206,7 +209,8 @@ class OfferHeaderController {
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us],   filename: "offertrapport-"+params.id+".pdf")
+//        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us],   filename: "offertrapport-"+params.id+".pdf")
+        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us,imageBytes: file.getByteArray()],   filename: "offertrapport-"+params.id+".pdf")
 //        notFound()
     }
     def reportpolish() {

@@ -22,6 +22,11 @@ div.contact {
     page-break-inside: avoid;
 }
 
+.logotype {
+    height: 80px;
+    width: 1000px;
+}
+
 #sum_right {
                 text-align: right; 
             }
@@ -49,6 +54,7 @@ div.contact {
 <!--
             <h1><g:message code="default.offer.report.title" args="[offerHeader.sawMill, offerHeader.species]" /></h1>
 -->
+    <rendering:inlinePng bytes="${imageBytes}" class="logotype"/>
             <table> 
                 <colgroup>
                     <col width="15%"/>
