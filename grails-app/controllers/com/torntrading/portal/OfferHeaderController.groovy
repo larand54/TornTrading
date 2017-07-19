@@ -198,8 +198,23 @@ class OfferHeaderController {
     
     def report() {
         def file = assetResourceLocator.findAssetForURI( 'TornTrading-DalaTrading.png' )
-        println "Report params: "+params
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+
+        
+        if (offerHeaderService.useWeeklyVolumes(offerHeader)) {
+            offerHeader.weekOfDelivery = offerHeaderService.weeksOfDelivery(offerHeader)
+        } else {
+            if (offerHeader.weekOfDelivery == null) {
+                flash.message = 'Week of delivery not entered!'
+                respond offerHeader.errors, view:'edit'
+                return
+            }
+
+            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
+                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
+            }
+        }
+        
         def currentUser = springSecurityService.currentUser
         def us = currentUser.userSettings
         if (offerHeader.freight == null) {
@@ -214,8 +229,22 @@ class OfferHeaderController {
 //        notFound()
     }
     def reportpolish() {
-        println "Report params: "+params
+        def file = assetResourceLocator.findAssetForURI( 'TornTrading-DalaTrading.png' )
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+        if (offerHeaderService.useWeeklyVolumes(offerHeader)) {
+            offerHeader.weekOfDelivery = offerHeaderService.weeksOfDelivery(offerHeader)
+        } else {
+            if (offerHeader.weekOfDelivery == null) {
+                flash.message = 'Week of delivery not entered!'
+                respond offerHeader.errors, view:'edit'
+                return
+            }
+
+            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
+                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
+            }
+        }
+        offerHeader.weekOfDelivery = offerHeader.weekOfDelivery.replace("Week", "Tydzien")
         def currentUser = springSecurityService.currentUser
         def us = currentUser.userSettings
         if (offerHeader.freight == null) {
@@ -225,7 +254,7 @@ class OfferHeaderController {
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us],   filename: "offertrapport-"+params.id+".pdf")
+        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us,imageBytes: file.getByteArray()],   filename: "offert_polish-"+params.id+".pdf")
 //        notFound()
     }
 }

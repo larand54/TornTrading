@@ -3,6 +3,8 @@ package com.torntrading.portal
 class OfferHeader {
     def springSecurityService
     String              termsOfDelivery
+    String              termsOfPayment = '30 Days netto after delivery'
+    String              weekOfDelivery
     String              info
     String              company
     String              country
@@ -66,6 +68,8 @@ class OfferHeader {
                 contactPerson()
                 contactPhone()
                 city()
+		termsOfPayment		size: 0..40
+                weekOfDelivery          size: 0..12
                 status(inList: ["New", "Active", "Sold", "Rejected"])
 		dateCreated()
                 termsOfDelivery(inList: ['CIP', 'DAP', 'CPT', 'EXW'])
@@ -73,6 +77,8 @@ class OfferHeader {
                 sawMill         nullable:true
                 info            nullable:true
                 termsOfDelivery nullable:true
+                termsOfPayment  nullable:true
+                weekOfDelivery  nullable:true
                 contactPhone    nullable:true
                 contactEmail    nullable:true
                 contactPerson   nullable:true

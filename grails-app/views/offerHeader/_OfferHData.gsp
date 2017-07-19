@@ -18,7 +18,10 @@
             <td>Freight <g:field class="elements" type="number decimal" name="freight" required="Y" value="${fieldValue(bean: offerHeader, field: 'freight')}" style="width: 6em"/>   
             <td>Fee(%) <g:field class="elements" min="0" max="25" type="number" name="agentFee"  value="${fieldValue(bean: offerHeader, field: 'agentFee')}" style="width: 4em"/>   
             <td>Valid until:<g:datePicker name="offerValidDate" value="${offerHeader.validUntil}" precision="day" default="${new Date().plus(30)}"/></td>
-
+        </tr>
+        <tr>
+            <td>Payment terms:<g:field name="termsOfPayment" type="text" value="${offerHeader.termsOfPayment}" size="40" maxlength="40"/></td>
+            <td>Week(s) of delivery:<g:field name="weekOfDelivery" type="text" value="${offerHeader.weekOfDelivery}" size="12" maxlength="12"/></td>
         </tr>
     </table>
 </fieldset>

@@ -63,6 +63,15 @@ class OfferHeaderService {
         }
     }
     
+    def Boolean useWeeklyVolumes(OfferHeader aOH) {
+        for (OfferDetail od in aOH.offerDetails) {
+            if (od.useWeeklyVolumes) {
+                return true
+            }
+        }
+        return false
+    }
+    
     def String weeksOfDelivery(OfferHeader aOH) {
         int yw = prodBufferService.getCurrentYearWeek()
         int currentWeek = prodBufferService.getWeekFromYearWeek(yw)
@@ -84,7 +93,7 @@ class OfferHeaderService {
             } else {
                currentWeek = prodBufferService.getWeekFromYearWeek(yw)
                currentYear = prodBufferService.getYearFromYearWeek(yw)
-               flw.addWeek(opv.week,currentWeek,currentYear) 
+               flw.addWeek(0,currentWeek,currentYear) 
             }    
         }
         return flw.toString()

@@ -120,7 +120,7 @@ class ProdBufferService {
             pv[i].volume = tapCellVolume(cellVol)
             i = i + 1
         }
-        if (cellVol.vol2 > 0.0) aPB.volumeInStock = aPB.volumeInstock - cellVol.vol2
+        if (cellVol.vol2 > 0.0) aPB.volumeInStock = aPB.volumeInStock - cellVol.vol2
         aPB.save(failOnError:true)
     }
     

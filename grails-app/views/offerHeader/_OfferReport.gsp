@@ -6,7 +6,9 @@
         <title><g:message code="default.report.label" args="[entityName]" /></title>
 <style type="text/css">
 @page {
-  size: A4 landscape; //210mm 297mm; // A4 format 
+  //size: A4 landscape; //210mm 297mm; // A4 format 
+  size: A4 portrait;
+  margin: 1cm;
   @bottom-center { content: element(footer);} // if you want footer
   @top-center { content: element(header); } // if you want header
 }
@@ -22,9 +24,13 @@ div.contact {
     page-break-inside: avoid;
 }
 
+span.normal {
+  font-weight: normal;
+}
+
 .logotype {
-    height: 80px;
-    width: 1000px;
+    height: 57px; //80px;
+    width: 712px; //1000px;
 }
 
 #sum_right {

@@ -8,7 +8,7 @@
             <col width="20%"/>
         </colgroup>
         <tbody>
-            <tr><td colspan="2"><h2>Streszcenie</h2></td><td></td><td colspan="2"><h2>Contact info</h2></td><td></td></tr>
+            <tr><td colspan="2"><h2>Streszcenie</h2></td><td></td><td colspan="2"><h2>Informacje kontaktowe</h2></td><td></td></tr>
             <tr>
                 <td>Produkty:</td><td id="sum_right">${offerHeader.offerDetails.sum{it.endPrice}}</td>
                 <td></td><td colspan="2">${us.company}</td>
