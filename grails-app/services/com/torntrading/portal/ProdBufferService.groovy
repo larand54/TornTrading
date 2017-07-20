@@ -27,20 +27,22 @@ class ProdBufferService {
     
     def checkWeekStatus() {
         // get current week
+            println( "checkWeekStatus called at: " + new Date())
         def int cWeek = getCurrentYearWeek()
         int id = 1
-        def wtStatus = WtStatus.get(id)
-        def int actWeek = wtStatus.weekUpdated
-        if (cWeek > wtStatus.weekUpdated) {
+        WtStatus wts = WtStatus.get(id)?:new WtStatus(id:1).save(failOnError:true)
+        def int actWeek = wts.weekUpdated
+        if (cWeek > wts.weekUpdated) {
             def List<ProdBuffer> pList = ProdBuffer.executeQuery("FROM ProdBuffer PB WHERE PB.status='Active' ORDER BY PB.sawMill" )
             for (p in pList) {
                 weekAdjustVolumes(p)
                 updateAvailableVolumes(p)
             }
             offerDetailService.weekAdjust()
+            println( "Week adjusted at: " + new Date())
+            wts.weekUpdated = cWeek
+            wts.save(failOnError:true)
         }
-        wtStatus.weekUpdated = cWeek
-        wtStatus.save(failOnError:true)
     }
     
     def weekAdjustVolumes(ProdBuffer aP) {
@@ -171,9 +173,12 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
     }
 
     def soldOfferVolume(ProdBuffer aPB, Double aVol) {
+        println("!!!!!!!!! ProdBufferService - soldOffer: Entered")
+    
         aPB.volumeOnOrder = aPB.volumeOnOrder + aVol
         aPB.volumeOffered = aPB.volumeOffered - aVol
 /*//        aPB.volumeAvailable = aPB.volumeAvailable - aVol
+        println("!!!!!!!!! ProdBufferService - soldOffer: Commented area")
         
         aPB.volumeInStock = aPB.volumeInStock - aVol
         if (aPB.volumeInStock > aVol) {
@@ -279,7 +284,7 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         return cal.getWeeksInWeekYear()
     }
    
-    def int nextYearWeek(Date d) {
+    def int nextYearWeek() {
         //create Calendar instance
         def Calendar now = Calendar.getInstance();
    
