@@ -16,7 +16,20 @@ import grails.transaction.Transactional
 class OrdersAndStoreController {
     def springSecurityService
     def prodBufferService
+
+    def boolean userOk() {
+        def User user
+        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
+        def us = user.getUserSettings()
+        return us.supplierName != null
+    }
+    
     def list(Integer max) { 
+        if (!userOk()) {
+            flash.error = "User have no sawmill defined!" 
+
+            redirect(uri:'/')
+        }
         params.max = Math.min(max ?: 10, 100)
         System.out.println("Controller List <<<<<<<< params: "+params)
         def offerDetails = null//OfferDetail.list()

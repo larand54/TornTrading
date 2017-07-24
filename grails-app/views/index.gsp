@@ -28,6 +28,13 @@
     <g:render template="/menue"/>
 
     <div class="svg" role="presentation">
+        <g:if test="${flash.error}">
+            <div class="alert alert-error" style="display: block">${flash.error}</div>
+        </g:if>
+        <g:if test="${flash.message}">
+            <div class="message" style="display: block">${flash.message}</div>
+        </g:if>
+
         <div class="grails-logo-container">
             <asset:image src="grails-cupsonly-logo-white.svg" class="grails-logo"/>
         </div>
