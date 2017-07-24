@@ -197,7 +197,7 @@ class OfferHeaderController {
     }
     
     def report() {
-        def file = assetResourceLocator.findAssetForURI( 'TornTrading-DalaTrading.png' )
+        def file = assetResourceLocator?.findAssetForURI( 'TornTrading-DalaTrading.png' )?.getInputStream()?.bytes 
         def OfferHeader offerHeader = OfferHeader.get(params.id)
 
         
@@ -225,11 +225,12 @@ class OfferHeaderController {
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
 //        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us],   filename: "offertrapport-"+params.id+".pdf")
-        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us,imageBytes: file.getByteArray()],   filename: "offertrapport-"+params.id+".pdf")
+        renderPdf(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader, us:us,imageBytes: file],   filename: "offertrapport-"+params.id+".pdf")
 //        notFound()
     }
+
     def reportpolish() {
-        def file = assetResourceLocator.findAssetForURI( 'TornTrading-DalaTrading.png' )
+        def file = assetResourceLocator?.findAssetForURI( 'TornTrading-DalaTrading.png' )?.getInputStream()?.bytes 
         def OfferHeader offerHeader = OfferHeader.get(params.id)
         if (offerHeaderService.useWeeklyVolumes(offerHeader)) {
             offerHeader.weekOfDelivery = offerHeaderService.weeksOfDelivery(offerHeader)
@@ -254,7 +255,7 @@ class OfferHeaderController {
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
 //        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
-        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us,imageBytes: file.getByteArray()],   filename: "offert_polish-"+params.id+".pdf")
+        renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us,imageBytes: file],   filename: "offert_polish-"+params.id+".pdf")
 //        notFound()
     }
 }

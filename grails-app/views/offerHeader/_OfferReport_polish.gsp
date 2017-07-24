@@ -71,7 +71,7 @@ span.normal {
                 </thead>
                 <tbody>
                 <tr>    
-                    <td><h1>Offer</h1></td>
+                    <td><h1>Oferta</h1></td>
                     <td><h1>${offerHeader.sawMill}</h1></td>
                     <g:if test="${offerHeader.species} == 'Redwood'">
                         <td><h1>Sosna</h1></td>

@@ -266,14 +266,27 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
     }
     
     def int getWeekFromYearWeek(int aYearWeek) {
-        // aYearWeek = 1718, aYear = 17 -> week = 1718 - 1700 = 18        
-        return ((aYearWeek as int) - getYearFromYearWeek(aYearWeek)*100) as int     
+        // aYearWeek = 1718, aYear = 17 -> week = 1718 - 1700 = 18 
+        int yw = checkYearWeek(aYearWeek)
+        return yw % 100     
     }
     
-    def int getYearFromYearWeek(aYearWeek) {
-        return (aYearWeek as int) / 100
+    def int getYearFromYearWeek(int aYearWeek) {
+        int yw = checkYearWeek(aYearWeek)
+        return yw.intdiv(100)
     }
     
+    def int checkYearWeek(int aYearWeek) {
+       int lastWeekThisYear = getWeeksInYear()
+       int weekNo = aYearWeek % 100
+       if (lastWeekThisYear < weekNo) {
+           int newYear = aYearWeek.intdiv(100) + 1 
+           return newYear*100+aYearWeek % 100 - lastWeekThisYear
+       } else {
+           return aYearWeek
+       }
+    }                                                                                                
+                                                                                                    
     def int getYearWeekFromWeek(int aWeek, int aYear) {
         return (aYear-2000)*100 + aWeek
     }

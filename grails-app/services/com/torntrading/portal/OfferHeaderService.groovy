@@ -80,19 +80,22 @@ class OfferHeaderService {
         for (OfferDetail od in aOH.offerDetails) {
             if (od.useWeeklyVolumes) {
                 if (od.fromStock > 0.01) {
+println('##### OfferHeaderService - weeksOfDelivery-fromStock '+od.fromStock+'-'+currentWeek+':'+currentYear)
                     flw.addWeek(0,currentWeek,currentYear)  
                 }
                 for(OfferPlannedVolume opv in od.offerPlannedVolumes) {
-                    int tempYw = yw + opv.week
-                    currentWeek = prodBufferService.getWeekFromYearWeek(tempYw)
-                    currentYear = prodBufferService.getYearFromYearWeek(tempYw)
                     if (opv.volume > 0.001) {
-                        flw.addWeek(opv.week,currentWeek,currentYear)
+                        int tempYw = yw + opv.week
+                        int iWeek = prodBufferService.getWeekFromYearWeek(tempYw)
+                        int iYear = prodBufferService.getYearFromYearWeek(tempYw)
+println('##### OfferHeaderService - weeksOfDelivery-tempYw '+tempYw)
+println('##### OfferHeaderService - weeksOfDelivery-iWeek '+iWeek)
+println('##### OfferHeaderService - weeksOfDelivery-iYear '+iYear)
+                        flw.addWeek(opv.week,iWeek,iYear)
                     }
                 } 
             } else {
-               currentWeek = prodBufferService.getWeekFromYearWeek(yw)
-               currentYear = prodBufferService.getYearFromYearWeek(yw)
+println('##### OfferHeaderService - weeksOfDelivery-ELSE '+'-'+currentWeek+':'+currentYear)
                flw.addWeek(0,currentWeek,currentYear) 
             }    
         }
