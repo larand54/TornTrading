@@ -101,6 +101,7 @@ environments:
     development:
         dataSource:
             dbCreate: update
+            pooled: true
 #            url: jdbc:mysql://localhost:3306/tt_portal_utv
 #            username: dbuser
 #            password: dbuser
@@ -109,6 +110,23 @@ environments:
             dialect: org.hibernate.dialect.SQLServer2008Dialect
             username: sa
             password: woods2011
+            properties :
+                maxActive: 50
+                maxIdle: 25
+                minIdle: 1
+                initialSize: 1
+
+                numTestsPerEvictionRun: 3
+                maxWait: 10000
+
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+
+                validationQuery: "select 1"
+
+                minEvictableIdleTimeMillis: 300000
+                timeBetweenEvictionRunsMillis: 300000
 
     test:
         dataSource:
@@ -117,6 +135,7 @@ environments:
     production:
         dataSource:
             dbCreate: none
+            pooled: true
 #            url: jdbc:jtds:sqlserver://localhost:1433/tt_portal_utv
             url: jdbc:jtds:sqlserver://192.168.225.11:1433/tt_sys
             driverClassName: net.sourceforge.jtds.jdbc.Driver
@@ -124,6 +143,23 @@ environments:
             username: sa
 #            password: woods2011
             password: Avoc3nt
+            properties :
+                maxActive: 50
+                maxIdle: 25
+                minIdle: 1
+                initialSize: 1
+
+                numTestsPerEvictionRun: 3
+                maxWait: 10000
+
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+
+                validationQuery: "select 1"
+
+                minEvictableIdleTimeMillis: 300000
+                timeBetweenEvictionRunsMillis: 300000
         server:
             port:  8443                                 # The port to listen on
             ssl:
