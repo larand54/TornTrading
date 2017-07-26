@@ -4,6 +4,24 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'offerHeader.label', default: 'Offer')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <script type="text/javascript">
+            function filteredOffers(){
+            var sWood = $('#wood').val();
+            var sStatus = $('#status').val();
+            var sCustomer = $('#customer').val();
+            var sSawMill = $('#sawMill').val();
+            //send fields to server
+                $.post("/offerHeader/filteredOffers", { wood:sWood, status:sStatus, customer:sCustomer, sawMill:sSawMill }, function(data){
+                    $( '#list-offerHeader' ).html( data ); });
+     /*
+     $.ajax({
+                    url:'${g.createLink( controller:'offerHeader', action:'filteredOffers' )}',
+                    data: [sawMill], data: [customer], data: [status], data: [wood],
+                    type: 'get'
+                }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
+     */
+     }
+        </script>    
     </head>
     <body>
         <g:render template="/menue"/>
@@ -13,39 +31,18 @@
                 <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
             </ul>
         </div>
-        <div id="list-offerHeader" class="content scaffold-list" role="main">
-            <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
-            </g:if>
             <table>
                 <thead>
                     <tr>
-                        <g:sortableColumn property="id" title='Id' />
-                        <g:sortableColumn property="company" title="Customer" />
-                        <g:sortableColumn property="sawMill" title='Mill' />
-                        <g:sortableColumn property="dateCreated" title='Created' />
-                        <g:sortableColumn property="status" title='Status' />
+                        <th> <h1><g:message code="default.list.label" args="[entityName]" /></h1> </th>
+                        <th>Customer: <g:select name="customer" from="${customerList}" value="" onchange="filteredOffers(customer)" noSelection = "${['':'All']}" /></th>
+                        <th>Supplier: <g:select name="sawMill" from="${millList}" value="" onchange="filteredOffers(sawMill)" noSelection = "${['':'All']}" /></th>
+                        <th>Wood: <g:select name="wood" from="${woodList}" value="" onchange="filteredOffers(wood)" noSelection = "${['':'All']}" /></th>
+            <!--            <th>Product: <g:select name="product" from="${productList}" value="" onchange="filteredOffers(products)" noSelection = "${['':'All']}" /></th>-->
+                        <th>Status: <g:select name="status" from="${statusList}" value="" onchange="filteredOffers(status)" noSelection = "${['':'All']}" /></th>
                     </tr>
-                </thead>
-                <tbody>
-
-                    <g:each in="${offerHeaderList}" status="i" var="oh"> 
-                        <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
-                            <td><g:link action="edit" id="${oh.id}">${oh.id}</g:link></td>
-                            <td>${oh.company}</td>
-                            <td>${oh.sawMill}</td>
-                            <td><g:formatDate format="yyyy-MM-dd HH:mm" date="${oh.dateCreated}"/></td>
-                            <td>${oh.status}</td>
-                        </tr>
-                    </g:each>
-
-                </tbody>
+                </thead>    
             </table>
-
-            <div class="pagination">
-                <g:paginate total="${offerHeaderCount ?: 0}" />
-            </div>
-        </div>
+        <g:render template="index"/>
     </body>
 </html>

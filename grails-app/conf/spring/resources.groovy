@@ -1,11 +1,16 @@
 import grails.databinding.converters.ValueConverter
 import com.torntrading.utils.DatabaseMessageSource
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
+import com.torntrading.portal.AuthenticationSuccessEventListener
 beans = {
     localeResolver(SessionLocaleResolver) { 
         defaultLocale= new java.util.Locale("en","GB") 
   }
 }
+beans = {
+    authenticationSuccessEventListener(AuthenticationSuccessEventListener)
+}
+
 // Place your Spring DSL code here
 beans = {
     "defaultGrailsjava.lang.DoubleConverter"(DoubleValueConverter)

@@ -1,4 +1,5 @@
 package com.torntrading.portal
+import com.torntrading.legacy.Customer
 
 class OfferHeader {
     def springSecurityService
@@ -94,6 +95,14 @@ class OfferHeader {
                 species         nullable:true
                 validUntil      nullable:true
     }
+    def beforeUpdate() {
+        if(company != null && company != '') {
+            def customer = Customer.findByName(this.company)
+            this.country = customer.countryName
+            this.city = customer.cityName
+        }
+    }
+    
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?
             springSecurityService.loadCurrentUser() :

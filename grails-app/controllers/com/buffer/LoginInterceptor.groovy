@@ -6,7 +6,9 @@ import grails.plugin.springsecurity.*//annotation.Secured
 class LoginInterceptor {
     def prodBufferService
     def springSecurityService
-    boolean before() { true }
+    boolean before() { 
+       true 
+    }
 
     boolean after() {  true }
 

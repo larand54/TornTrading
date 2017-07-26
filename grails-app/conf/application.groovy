@@ -41,6 +41,10 @@ grails.plugins.localeConfiguration.defaultLocale = Locale.ENGLISH
 grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.databasemigration.updateOnStartFilename = 'changelog.groovy'
 grails.plugin.databasemigration.updateOnStart = false
+grails.plugin.springsecurity.logout.postOnly = false
+logout.afterLogoutUrl = "/"
+
+grails.plugin.springsecurity.useSecurityEventListener = true
 //grails.plugin.databasemigration.updateOnStartContexts = ['WoodTrading']
 /*
         // Config mail-plugin

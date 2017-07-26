@@ -30,7 +30,8 @@
     <table style="width:100%">
         <tr>
             <td>
-                Company: <g:field class="elements" type="text" name="company"  value="${offerHeader?.company}" size="50"/>
+                Company: <g:select class="elements" name="company" from="${customers}"
+                value="${offerHeader?.company}" required="N"/></td>
             </td>
             <td>
                 country: <g:field class="elements" type="text" name="country" value="${offerHeader?.country}" size="50"/>

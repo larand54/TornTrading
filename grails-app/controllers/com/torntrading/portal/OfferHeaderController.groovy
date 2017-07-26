@@ -6,6 +6,7 @@ import sun.util.calendar.LocalGregorianCalendar.Date
 
 import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.portal.OfferDetail
+import com.torntrading.legacy.Customer
 
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
 @Transactional(readOnly = true)
@@ -18,11 +19,65 @@ class OfferHeaderController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        def offerHeader = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
+        println("XXXX OfferHeaderController - List - params: "+params)
+        def millList = getMills()
+        def customerList = getCustomersFromOffers()
+        def offerHeader = getOfferList()
+        def woodList = getWoods() 
+        def statusList = getStatusList()
+        println("###### WoodList: "+woodList)
         for (oh in offerHeader) println("OfferHeaderController - index: "+ oh.id  +" deliveryweeks: " + offerHeaderService.weeksOfDelivery(oh))
-        respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount]
+        respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount, customerList: customerList, millList: millList, woodList:woodList, statusList:statusList]
     }
 
+    
+    def filteredOffers() {
+        println("XXXX OfferHeaderController - filteredOffers - params: "+params)
+        def offerHeaderList = getOfferList()
+        println("zzzzz OfferHeaderController - filteredOffers- count: "+offerHeaderList.count)
+        render(template:"index", model: [offerHeaderList:offerHeaderList])
+    }
+    
+    def List<OfferHeader> getOfferList() {
+        def offerList = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
+    //        if (params.sort == null) return offerList
+        if (params.status == null || params.status == '' || params.status == 'All') {
+           // offerList = offerList.findAll()
+        } else{
+            offerList = offerList.findAll({it.status==params.status})
+        }
+        if (params.customer != null && params.customer !='') {
+            offerList = offerList.findAll({it.company == params.customer})
+        }
+        if (params.sawMill != null && params.sawMill !='') {
+            offerList = offerList.findAll({it.sawMill == params.sawMill})
+        }
+        if (params.wood != null && params.wood !='') {
+            offerList = offerList.findAll({it.species == params.wood})
+        }  
+        return offerList
+    }
+    
+    def List<String> getMills() {
+        OfferHeader.executeQuery("SELECT DISTINCT sawMill FROM OfferHeader WHERE sawMill is not NULL")
+    }
+
+    def List<String> getCustomersFromOffers() {
+        OfferHeader.executeQuery("SELECT DISTINCT company FROM OfferHeader WHERE company is not NULL OR company <> ''")
+    }
+    
+    def getCustomers() {
+       Customer.executeQuery("SELECT DISTINCT name FROM Customer WHERE name is not NULL AND name <> ''") 
+    }
+
+    def List<String> getWoods() {
+       OfferHeader.executeQuery("SELECT DISTINCT species FROM OfferHeader WHERE species is not NULL AND species <> ''") 
+    }
+    
+    def List<String> getStatusList() {
+        ["New", "Active", "Sold", "Rejected"]
+    }
+    
     def show(OfferHeader offerHeader) {
         respond offerHeader
     }
@@ -37,7 +92,8 @@ class OfferHeaderController {
 
     def renderEdit() {
         println("%%%% Params: "+params)
-        render(view:"edit", model:[offerHeader:offerHeader])
+        def customers = getCustomers()
+        render(view:"edit", model:[offerHeader:offerHeader, customers:customers])
     }
     @Transactional
     def save(OfferHeader offerHeader) {
@@ -65,7 +121,9 @@ class OfferHeaderController {
     }
 
     def edit(OfferHeader offerHeader) {
-        respond offerHeader
+        def customers = getCustomers()
+
+        respond offerHeader, model: [customers:customers]
     }
 
     @Transactional

@@ -76,6 +76,9 @@ grails:
                 scriptlets: html
                 taglib: none
                 staticparts: none
+    plugin:
+        springsecurity:
+            useSecurityEventListener:   true
 endpoints:
     jmx:
         unique-names: true
@@ -99,6 +102,9 @@ dataSource:
 
 environments:
     development:
+        server:
+            session:
+                timeout:    1800 # seconds
         dataSource:
             dbCreate: update
             pooled: true

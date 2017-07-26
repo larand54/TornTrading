@@ -1,5 +1,4 @@
 package com.torntrading.portal
-
 class OfferDetail {
 
     def springSecurityService

@@ -25,6 +25,7 @@ class OrdersAndStoreController {
     }
     
     def list(Integer max) { 
+            println "Timeout: ${session.getMaxInactiveInterval()} seconds"
         if (!userOk()) {
             flash.error = "User have no sawmill defined!" 
 
