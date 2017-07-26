@@ -17,7 +17,7 @@
     <thead>
         <tr>
             <th><h2> Dostawa </h2></th>
-            <th><span class="normal"> ${offerHeader?.weekOfDelivery}</span></th>
+            <th><span class="normal"> Tydzien ${offerHeader?.weekOfDelivery}</span></th>
         </tr>
         <tr>
             <th>Waluta</th>

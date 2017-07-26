@@ -38,9 +38,9 @@ class FirstLastWeek {
     String toString() {
         if (firstWeek == null) return ''
         if ((lastWeek==null) || (lastWeek.yearWeek()==firstWeek.yearWeek()))
-            return firstWeek.toString('Week ')
+            return firstWeek.toString('')
         else 
-            return firstWeek.toString('Week ') + '-' + lastWeek.toString('')
+            return firstWeek.toString('') + '-' + lastWeek.toString('')
     }
 }
 

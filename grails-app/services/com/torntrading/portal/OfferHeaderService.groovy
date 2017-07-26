@@ -47,7 +47,7 @@ class OfferHeaderService {
     def rejectOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.rejectOffer(pb, od)  
+            prodBufferService.rejectOffer(pb, od.volumeOffered)  
         }
     }
     

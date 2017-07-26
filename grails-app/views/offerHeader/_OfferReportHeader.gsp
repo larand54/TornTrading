@@ -17,7 +17,7 @@
     <thead>
         <tr>
             <th><h2> Delivery </h2></th>
-            <th><span class="normal"> ${offerHeader?.weekOfDelivery}</span></th>
+            <th><span class="normal"> Week ${offerHeader?.weekOfDelivery}</span></th>
         </tr>
         <tr>
             <th>Currency</th>

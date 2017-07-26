@@ -19,30 +19,24 @@ class OfferHeaderController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        println("XXXX OfferHeaderController - List - params: "+params)
         def millList = getMills()
         def customerList = getCustomersFromOffers()
         def offerHeader = getOfferList()
         def woodList = getWoods() 
         def statusList = getStatusList()
-        println("###### WoodList: "+woodList)
         for (oh in offerHeader) println("OfferHeaderController - index: "+ oh.id  +" deliveryweeks: " + offerHeaderService.weeksOfDelivery(oh))
         respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount, customerList: customerList, millList: millList, woodList:woodList, statusList:statusList]
     }
 
     
     def filteredOffers() {
-        println("XXXX OfferHeaderController - filteredOffers - params: "+params)
         def offerHeaderList = getOfferList()
-        println("zzzzz OfferHeaderController - filteredOffers- count: "+offerHeaderList.count)
         render(template:"index", model: [offerHeaderList:offerHeaderList])
     }
     
     def List<OfferHeader> getOfferList() {
         def offerList = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
-    //        if (params.sort == null) return offerList
         if (params.status == null || params.status == '' || params.status == 'All') {
-           // offerList = offerList.findAll()
         } else{
             offerList = offerList.findAll({it.status==params.status})
         }
@@ -91,7 +85,7 @@ class OfferHeaderController {
     }
 
     def renderEdit() {
-        println("%%%% Params: "+params)
+        println("%%%% OfferHeaderController - renderEdit - Params: "+params)
         def customers = getCustomers()
         render(view:"edit", model:[offerHeader:offerHeader, customers:customers])
     }
@@ -128,7 +122,7 @@ class OfferHeaderController {
 
     @Transactional
     def update(OfferHeader offerHeader) {
-        println("offerHeaderController, params: "+params)
+        println("offerHeaderController - update, params: "+params)
         if (offerHeader == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -137,7 +131,7 @@ class OfferHeaderController {
 
         if (offerHeader.hasErrors()) {
             transactionStatus.setRollbackOnly()
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return
         }
         println("OfferHeader: status: "+offerHeader.status)
@@ -150,35 +144,35 @@ class OfferHeaderController {
         if ((oldStatus != 'Active') && (oldStatus != 'New')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Not Active or New! Can not be modified!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
 
         if (params.status == 'Active' && (oldStatus != 'New') && (oldStatus != 'Active')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'You can not back status to active!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
 
         if (params.status == 'New' && oldStatus != 'New') {
             transactionStatus.setRollbackOnly()
             flash.message = 'You can not back status to New!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
 
         if ((oldStatus == 'Sold' || oldStatus == 'Rejected') && params.status != oldStatus) {
             transactionStatus.setRollbackOnly()
             flash.message = 'You can not change from this status!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
 
         if (params.status == 'Active' && oldStatus == 'New' && !volumeOk) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Volume is 0 or more than available - status can not be set active!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         } else if (params.status == 'Active' && oldStatus == 'New') {
             offerHeaderService.addOfferVolume(offerHeader)
@@ -194,7 +188,7 @@ class OfferHeaderController {
         } else if (params.status == 'Sold') {
             transactionStatus.setRollbackOnly()
             flash.message = 'Volume is 0 or status not Active - status can not be set Sold!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
 
@@ -203,7 +197,7 @@ class OfferHeaderController {
         } else if (params.status == 'Rejected') {
             transactionStatus.setRollbackOnly()
             flash.message = 'Status not Active - status can not be set Rejected!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
         println("OfferHeaderController - date: "+params.offerValidDate)
@@ -216,11 +210,7 @@ class OfferHeaderController {
                 System.out.println("withFormat")
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'offerHeader.label', default: 'OfferHeader'), offerHeader.id])
                 redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
-                //redirect offerHeader
             }
-//               redirect controller: "offerHeader", action: "edit", id: "${offerHeader.id}"
-
-            //            '*'{ respond offerHeader, [status: OK] }
         }
     }
 
@@ -257,27 +247,31 @@ class OfferHeaderController {
     def report() {
         def file = assetResourceLocator?.findAssetForURI( 'TornTrading-DalaTrading.png' )?.getInputStream()?.bytes 
         def OfferHeader offerHeader = OfferHeader.get(params.id)
-
+        if (offerHeader.status != 'Active') {
+            flash.message = 'Status not Active!'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
+            return
+        }
         
         if (offerHeaderService.useWeeklyVolumes(offerHeader)) {
             offerHeader.weekOfDelivery = offerHeaderService.weeksOfDelivery(offerHeader)
         } else {
             if (offerHeader.weekOfDelivery == null) {
                 flash.message = 'Week of delivery not entered!'
-                respond offerHeader.errors, view:'edit'
+                respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
                 return
             }
 
-            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
-                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
-            }
+//            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
+//                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
+//            }
         }
         
         def currentUser = springSecurityService.currentUser
         def us = currentUser.userSettings
         if (offerHeader.freight == null) {
             flash.message = 'Shipment not entered!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
@@ -290,25 +284,30 @@ class OfferHeaderController {
     def reportpolish() {
         def file = assetResourceLocator?.findAssetForURI( 'TornTrading-DalaTrading.png' )?.getInputStream()?.bytes 
         def OfferHeader offerHeader = OfferHeader.get(params.id)
+        if (offerHeader.status != 'Active') {
+            flash.message = 'Status not Active!'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
+            return
+        }
         if (offerHeaderService.useWeeklyVolumes(offerHeader)) {
             offerHeader.weekOfDelivery = offerHeaderService.weeksOfDelivery(offerHeader)
         } else {
             if (offerHeader.weekOfDelivery == null) {
                 flash.message = 'Week of delivery not entered!'
-                respond offerHeader.errors, view:'edit'
+                respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
                 return
             }
 
-            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
-                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
-            }
+//            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
+//                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
+//            }
         }
-        offerHeader.weekOfDelivery = offerHeader.weekOfDelivery.replace("Week", "Tydzien")
+        //offerHeader.weekOfDelivery = offerHeader.weekOfDelivery.replace("Week", "Tydzien")
         def currentUser = springSecurityService.currentUser
         def us = currentUser.userSettings
         if (offerHeader.freight == null) {
             flash.message = 'Shipment not entered!'
-            respond offerHeader.errors, view:'edit'
+            respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return
         }
         println(">>> Offerheader: "+offerHeader.sawMill)

@@ -11,7 +11,7 @@ buildscript {
     }
 }
 
-version "0.9933"
+version "0.9936"
 group "torntrading"
 
 apply plugin:"eclipse"
