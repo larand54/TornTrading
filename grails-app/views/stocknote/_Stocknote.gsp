@@ -14,6 +14,13 @@
             div.break {
                 page-break-after:always;
             }
+div.footer {
+    page-break-inside: avoid;
+}
+
+span.normal {
+  font-weight: normal;
+}
             .StocknoteTitle {
                 font-size: 1.8em;
                 font-weight: bold;
@@ -29,8 +36,8 @@
                 clear: both;
             }
             table.tborder, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
+#                border: 1px solid black;
+ #               border-collapse: collapse;
             }
 
             div.header_detail {
@@ -43,14 +50,14 @@
                 text-align: center; 
             }
             #pv_center {
-                background-color: #eeeeee;
+                background-color: #e5e5e5;
                 text-align: center; 
             }
             #is_header1 {
               background-color: #cccccc;  
             }
             #pv_header1 {
-              background-color: #dddddd;  
+              background-color: #d5d5d5;  
             }
         </style>    
     </head>
@@ -76,6 +83,7 @@
             <g:render template="StocknoteHeader" model="[offerHeader:offerHeader]"/>
 
             <g:render template="StocknoteDetail" model="[offerDetail:offerDetail]"/>
+            <g:render template="StocknoteFooter" model="[offerDetail:offerDetail]"/>
 
 <!--            <div class="break"/>-->
         </div>

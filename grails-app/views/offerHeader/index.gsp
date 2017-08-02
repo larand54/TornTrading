@@ -6,11 +6,12 @@
         <title><g:message code="default.list.label" args="[entityName]" /></title>
         <script type="text/javascript">
             function filteredOffers(){
-            var sWood = $('#wood').val();
-            var sStatus = $('#status').val();
-            var sCustomer = $('#customer').val();
-            var sSawMill = $('#sawMill').val();
-            //send fields to server
+                var sWood = $('#wood').val();
+                var sStatus = $('#status').val();
+                var sCustomer = $('#customer').val();
+                var sSawMill = $('#sawMill').val();
+                
+                //send fields to server
                 $.post("/offerHeader/filteredOffers", { wood:sWood, status:sStatus, customer:sCustomer, sawMill:sSawMill }, function(data){
                     $( '#list-offerHeader' ).html( data ); });
      /*
@@ -21,7 +22,8 @@
                 }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
      */
      }
-        </script>    
+        </script> 
+        
     </head>
     <body>
         <g:render template="/menue"/>

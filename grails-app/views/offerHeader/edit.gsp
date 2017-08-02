@@ -10,6 +10,22 @@
                 font-weight: bold;
             }
         </style>
+
+        <script>
+            $(document).ready(function(){
+                $( document ).on('change', '.company', function ( event ){ 
+                    $.ajax({
+                        url: '${g.createLink( controller:'offerHeader', action:'changedCompany' )}',
+                        data: {companyName:this.value, id:this.id},
+                        type: 'get'
+                    }).success( function ( data ) { 
+                        $("#city").val(data.city);    
+                        $("#country").val(data.country);    
+                    });
+                });
+            });
+        </script>
+        
     </head>
     <body>
         <g:render template="/menue"/>

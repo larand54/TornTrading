@@ -30,15 +30,17 @@
     <table style="width:100%">
         <tr>
             <td>
-                Company: <g:select class="elements" name="company" from="${customers}"
-                value="${offerHeader?.company}" required="N"/></td>
+                Company: <g:select id="${offerHeader.id}" class="company" name="company" from="${customers}"
+                value="${offerHeader?.company}" required="Y" noSelection = "${['':'All']}"/></td>
+            </td>
+            <div id="updateCompany">
+            <td>
+                country: <g:field class="elements" id="country" type="text" name="country" value="${offerHeader?.country}" size="50"/>
             </td>
             <td>
-                country: <g:field class="elements" type="text" name="country" value="${offerHeader?.country}" size="50"/>
+                City:  <g:field class="elements" id="city" type="text" name="city"  value="${offerHeader?.city}" size="50"/>
             </td>
-            <td>
-                City:  <g:field class="elements" type="text" name="city"  value="${offerHeader?.city}" size="50"/>
-            </td>
+            </div>
         </tr>
         <tr>
             <td>

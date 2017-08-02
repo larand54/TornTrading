@@ -8,7 +8,7 @@
             <tr>
                 <th id="is_header1">Dimension</th>
                 <th id="is_header1">Length</th>
-                <th id="is_header1">Volume(${offerHeader.volumeUnit})</th>
+                <th id="is_header1">Volume(m3)</th>
                 <th id="is_header1">KD(%)</th>
                 <th id="is_header1">Price m3</th>
                 <th id="is_header1">Grade</th>

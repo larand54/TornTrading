@@ -21,7 +21,7 @@ class OrdersAndStoreController {
         def User user
         user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
-        return us.supplierName != null
+        return us.supplierName != null && us.supplierName != ''
     }
     
     def list(Integer max) { 

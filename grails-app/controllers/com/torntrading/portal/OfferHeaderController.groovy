@@ -6,6 +6,7 @@ import sun.util.calendar.LocalGregorianCalendar.Date
 
 import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.portal.OfferDetail
+import grails.converters.JSON
 import com.torntrading.legacy.Customer
 
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
@@ -32,6 +33,20 @@ class OfferHeaderController {
     def filteredOffers() {
         def offerHeaderList = getOfferList()
         render(template:"index", model: [offerHeaderList:offerHeaderList])
+    }
+    
+    def changedCompany() {
+        println("OfferHeaderController - changedCompany - params: " + params)
+        def oh = OfferHeader.get(params.id) 
+        def company = params.companyName
+        if(company != null && company != '') {
+            def customer = Customer.findByName(company)
+            oh.company = customer.name
+            oh.country = customer.countryName
+            oh.city = customer.cityName
+        }
+        oh.save()
+        render oh as JSON
     }
     
     def List<OfferHeader> getOfferList() {

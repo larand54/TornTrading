@@ -13,6 +13,7 @@ import com.torntrading.portal.OfferHeader
 class StocknoteController {
     def prodBufferService
     def assetResourceLocator
+    def springSecurityService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -125,12 +126,14 @@ class StocknoteController {
             }
             println("OfferDetail dim: "+od.dimension)
         }
+        def currentUser = springSecurityService.currentUser
+        def us = currentUser.userSettings
         
         //        def millId = offerHeader.offerDetails.millOfferID
         //        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
         //        println(">>> Offerheader: "+offerHeader.sawMill)
         //        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
-        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, us:us, imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
     }
     def createPolishPDF() {
         println("createPDF, Stocknote params: "+params)
@@ -148,11 +151,13 @@ class StocknoteController {
             }
             println("OfferDetail dim: "+od.dimension)
         }
+        def currentUser = springSecurityService.currentUser
+        def us = currentUser.userSettings
         
         //        def millId = offerHeader.offerDetails.millOfferID
         //        def ProdBuffer prodBuffer = ProdBuffer.get(millId)
         //        println(">>> Offerheader: "+offerHeader.sawMill)
         //        renderPdf(template: "/stocknote/Stocknote", model: [offerHeader: offerHeader, prodBuffer:prodBuffer],   filename: "Stocknote-"+params.id+".pdf")
-        renderPdf(template: "/stocknote/Stocknote_polish", model: [offerHeader: offerHeader,imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
+        renderPdf(template: "/stocknote/Stocknote_polish", model: [offerHeader: offerHeader, us:us, imageBytes: assetResourceLocator?.findAssetForURI('Checkout16x16.png')?.getInputStream()?.bytes],   filename: "Stocknote-"+params.id+".pdf")
     }
 }
