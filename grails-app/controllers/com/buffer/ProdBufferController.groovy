@@ -90,6 +90,7 @@ class ProdBufferController {
             println(">>> IsDirty! newVol: "+newVol+" oldVol: "+ oldVol)
             if (newVol != oldVol) {
                 prodBuffer.volumeAvailable = prodBuffer.volumeAvailable + diffVol
+                prodBuffer.volumeInitial = newVol
             }
         }
 
