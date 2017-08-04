@@ -5,11 +5,11 @@
             <g:field type="hidden" name="offerHeader" value="${offerDetail?.offerHeader?.id}"/>
             <tr>
                 <td>
-                    Wood:  <g:select name="species" from="${offerDetail?.constrainedProperties.species.inList}" value="${offerDetail?.species}"/>
-                    Dimension:  <g:field class="elements" type="text" name="dimension" required="y" value="${offerDetail?.dimension}" size="60"/>
-                    Length:     <g:field class="elements" type="text" name="lengthDescr"  required="Y" value="${offerDetail?.lengthDescr}" size="30"/>
-                    Grade:  <g:select name="grade" from="${offerDetail?.constrainedProperties.grade.inList}" value="${offerDetail?.grade}"/>
-                    KD(%):       <g:field class="elements" type="text" name="kd"  value="${offerDetail?.kd}" size="4"/>
+                    Wood:  <g:field name="species"  readonly="Y"  value="${offerDetail?.species}"/>
+                    Dimension:  <g:field class="elements" type="text" name="dimension" readonly="Y"  value="${offerDetail?.dimension}" size="60"/>
+                    Length:     <g:field class="elements" type="text" name="lengthDescr"  readonly="Y"  value="${offerDetail?.lengthDescr}" size="30"/>
+                    Grade:  <g:field name="grade"   readonly="Y" value="${offerDetail?.grade}"/>
+                    KD(%):       <g:field class="elements" type="text" name="kd" readonly="Y" value="${offerDetail?.kd}" size="4"/>
 
                 </td>
             </tr>

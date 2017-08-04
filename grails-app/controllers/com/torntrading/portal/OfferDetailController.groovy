@@ -115,9 +115,6 @@ class OfferDetailController {
     }
 
     def edit(OfferDetail offerDetail) {
-/*        offerDetail.plannedVolumes = ProdBuffer.get(offerDetail.millOfferID).plannedVolumes
-        offerDetail.inStock = ProdBuffer.get(offerDetail.millOfferID).volumeInStock
-*/
         if(offerDetail.useWeeklyVolumes) {
             prodBufferService.checkWeekStatus()
             offerDetailService.setAvailableVolumes(offerDetail)
@@ -137,16 +134,14 @@ class OfferDetailController {
 
         if (offerDetail.hasErrors()) {
             transactionStatus.setRollbackOnly()
-//            respond offerDetail.errors, view:'edit'
-                redirect controller: "offerDetail", action:"edit", id:params.id
-
+            redirect controller: "offerDetail", action:"edit", id:params.id
             return
         }
         String status =  offerDetail.offerHeader.status 
         if ((status == 'Sold') || (status == 'Rejected')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Offer can not be changed (Sold/Rejected)'
-            respond offerDetail.errors, view:'edit'
+            redirect controller: "offerDetail", action:"edit", id:params.id
             return
         }
         
@@ -154,7 +149,7 @@ class OfferDetailController {
         if (pb == null) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Offer not created! Connected product does not exist!'
-            respond offerDetail.errors, view:'edit'
+            redirect controller: "offerDetail", action:"edit", id:params.id
             return            
         }
         
@@ -184,7 +179,7 @@ class OfferDetailController {
                 println("Volume NOT OK! " + volumeChange)
                 transactionStatus.setRollbackOnly()
                 flash.message = 'Offer not updated! Volume set to high!'
-                respond offerDetail.errors, view:'edit'
+                redirect controller: "offerDetail", action:"edit", id:params.id
                 return                            
             }
             
