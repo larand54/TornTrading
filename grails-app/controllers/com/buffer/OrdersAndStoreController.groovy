@@ -10,6 +10,7 @@ import com.torntrading.portal.OfferDetail
 import com.torntrading.portal.OfferHeader
 import com.torntrading.portal.OfferWeeklyAvailableVolume
 import grails.plugin.springsecurity.annotation.Secured
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
 
 @Secured(['ROLE_ADMIN','ROLE_SALES', 'ROLE_SUPPLIER'])
@@ -19,7 +20,14 @@ class OrdersAndStoreController {
 
     def boolean userOk() {
         def User user
-        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
+        if(SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN,ROLE_SALES')) { 
+            return true
+        }    
+/*        def roles = springSecurityService.getPrincipal().getAuthorities()
+        for(def role in roles){ if((role.getAuthority() == "ROLE_ADMIN") || (role.getAuthority() == "ROLE_SALES")){
+                SpringSecurityUtils.ifAnyGranted( ROLE_ADMIN, ROLE_SALES) {     
+            }        
+*/        user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
         return us.supplierName != null && us.supplierName != ''
     }

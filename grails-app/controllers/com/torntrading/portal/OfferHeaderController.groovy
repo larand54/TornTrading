@@ -131,7 +131,6 @@ class OfferHeaderController {
 
     def edit(OfferHeader offerHeader) {
         def customers = getCustomers()
-
         respond offerHeader, model: [customers:customers]
     }
 
