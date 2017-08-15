@@ -145,14 +145,14 @@ class UserController {
             return
         }
 
-        user.us.supplierName = params.sawMill
-        user.us.currency = params.currency
-        user.us.name = params.uName
-        user.us.company = params.uCompany
-        user.us.email = params.uEmail
-        user.us.tel = params.uTel
-        user.us.phone = params.uPhone
-        user.us.mobile = params.uMobile
+        user.us.supplierName = params.sawMill?params.sawMill:user.us.supplierName
+        user.us.currency = params.currency?params.currency:user.us.currency
+        user.us.name = params.uName?params.uName:user.us.name
+        user.us.company = params.uCompany?params.uCompany:user.us.company
+        user.us.email = params.uEmail?params.uEmail:user.us.email
+        user.us.tel = params.uTel?params.uTel:user.us.tel
+        user.us.phone = params.uPhone?params.uPhone:user.us.phone
+        user.us.mobile = params.uMobile?params.uMobile:user.us.mobile
         user.us.save flush:true
         user.save flush:true
 

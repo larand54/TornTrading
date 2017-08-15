@@ -99,7 +99,6 @@ class OrdersAndStoreController {
                 //SpringSecurityUtils.ifAnyGranted( ROLE_ADMIN, ROLE_SALES) {     
                 def List<OfferDetail> offerDetails = getOfferList()
                 System.out.println("OfferDetail filtered count: "+offerDetails.count) 
-                def orders = Orders.list()
                 render(template:"ListOffers", model:[offerDetails: offerDetails])
             }        
         }
@@ -145,9 +144,12 @@ class OrdersAndStoreController {
         user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
         def mill = (us != null) ? us.supplierName :''
+        println('OrdersAndStoreController, getBufferList, mill: '+mill)
+        println('OrdersAndStoreController, getBufferList, user: '+user.username)
         def roles = springSecurityService.getPrincipal().getAuthorities()
         
         def prodBuffer = ProdBuffer.findAllByStatus('Active', [sort:params.sort, order:params.order])
+        println('OrdersAndStoreController, getBufferList, All active products: '+prodBuffer.size+prodBuffer.sawMill)
         def List<ProdBuffer> myList
         def List<ProdBuffer> tempList
         System.out.println(" GetBufferList active count: " + prodBuffer.count)
@@ -165,7 +167,11 @@ class OrdersAndStoreController {
                 myList = tempList
                 break
             }else if(role.getAuthority() == "ROLE_SUPPLIER") {
+                tempList.findAll{println('OrdersAndStoreController, getBufferList(SUPPLIER), it.sawMill: '+it.sawMill)}
+                tempList.findAll{println('OrdersAndStoreController, getBufferList(SUPPLIER), found: '+(mill==it.sawMill))}
                 myList = tempList.findAll{mill == it.sawMill}
+//        println('OrdersAndStoreController, getBufferList(SUPPLIER), it.sawMill: '+it.sawMill)
+        println('OrdersAndStoreController, getBufferList(SUPPLIER), mill: '+mill+ '  Found: '+myList.size)
                 break
             }
         }
