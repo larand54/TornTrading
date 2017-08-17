@@ -12,6 +12,7 @@ import com.torntrading.legacy.Customer
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
 @Transactional(readOnly = true)
 class OfferHeaderController {
+    def logService
     def offerHeaderService
     def prodBufferService
     def springSecurityService
@@ -214,6 +215,7 @@ class OfferHeaderController {
             respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
+        logService.logOfferHeader('update',offerHeader)
         println("OfferHeaderController - date: "+params.offerValidDate)
         offerHeader.validUntil = params.date('offerValidDate', 'yyyy-MM-dd')
         offerHeader.info = params.info
