@@ -126,7 +126,7 @@ class ProdBufferService {
         aPB.save(failOnError:true)
     }
     
-    def restoreVolumeToBuffer(ProdBuffer aPB, Double aVol){
+    def restoreVolumeToBuffer(ProdBuffer aPB, OfferDetail){
         def int i = 11
         def CellVol cellVol = new CellVol(vol1:0, vol2:0) 
         def pv = aPB.plannedVolumes
@@ -145,23 +145,52 @@ println("RestoreVolumeToBuffer InStock: "+aPB.volumeInStock)
 println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         aPB.save(failOnError:true)
     }
-    
-    def rejectOffer(ProdBuffer aPB, Double aVol) {
-        aPB.volumeOffered = aPB.volumeOffered - aVol
-        aPB.volumeAvailable = aPB.volumeAvailable + aVol
-        println("Rejected: Volume offered: "+aPB.volumeOffered+" volumeAvailabel: "+aPB.volumeAvailable)
+    def restorePlannedOfferVolumesToBuffer(ProdBuffer aPB, OfferDetail aOD) {
+        
+        aPB.volumeInStock = aPB.volumeInStock + aOD.fromStock
+        int i = 0
+        for (odpv in aOD.offerPlannedVolumes) {
+            aPB.plannedVolumes[i].volume = aPB.plannedVolumes[i].volume + odpv.volume
+            i = i + 1
+        }
         aPB.save(flush:true, failOnError:true)
-        restoreVolumeToBuffer(aPB, aVol)
     }
     
-    def addOfferVolume(ProdBuffer aPB, Double aVol) {
-        aPB.volumeOffered = aPB.volumeOffered + aVol
-        aPB.volumeAvailable = aPB.volumeAvailable - aVol
+    def rejectOffer(ProdBuffer aPB, OfferDetail aOD) {
+        aPB.volumeOffered = aPB.volumeOffered - aOD.volumeOffered
+        aPB.volumeAvailable = aPB.volumeAvailable + aOD.volumeOffered
+        println("Rejected: Volume offered: "+aPB.volumeOffered+" volumeAvailabel: "+aPB.volumeAvailable)
         aPB.save(flush:true, failOnError:true)
-        if (aVol > 0) {
-            retrieveVolumeFromBuffer(aPB, aVol)
-        } else if (aVol < -0.01) {
-            restoreVolumeToBuffer(aPB, -aVol)
+        if (aOD.useWeeklyVolumes) {
+            restorePlannedOfferVolumesToBuffer(aPB, aOD)
+        } else {
+            restoreVolumeToBuffer(aPB, aOD.volumeOffered)
+        }
+    }
+    
+    def retrieveOfferedVolumeFromBuffer(ProdBuffer aPB, OfferDetail aOD) {
+        aPB.volumeInStock = aPB.volumeInStock - aOD.fromStock
+        int i = 0
+        for (odpv in aOD.offerPlannedVolumes) {
+            aPB.plannedVolumes[i].volume = aPB.plannedVolumes[i].volume - odpv.volume
+            i = i + 1
+        }
+        aPB.save(flush:true, failOnError:true)
+    }
+    
+    def addOfferVolume(ProdBuffer aPB, OfferDetail aOD) {
+        Double aVol = aOD.volumeOffered
+        aPB.volumeOffered = aPB.volumeOffered + aOD.volumeOffered
+        aPB.volumeAvailable = aPB.volumeAvailable - aOD.volumeOffered
+        aPB.save(flush:true, failOnError:true)
+        if (aOD.useWeeklyVolumes) {
+            retrieveOfferedVolumeFromBuffer(aPB, aOD)
+        } else {
+            if (aVol > 0) {
+                retrieveVolumeFromBuffer(aPB, aVol)
+            } else if (aVol < -0.01) {
+                restoreVolumeToBuffer(aPB, -aVol)
+            }
         }
     }
     
