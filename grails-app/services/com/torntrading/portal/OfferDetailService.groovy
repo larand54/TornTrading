@@ -229,21 +229,68 @@ class OfferDetailService {
         
     }
     
-    def checkOldVolumesAndCorrect(OfferDetail aOD) {
-        if (aOD.oldVolume > 0.001) {
-            println("OfferDetailService.CheckOldVolumesAndCorrect - oldVolume: "+aOD.oldVolume)
-            def weekListSize = 12
-            def  opv = aOD.offerPlannedVolumes
-            def  oav = aOD.availableVolumes
+    def allocateVolumeFromBuffer(Double aVol, OfferDetail aOD, ProdBuffer aPB) {
+        int i = 0
+        def  opv = aOD.offerPlannedVolumes
+        def  oav = aOD.availableVolumes
+        def  ppv = aPB.plannedVolumes
         
-            aOD.inStock = aOD.inStock + aOD.fromStock
-            for (int i=0; i< weekListSize; i++) {
-                oav[i].volume = oav[i].volume + opv[i].volume
-                opv[i].volume = 0.0
-                opv[i].save(failOnError:true)
-                oav[i].save(failOnError:true)
+        double vol = new Double(aVol)
+        if (vol <= aPB.volumeInStock) {
+            aOD.fromStock = vol
+            aPB.volumeInStock = aPB.volumeInStock - vol
+            aOD.inStock = aPB.volumeInStock
+        } else {
+            aOD.fromStock = aPB.volumeInStock
+            aPB.volumeInStock = 0
+            aOD.inStock = 0
+            vol = vol - aOD.fromStock
+            
+            while(vol > 0 && i < 12) {
+                if (vol <= ppv[i].volume) {
+                    opv[i].volume = vol
+                    ppv[i].volume = ppv[i].volume - vol
+                    oav[i].volume = ppv[i].volume
+                    vol = 0
+                } else {
+                    vol = vol - ppv[i].volume
+                    opv[i].volume = ppv[i].volume
+                    oav[i].volume = 0
+                    ppv[i].volume = 0
+                }
+                i++
             }
         }
+        aPB.volumeAvailable = aPB.volumeAvailable - aVol
+        aPB.volumeOffered = aPB.volumeOffered + aVol
     }
+    
+    def unAllocateVolumeFromBuffer(OfferDetail aOD, ProdBuffer aPB) {
+        int i = 0
+        def  opv = aOD.offerPlannedVolumes
+        def  oav = aOD.availableVolumes
+        def  ppv = aPB.plannedVolumes
+        
+        double vol = aOD.fromStock
+        double usedVolume = vol
+        aOD.inStock = aOD.inStock + vol
+        aPB.volumeInStock = aOD.inStock
+        
+        for(opvv in opv) {
+            usedVolume = usedVolume + opvv.volume
+            ppv[i].volume = ppv[i].volume + opvv.volume
+            oav[i].volume = ppv[i].volume
+            i++
+        }
+        aPB.volumeAvailable = aPB.volumeAvailable + usedVolume
+        aPB.volumeOffered = aPB.volumeOffered - usedVolume
+   }
  
+    def newOfferedVolume(Double aVol, OfferDetail aOD, ProdBuffer aPB) {
+        unAllocateVolumeFromBuffer(aOD, aPB)
+            logService.logOfferDetailVolumes('SRVC','newOfferedVolume','After unAllocate',aOD)
+        allocateVolumeFromBuffer(aVol, aOD, aPB)
+        aPB.save(failOnError: true, flush:true)
+        aOD.save(failOnError: true, flush:true)
+    }
 }

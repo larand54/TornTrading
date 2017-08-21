@@ -63,7 +63,10 @@ class OfferDetailController {
             if (offerDetailService.okToAddVolume(pb, volumeChange)) {
                 println("Volume OK! " + volumeChange)
                 if (od.offerHeader.status == 'Active') {
-                    prodBufferService.addOfferVolume(pb, od, volumeChange)
+//                    prodBufferService.addOfferVolume(pb, od, volumeChange)
+            logService.logOfferDetailVolumes('CTRL','changeVolumeOffered','Before newOfferedVolume',od)
+                    offerDetailService.newOfferedVolume(newVolume, od, pb)
+            logService.logOfferDetailVolumes('CTRL','changeVolumeOffered','After newOfferedVolume',od)
                 }
                 return true
             } else {

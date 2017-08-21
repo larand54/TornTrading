@@ -33,7 +33,8 @@ class OfferHeaderService {
             if (od.useWeeklyVolumes) {
                 offerDetailService.addWeeklyOfferedVolumesAtActivation(od)
             } else {
-                VolumeChange vc = offerDetailService.addOfferVolume(od, pb, od.volumeOffered*2) // This is the first reg of volume and as volumechange is calculated  as: Chagedvol = NewVol - Actual volume, we need to double the volume
+                offerDetailService.allocateVolumeFromBuffer(od.volumeOffered,od,pb)
+//                VolumeChange vc = offerDetailService.addOfferVolume(od, pb, od.volumeOffered*2) // This is the first reg of volume and as volumechange is calculated  as: Chagedvol = NewVol - Actual volume, we need to double the volume
             }
 /*            if (vc.allowed) {
                 prodBufferService.addOfferVolume(pb, od, vc.volume)
