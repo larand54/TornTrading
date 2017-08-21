@@ -66,7 +66,7 @@
                     <g:field class="volumeOffered" id="${offerDetail.id}" type="number decimal" name="volumeOffered" min="1" max="10000" required="Y" value="${fieldValue(bean: offerDetail, field: 'volumeOffered')}" style="width: 6em"/>
                 </td>
                 <td>
-                    Available: <g:field class="volumeOffered" id="${offerDetail.id}" type="number decimal" name="volumeOffered" min="1" max="10000" readonly="Y" value="${prodBuffer.volumeAvailable}" style="width: 6em"/>
+                    Available: <g:field class="volumeAvailable" id="${offerDetail.id}" type="number decimal" name="volumeAvailable" min="1" max="10000" readonly="Y" value="${prodBuffer.volumeAvailable}" style="width: 6em"/>
                 </td>
                     
 

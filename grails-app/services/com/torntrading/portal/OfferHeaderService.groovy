@@ -6,6 +6,7 @@ import grails.transaction.Transactional
 @Transactional
 class OfferHeaderService {
     def prodBufferService
+    def offerDetailService
     def Boolean allOfferDetailsVolumeOK(OfferHeader aOH) {
         def result = true
         for (od in aOH.offerDetails) {
@@ -25,15 +26,19 @@ class OfferHeaderService {
         return result
     }
     
-    def boolean okToAddVolume(ProdBuffer aPB, Double aVolChange) {
-        println(">>> Available: "+aPB.volumeAvailable+"  Offered: "+aVolChange)
-        return aPB.volumeAvailable >= aVolChange        
-    }
-    
     def addOfferVolume(OfferHeader aOH) {
         for (OfferDetail od in aOH.offerDetails) {
             def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.addOfferVolume(pb, od)  
+            
+            if (od.useWeeklyVolumes) {
+                offerDetailService.addWeeklyOfferedVolumesAtActivation(od)
+            } else {
+                VolumeChange vc = offerDetailService.addOfferVolume(od, pb, od.volumeOffered*2) // This is the first reg of volume and as volumechange is calculated  as: Chagedvol = NewVol - Actual volume, we need to double the volume
+            }
+/*            if (vc.allowed) {
+                prodBufferService.addOfferVolume(pb, od, vc.volume)
+            } else 5/0
+*/
         }
     }
     

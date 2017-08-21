@@ -5,18 +5,9 @@ import com.buffer.*
 
 @Transactional
 class OfferDetailService {
-
-    def Double getVolumeChange(OfferDetail aOD) {
-        if ((aOD.volumeOffered > 0.0001) || (aOD.oldVolume > 0.0001)){
-            double diff = aOD.volumeOffered - aOD.oldVolume
-            if (Math.abs(diff) > 0.0001) {
-                return diff
-            } else {
-                return 0.0
-            }
-        } else return 0.0
-
-    }
+    def offerHeaderService
+    def prodBufferService
+    def logService
 
     def Double getVolumeChangeFromForm(OfferDetail aOD, Double aNewVolume) {
         if ((aNewVolume > 0.0001) || (aOD.volumeOffered > 0.0001)){
@@ -30,16 +21,16 @@ class OfferDetailService {
 
     }
     
+    def boolean okToAddVolume(ProdBuffer aPB, Double aVolChange) {
+        println(">>> Available: "+aPB.volumeAvailable+"  Offered: "+aVolChange)
+        return aPB.volumeAvailable >= aVolChange        
+    }
+    
     def String getWeekAsTitle(Date aDate, int aOffset) {
-        println("getWeekAsTitle: "+aDate)
         def calendar = aDate.toCalendar()
-        println("getWeekAsTitle: calendar ")
         calendar.add(Calendar.DATE,7*(aOffset as int))
-        println("getWeekAsTitle: calendar.add ")
         def int week = calendar.get(Calendar.WEEK_OF_YEAR)
-        println("getWeekAsTitle: week: "+week)
         String weekStr = String.format("W%02d", week)
-        println("Week as title: "+weekStr)
          
         return weekStr
         
@@ -131,7 +122,9 @@ class OfferDetailService {
         if (usedVolume > volumeInStock) {
             return -1.0
         }
+        
         availableVolume = volumeInStock - usedVolume
+        volumeInStock = volumeInStock - usedVolume
         def Double restVol
         for (i=0; i < 12; i++) {
             if (uVol[i] > 0.0){
@@ -148,11 +141,27 @@ class OfferDetailService {
         }
         println("addWeekVolumes - uVol: "+usedVolume)
         
+        def ProdBuffer pb = ProdBuffer.get(aOD.millOfferID)
         i = 0
         for (odpv in aOD.offerPlannedVolumes) {
+
+            if (aOD.offerHeader.status == 'Active'){
+                print('>>>>>  Vol['+i+']: '+ pb.plannedVolumes[i].volume)
+                pb.plannedVolumes[i].volume = pb.plannedVolumes[i].volume + odpv.volume
+                print('>>>>>  efter retur: '+ pb.plannedVolumes[i].volume)
+                pb.plannedVolumes[i].volume = pb.plannedVolumes[i].volume - uVol[i]
+                println('>>>>>  efter avdrag '+ pb.plannedVolumes[i].volume)
+            }
+
             odpv.volume = uVol[i]
             i++
         }
+        aOD.inStock = volumeInStock
+        if (aOD.offerHeader.status == 'Active'){
+            println('addWeekVolumes. We are going to call addOfferVolume: '+aOD.offerHeader.status)
+            prodBufferService.addOfferVolume(pb, aOD, usedVolume - aOD.volumeOffered)
+        }
+        
         return usedVolume
     }
     
@@ -178,6 +187,46 @@ class OfferDetailService {
         }
         opv[weekListSize-1].volume = 0
         opv[weekListSize-1].save(flush:true, failOnError:true)
+    }
+    
+    def VolumeChange addOfferVolume(OfferDetail aOD, ProdBuffer aPB, Double newVolume) {
+        def Double volumeChange = getVolumeChangeFromForm(aOD, newVolume)
+        println(" addOfferVolume - Before check " + volumeChange)
+        if (Math.abs(volumeChange) > 0.0) {
+            if (okToAddVolume(aPB, volumeChange)) {
+                println(" addOfferVolume - Volume OK! " + volumeChange)
+                if (aOD.offerHeader.status == 'Active') {
+                    prodBufferService.addOfferVolume(aPB, aOD, volumeChange)
+                    logService.logOfferDetailVolumes('CTRL','update','After addOfferVolume - volumeChange: '+volumeChange ,aOD)
+                }
+                return new VolumeChange(volumeChange, true)
+            } else {
+                println(" addOfferVolume - Volume -- NOT -- OK! " + volumeChange)
+
+                return new VolumeChange(volumeChange, false)                           
+            }
+            
+        } else {
+            return new VolumeChange(0,true)
+        }
+
+    }
+    
+    def addWeeklyOfferedVolumesAtActivation(OfferDetail aOD) {
+        
+        assert aOD.useWeeklyVolumes : "Called addWeeklyOfferedVolumesAtActivation not using weekly volumes!"
+        assert aOD.offerHeader.status == 'Active' : "Called addWeeklyOfferedVolumesAtActivation and status not active"
+        def int i
+        def double usedVolume = aOD.fromStock
+        def ProdBuffer pb = ProdBuffer.get(aOD.millOfferID)
+        i = 0
+        for (odpv in aOD.offerPlannedVolumes) {
+            pb.plannedVolumes[i].volume = pb.plannedVolumes[i].volume - odpv.volume
+            usedVolume = usedVolume + odpv.volume
+            i++
+        }
+        prodBufferService.addOfferVolume(pb, aOD, usedVolume)
+        
     }
     
     def checkOldVolumesAndCorrect(OfferDetail aOD) {

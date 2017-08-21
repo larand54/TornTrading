@@ -257,7 +257,20 @@ class ProdBufferController {
         }
         return myList
     }
+    
+    def fix() {
+        def ProdBuffer pb = ProdBuffer.get(params.id)
+        println('!!!!!!!! FIX !!!!!!' + pb.volumeAvailable)
+        def Double vol = pb.volumeInitial - pb.volumeOffered - pb.volumeOnOrder
+        for (pv in pb.plannedVolumes) {
+            vol = vol + pv.initialVolume
+        }
+        println('!!!!!! Available volume: '+vol)
+        redirect(action:"edit",id:params.id)
+    }
 }
+
+
 
 class OfferCommand {
     List<Integer> toOffer

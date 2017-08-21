@@ -32,11 +32,11 @@ class OfferDetail {
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
     double              oldVolume   // Volym angiven före uppdatering
+    
     SortedSet offerPlannedVolumes
     SortedSet availableVolumes
     static belongsTo = [offerHeader: OfferHeader]
     static hasMany = [offerPlannedVolumes: OfferPlannedVolume, availableVolumes: OfferWeeklyAvailableVolume]
-
 //    static transients = ['endPriceM3']
     def beforeInsert() {
         createdBy = getUserID()
@@ -70,7 +70,9 @@ class OfferDetail {
     }
     
     def beforeUpdate() {
-//        oldVolume =  getPersistentValue('volumeOffered')
+        println('OfferDetail-Domain1- OldVolume: '+oldVolume)
+        oldVolume =  getPersistentValue('volumeOffered')
+        println('OfferDetail-Domain2- OldVolume: '+oldVolume)
         def oldCert = getPersistentValue('choosedCert')
         def certList = getAvailableCert()
         if (certList.size() == 1)       choosedCert = certList[0]
@@ -80,7 +82,7 @@ class OfferDetail {
         else if (choosedCert == 'CW')   endPrice = priceCW
         println("Choose cert UPDATE: "+choosedCert)
         calculateEndPrice()
-        oldVolume = volumeOffered
+//        oldVolume = volumeOffered
         println("EndPrice at domain: "+endPrice)
     }
     

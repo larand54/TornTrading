@@ -9,6 +9,7 @@ import grails.transaction.Transactional
 @Transactional
 class ProdBufferService {
     def offerDetailService
+    def logService
     // Hjälp klass för att hantera veckobyten med volymer
     class CellVol {
         Double vol1
@@ -126,9 +127,10 @@ class ProdBufferService {
         aPB.save(failOnError:true)
     }
     
-    def restoreVolumeToBuffer(ProdBuffer aPB, OfferDetail){
+    def restoreVolumeToBuffer(ProdBuffer aPB, Double aVol){
         def int i = 11
         def CellVol cellVol = new CellVol(vol1:0, vol2:0) 
+println("RestoreVolumeToBuffer Start - cellVol.vol2: "+cellVol.vol2)
         def pv = aPB.plannedVolumes
         
         cellVol.vol2 = aVol 
@@ -178,18 +180,20 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         aPB.save(flush:true, failOnError:true)
     }
     
-    def addOfferVolume(ProdBuffer aPB, OfferDetail aOD) {
-        Double aVol = aOD.volumeOffered
-        aPB.volumeOffered = aPB.volumeOffered + aOD.volumeOffered
-        aPB.volumeAvailable = aPB.volumeAvailable - aOD.volumeOffered
+    def addOfferVolume(ProdBuffer aPB, OfferDetail aOD, Double aVol) {
+        logService.logProdBufferVolumes('SRVC','addOfferVolume','At start - volOff: '+aPB.volumeOffered+' VolAvail: '+ aPB.volumeAvailable ,aPB)
+        aPB.volumeOffered = aPB.volumeOffered + aVol
+        aPB.volumeAvailable = aPB.volumeAvailable - aVol
+        logService.logProdBufferVolumes('SRVC','addOfferVolume','After start - volOff: '+aPB.volumeOffered+' VolAvail: '+ aPB.volumeAvailable ,aPB)
         aPB.save(flush:true, failOnError:true)
         if (aOD.useWeeklyVolumes) {
-            retrieveOfferedVolumeFromBuffer(aPB, aOD)
+            // We do nothing here
         } else {
             if (aVol > 0) {
                 retrieveVolumeFromBuffer(aPB, aVol)
             } else if (aVol < -0.01) {
                 restoreVolumeToBuffer(aPB, -aVol)
+        logService.logProdBufferVolumes('SRVC','addOfferVolume','After restore - volOff: '+aPB.volumeOffered+' VolAvail: '+ aPB.volumeAvailable ,aPB)
             }
         }
     }

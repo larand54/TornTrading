@@ -215,7 +215,7 @@ class OfferHeaderController {
             respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return            
         }
-        logService.logOfferHeader('update',offerHeader)
+        logService.logOfferHeader('CTRL','update',offerHeader)
         println("OfferHeaderController - date: "+params.offerValidDate)
         offerHeader.validUntil = params.date('offerValidDate', 'yyyy-MM-dd')
         offerHeader.info = params.info

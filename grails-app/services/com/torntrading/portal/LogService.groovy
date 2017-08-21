@@ -57,6 +57,8 @@ class LogService {
         msg = '-> OPV: '
         def  opv = aOD.offerPlannedVolumes
         def  oav = aOD.availableVolumes
+        def ProdBuffer pb = ProdBuffer.get(aOD.millOfferID)
+        def  pav = pb.plannedVolumes
         for (pv in opv) {
             msg = msg + '| ' + pv.volume
         }
@@ -68,8 +70,29 @@ class LogService {
         }
         printLog(msg)
     
+        msg = '-> PAV: '
+        for (av in pav) {
+            msg = msg + '| ' + av.volume
+        }
+        printLog(msg)
+    
     }
     
+    def logProdBufferVolumes(String aClass, String aMethod, String aComment, ProdBuffer aPB) {
+        String msg = 'ProdBuffer-'+aClass+'-'+aMethod+' productNo: '+aPB.id+' >>> '+aComment+' <<<' + ' Status: '+aPB.status + 'oldVolInStock: ' + aPB.getPersistentValue('volumeInStock') + ' OldAvailableVol: '+aPB.getPersistentValue('volumeAvailable')
+        printLog(msg)
+        
+        msg = '-> InStock: ' + aPB.volumeInStock + ' Available: '+aPB.volumeAvailable
+        printLog(msg)
+        
+        msg = '-> PPV: '
+        def  ppv = aPB.plannedVolumes
+        for (pv in ppv) {
+            msg = msg + '| ' + pv.volume
+        }
+        printLog(msg)
+    }
+
     def printLog(String aMsg) {
         def Date d = new Date()
         println(d.format('yyyy-MM-dd hh:mm:ss')+'  '+aMsg)
