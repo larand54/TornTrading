@@ -11,7 +11,7 @@ buildscript {
     }
 }
 
-version "0.9950"
+version "0.9951"
 group "torntrading"
 
 apply plugin:"eclipse"
@@ -95,5 +95,34 @@ sourceSets {
         resources {
             srcDir 'grails-app/migrations'
         }
+    }
+}
+
+// Codesnippet from http://grailsblog.objectcomputing.com/posts/2017/04/02/add-build-info-to-your-project.html
+buildProperties.doLast {
+    // Find the right file
+    File grailsBuildInfoFile = it.outputs.files.files.find { it.name == 'grails.build.info' }
+    if(!grailsBuildInfoFile) return // No need to continue if the file is not there
+    Properties properties = new Properties()
+    // Read properties from the file
+    grailsBuildInfoFile.withInputStream {
+        properties.load(it)
+    }
+    // Add new properties from various sources
+    properties.setProperty('build.time', new Date().format("yyyy-MM-dd HH:mm:ss"))
+    // Get a System property
+    properties.setProperty('build.java.version', System.getProperty('java.version'))
+    // Get the host name where the build was created
+    properties.setProperty('build.host', InetAddress.localHost.hostName)
+    // Add property set by your CI (in this case Bamboo)
+    Map<String, String> env = System.getenv()
+    if(env.bamboo_buildNumber) {
+        properties.setProperty('build.number', env.bamboo_buildNumber)
+        properties.setProperty('build.git.revision', env.bamboo_planRepository_revision)
+        properties.setProperty('build.git.branch', env.bamboo_planRepository_branch)
+    }
+    // Write the properties back to the file
+    grailsBuildInfoFile.withOutputStream {
+        properties.store(it,null)
     }
 }
