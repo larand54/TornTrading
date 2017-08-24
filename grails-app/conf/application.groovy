@@ -58,7 +58,7 @@ grails.plugin.springsecurity.useSecurityEventListener = true
                     }
                 port = 465
                 username = "caves700@gmail.com"
-                password = "iX1gPuk9"
+                password = ""
                 props = ["mail.smtp.auth":"true",
                     "mail.smtp.socketFactory.port":"465",
                     "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",

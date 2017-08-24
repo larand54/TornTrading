@@ -1,24 +1,36 @@
 <div id="divToUpdate">
     <table id="products" width="100%">
         <colgroup>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="1%"/>
-            <col width="83%"/>
+            <col width="1%"/> <!-- Del -->
+            <col width="1%"/> <!-- ChkBox -->
+            <col width="3%"/> <!-- ID -->
+            <col width="3%"/> <!-- Mill -->
+            <col width="3%"/> <!-- Species -->
+            <col width="11%"/> <!-- Dimension -->
+            <col width="11%"/> <!-- Length -->
+            <col width="5%"/> <!-- Grade -->
+            <col width="3%"/> <!-- KD -->
+            <col width="3%"/> <!-- Currency -->
+            <col width="3%"/> <!-- FSC -->
+            <col width="3%"/> <!-- PEFC -->
+            <col width="3%"/> <!-- CW -->
+            <col width="3%"/> <!-- UC -->
+            <col width="3%"/> <!-- InStock -->
+            <col width="3%"/> <!-- Sold -->
+            <col width="3%"/> <!-- Offered -->
+            <col width="3%"/> <!-- Available -->
+            <col width="3%"/> <!-- W01 -->
+            <col width="3%"/> <!-- W02 -->
+            <col width="3%"/> <!-- W03 -->
+            <col width="3%"/> <!-- W04 -->
+            <col width="3%"/> <!-- W05 -->
+            <col width="3%"/> <!-- W06 -->
+            <col width="3%"/> <!-- W07 -->
+            <col width="3%"/> <!-- W08 -->
+            <col width="3%"/> <!-- W09 -->
+            <col width="3%"/> <!-- W10 -->
+            <col width="3%"/> <!-- W11 -->
+            <col width="3%"/> <!-- W12 -->
         </colgroup>
         <thead>
             <tr>
@@ -33,8 +45,9 @@
                 <g:sortableColumn property="species" title='Species' />
                 <g:sortableColumn property="dimension" title='Dimension' />
                 <g:sortableColumn property="length" title='Length' />
-                <g:sortableColumn property="currency" title='Cur' />
+                <g:sortableColumn property="grade" title='Grade' />
                 <g:sortableColumn property="kd" title='KD(%)' />
+                <g:sortableColumn property="currency" title='Cur' />
                 <g:sortableColumn property="priceFSC" title='FSC' />
                 <g:sortableColumn property="priceFSC" title='PEFC' />
                 <g:sortableColumn property="priceFSC" title='CW' />
@@ -77,8 +90,9 @@
                     <td>${pb.species}</td>
                     <td>${pb.dimension}</td>
                     <td>${pb.length}</td>
-                    <td>${pb.currency}</td>
+                    <td>${pb.grade}</td>
                     <td>${pb.kd}</td>
+                    <td>${pb.currency}</td>
                     <td>${pb.priceFSC}</td>
                     <td>${pb.pricePEFC}</td>
                     <td>${pb.priceCW}</td>
