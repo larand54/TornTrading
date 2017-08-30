@@ -47,8 +47,11 @@
                     $.ajax({
                         url: '${g.createLink( controller:'offerDetail', action:'updatePrice' )}',
                         data: {volumeOffered:this.value, id:this.id},
-                        type: 'get'
-                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
+                        type: 'get',
+                        success:function ( data ) { $( '#updatePrice' ).html( data );     }), 
+                        error: alert('!!! E R R O R !!!');
+                        });
+//                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
                 });
             });
         </script>

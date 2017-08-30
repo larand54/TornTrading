@@ -10,14 +10,15 @@
                 var sStatus = $('#status').val();
                 var sCustomer = $('#customer').val();
                 var sSawMill = $('#sawMill').val();
+                var sCreator = $('#creator').val();
                 
                 //send fields to server
-                $.post("/offerHeader/filteredOffers", { wood:sWood, status:sStatus, customer:sCustomer, sawMill:sSawMill }, function(data){
+                $.post("/offerHeader/filteredOffers", { wood:sWood, status:sStatus, customer:sCustomer, sawMill:sSawMill, creator: sCreator }, function(data){
                     $( '#list-offerHeader' ).html( data ); });
      /*
      $.ajax({
                     url:'${g.createLink( controller:'offerHeader', action:'filteredOffers' )}',
-                    data: [sawMill], data: [customer], data: [status], data: [wood],
+                    data: [sawMill], data: [customer], data: [status], data: [wood], data: [creator],
                     type: 'get'
                 }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
      */
@@ -42,6 +43,7 @@
                         <th>Wood: <g:select name="wood" from="${woodList}" value="" onchange="filteredOffers(wood)" noSelection = "${['':'All']}" /></th>
             <!--            <th>Product: <g:select name="product" from="${productList}" value="" onchange="filteredOffers(products)" noSelection = "${['':'All']}" /></th>-->
                         <th>Status: <g:select name="status" from="${statusList}" value="" onchange="filteredOffers(status)" noSelection = "${['':'All']}" /></th>
+                        <th>Created by: <g:select name="creator" from="${creators}" value="" onchange="filteredOffers(creator)" noSelection = "${['':'All']}" /></th>
                     </tr>
                 </thead>    
             </table>

@@ -1,5 +1,5 @@
 package com.buffer
-
+import com.torntrading.security.*
 class UserTagLib {
     static final namespace = 'myTag'
     static defaultEncodeAs = [taglib:'html']
@@ -20,5 +20,11 @@ class UserTagLib {
         def loggedInUser = springSecurityService.currentUser
         def uc = loggedInUser.getUserSettings().supplierName
         out << uc
+    }
+    
+    def userNameFromID = { attrs, body ->
+        def theUser = User.get(attrs?.id)
+        def userName = theUser.username
+        out << userName
     }
 }

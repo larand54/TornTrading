@@ -7,6 +7,7 @@ import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 import com.buffer.OrdersAndStoreController
 import com.torntrading.portal.PlannedVolume
+import com.torntrading.legacy.*
 
 @Transactional(readOnly = true)
 @Secured(['ROLE_ADMIN','ROLE_USER','ROLE_SALES','ROLE_SUPPLIER'])
@@ -26,7 +27,8 @@ class ProdBufferController {
     }
 
     def create() {
-        respond new ProdBuffer(params)
+        def suppliers = Supplier.list()
+        respond new ProdBuffer(params), model:[sawMills: suppliers]
     }
     
     
@@ -62,9 +64,10 @@ class ProdBufferController {
     }
 
     def edit(ProdBuffer prodBuffer) {
+        def suppliers = Supplier.list()
         def plannedVolumes = prodBuffer.plannedVolumes
         println("%%% PlannedVolumes: "+plannedVolumes)
-        respond prodBuffer, model:[plannedVolumes: plannedVolumes]
+        respond prodBuffer, model:[plannedVolumes: plannedVolumes, sawMills:suppliers]
     }
 
     @Transactional

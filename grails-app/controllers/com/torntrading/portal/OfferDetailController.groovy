@@ -26,7 +26,9 @@ class OfferDetailController {
         if ((status == 'Sold') || (status == 'Rejected')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Offer can not be changed (Sold/Rejected)'
-            redirect(action:"edit", id:params.id)
+            redirect controller: "offerDetail", action:"edit", id:params.id
+            return
+
         } else {
             if (params.availableCert) {
                 od.choosedCert = params.availableCert

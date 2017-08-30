@@ -11,6 +11,7 @@
                         <g:sortableColumn property="sawMill" title='Supplier' />
                         <g:sortableColumn property="species" title='Wood' />
                         <g:sortableColumn property="status" title='Status' />
+                        <g:sortableColumn property="creatorsName" title='Created by' />
                         <g:sortableColumn property="dateCreated" title='Created' />
                     </tr>
                 </thead>
@@ -23,6 +24,7 @@
                             <td>${oh.sawMill}</td>
                             <td>${oh.species}</td>
                             <td>${oh.status}</td>
+                            <td>${oh.creatorsName}</td>
                             <td><g:formatDate format="yyyy-MM-dd HH:mm" date="${oh.dateCreated}"/></td>
                         </tr>
                     </g:each>

@@ -1,5 +1,6 @@
 package com.torntrading.portal
 import com.torntrading.legacy.Customer
+import com.torntrading.security.User
 
 class OfferHeader {
     def springSecurityService
@@ -24,10 +25,13 @@ class OfferHeader {
     Date		dateCreated
     int                 createdBy 
     Date                validUntil
+    String              creatorsName
+//    String              getCreatorsName() {User.get(createdBy).username}
 
     static hasMany =[offerDetails: OfferDetail]
     def beforeInsert() {
         createdBy = getUserID()
+        creatorsName = User.get(createdBy).username
         status = 'New'
         if (offerType == null) {offerType = 'o'}
         termsOfDelivery = 'CIP'
@@ -48,7 +52,6 @@ class OfferHeader {
         contactEmail     column: "contactEmail",   sqltype: "char", length: 100
         info             column: "info",           sqltype: "char", length: 500
         agentFee         column: "agentFee",       sqltype: "int"
-
     }
     static constraints = {
 		sawMill		size: 0..80
@@ -94,6 +97,7 @@ class OfferHeader {
                 freight         nullable:true
                 species         nullable:true
                 validUntil      nullable:true
+                creatorsName    nullable:true
     }
     def beforeUpdate() {
         if(company != null && company != '') {

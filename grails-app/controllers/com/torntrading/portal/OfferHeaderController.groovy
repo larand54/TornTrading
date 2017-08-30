@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 import sun.util.calendar.LocalGregorianCalendar.Date
 
 import grails.plugin.springsecurity.annotation.Secured
-import com.torntrading.portal.OfferDetail
+import com.torntrading.security.*
 import grails.converters.JSON
 import com.torntrading.legacy.Customer
 
@@ -18,16 +18,22 @@ class OfferHeaderController {
     def springSecurityService
     def assetResourceLocator
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    
 
     def index(Integer max) {
+        println('OH Index - Params: '+params)
         params.max = Math.min(max ?: 10, 100)
         def millList = getMills()
         def customerList = getCustomersFromOffers()
         def offerHeader = getOfferList()
         def woodList = getWoods() 
         def statusList = getStatusList()
+        def creators = getCreatorList()
+        
+        
+        
         for (oh in offerHeader) println("OfferHeaderController - index: "+ oh.id  +" deliveryweeks: " + offerHeaderService.weeksOfDelivery(oh))
-        respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount, customerList: customerList, millList: millList, woodList:woodList, statusList:statusList]
+        respond offerHeader, model:[offerHeaderCount: offerHeader.totalCount, customerList: customerList, millList: millList, woodList:woodList, statusList:statusList, creators:creators]
     }
 
     
@@ -51,7 +57,9 @@ class OfferHeaderController {
     }
     
     def List<OfferHeader> getOfferList() {
-        def offerList = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
+        println("GetOfferList - params: "+params)
+        def offerList = OfferHeader.createCriteria().list(params) { eq ( "offerType", "o" )}
+        
         if (params.status == null || params.status == '' || params.status == 'All') {
         } else{
             offerList = offerList.findAll({it.status==params.status})
@@ -65,6 +73,10 @@ class OfferHeaderController {
         if (params.wood != null && params.wood !='') {
             offerList = offerList.findAll({it.species == params.wood})
         }  
+        if (params.creator != null && params.creator !='') {
+            offerList = offerList.findAll({User.get(it.createdBy).username == params.creator})
+        }  
+        
         return offerList
     }
     
@@ -86,6 +98,16 @@ class OfferHeaderController {
     
     def List<String> getStatusList() {
         ["New", "Active", "Sold", "Rejected"]
+    }
+    
+    def List<String> getCreatorList() {
+        def offerList = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
+        def List<String> creators = new ArrayList<String>()
+        for (offer in offerList) {
+            creators.add(User.get(offer.createdBy).username)
+        }
+        creators.unique()
+        return creators
     }
     
     def show(OfferHeader offerHeader) {
@@ -331,4 +353,17 @@ class OfferHeaderController {
         renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us,imageBytes: file],   filename: "offert_polish-"+params.id+".pdf")
 //        notFound()
     }
+    
+        def initiate() {
+        println "%%%%%%% REFRESH %%%%%%%%"
+        def offers = getOfferList()
+        for (offer in offers) {
+            if (offer.creatorsName == null || offer.creatorsName == '') {
+                offer.creatorsName = User.get(offer.createdBy).username
+                offer.save()
+            }
+        }
+        redirect action:'index'
+    }
+
 }

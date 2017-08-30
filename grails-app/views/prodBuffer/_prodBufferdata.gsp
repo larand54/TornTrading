@@ -1,10 +1,22 @@
 <fieldset class="form">
+<table style="width:30%">
+    <tr>
+        <td>
     Set status: <g:select name="status" from="${prodBuffer?.constrainedProperties.status.inList}" 
     value="${prodBuffer?.status}" required="Y"/>
+        </td>
+                    <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
+                        <td>
+    <label for='sawMill'>SawMill</label><g:select name="sawMill" from="${sawMills.searchName}" value="${prodBuffer?.sawMill}"  noSelection = "${['':'Choose supplier']}" required="Y" />
+                        </td>
+                        </tr>
+</sec:ifAnyGranted>
 </fieldset>
+                    <sec:ifAnyGranted roles="ROLE_SUPPLIER"> 
  <g:if test="${motherview=='create'}">
      <input type="hidden" name="sawMill" value="${myTag.userCompany()}" />
  </g:if>
+</sec:ifAnyGranted>
 <table style="width:100%">
     <tr>
         <td>
