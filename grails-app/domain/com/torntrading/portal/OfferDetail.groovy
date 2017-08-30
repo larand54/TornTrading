@@ -58,13 +58,10 @@ class OfferDetail {
         for (int i=0; i<12; i++) {
             def ov = new OfferPlannedVolume(week:i+1 as Integer, volume:0 as Double)
             addToOfferPlannedVolumes(ov)
-            println("Add offerplanned volume record: "+i)
         }
-        println("Add available volume record: ")
         for (int i=0; i<12; i++) {
             def oav = new OfferWeeklyAvailableVolume(week:i+1 as Integer, volume:0 as Double)
             addToAvailableVolumes(oav)
-            println("Add available volume record: "+i+" - "+oav.week)
         }
 
     }

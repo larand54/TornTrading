@@ -31,7 +31,7 @@
                     <g:each in="${sawMills}" status="i" var="sm">
                         <tr  class="${ (i % 2) == 0 ? 'even': 'odd'}">
                             <td><g:checkBox name="sawMill" value="${sm}" checked="false"  /></td>
-                            <td>${sm}</td>
+                            <td><g:field name="Mills" value="${sm}"/></td>
                             <td>Wood:  <g:select name="species" from="${['Redwood','Whitewood']}"/> </td>
                         </tr>
                     </g:each>
