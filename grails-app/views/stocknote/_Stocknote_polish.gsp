@@ -67,12 +67,12 @@ span.normal {
         <div id="report-Stocknote" class="content scaffold-show" role="main">
             <table style="width:75%">
                 <tr>
-                <td class="StocknoteTitle">Stan magazyunu i plan produkcji</td>
+                <td class="StocknoteTitle">Stan magazynu i plan produkcji</td>
                 <td class="StocknoteSpec">    ${this.offerHeader.sawMill}</td>
-                <g:if test="${this.offerHeader.species} == 'Redwood'">
+                <g:if test="${this.offerHeader.species == 'Redwood'}">
                     <td class="StocknoteSpec">Sosna</td>
                 </g:if>
-                <g:elseif test="${this.offerHeader.species} == 'Whitewood'">
+                <g:elseif test="${this.offerHeader.species == 'Whitewood'}">
                     <td class="StocknoteSpec">Swierk</td>
                 </g:elseif>
                 <g:else>

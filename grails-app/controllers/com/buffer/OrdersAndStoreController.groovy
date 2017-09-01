@@ -54,8 +54,8 @@ class OrdersAndStoreController {
         //        prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
         def List<String> millList = getMills()
         def List<ProdBuffer> pbl = getBufferList()
-        // Paging        def List<ProdBuffer> prodBuffer = pbl
-        def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
+        def List<ProdBuffer> prodBuffer = pbl
+        // Paging def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
         respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
     }
     

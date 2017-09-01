@@ -78,10 +78,10 @@
                     </div>
                 </sec:ifAnyGranted>
                     <g:render template="AvailableProductData" model="[prodBuffer:prodBuffer]"/>
-                    <div class="pagination">
+<!--                    <div class="pagination">
                         <g:paginate total="${prodBufferCount ?: 0}" max="24"/> 
                     </div>
-<!---->
+-->
                     <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                         <fieldset class="buttons">
                             <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
