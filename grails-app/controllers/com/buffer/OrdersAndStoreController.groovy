@@ -33,7 +33,6 @@ class OrdersAndStoreController {
     }
     
     def list(Integer max) { 
-        println "Timeout: ${session.getMaxInactiveInterval()} seconds"
         if (!userOk()) {
             flash.error = "User have no sawmill defined!" 
 
@@ -214,13 +213,10 @@ class OrdersAndStoreController {
                 }
             } else {
                 int mc=0
-                for (mill in params.Mills) {
-                    if (params.sawMill==mill) {
-                        String wood = species[mc]
-                        total = total + createTheStockNotes(wood, mill)
-                        break
-                    }
-                    mc++              
+                if (params.sawMill==params.Mills) {
+                    String wood = species[mc]
+                    total = total + createTheStockNotes(wood, params.sawMill)
+                    mc = 1
                 }
             }
             if (total <= 0) {
