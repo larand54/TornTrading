@@ -238,8 +238,20 @@ class OfferDetailController {
     
     def useWeeklyVolumes() {
         println("useWeeklyVolumes - params: "+params)
-        def boolean ckb = params.ckbWeeklyVolumes.toBoolean()
         def od = OfferDetail.get(params.id)
+        String status =  od.offerHeader.status 
+        if ((status == 'Sold') || (status == 'Rejected')) {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Offer can not be changed (Sold/Rejected)'
+//            redirect controller: "offerDetail", action:"edit", id:params.id
+            return
+/*        } else {
+            transactionStatus.setRollbackOnly()
+            flash.message = 'Today I dont allow you!'
+            redirect controller: "offerDetail", action:"edit", id:params.id
+*/           
+        }
+        def boolean ckb = params.ckbWeeklyVolumes.toBoolean()
         od.useWeeklyVolumes = ckb
         od.save(flush:true)
         if (od.useWeeklyVolumes) {
