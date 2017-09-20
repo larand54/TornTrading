@@ -166,7 +166,8 @@ class OfferDetailService {
     }
     
     def weekAdjust() {
-        def List<OfferHeader> ohList = OfferHeader.executeQuery("FROM OfferHeader OH WHERE OH.status IN ('Active', 'New')" )
+        def List<OfferHeader> ohList = OfferHeader.executeQuery("FROM OfferHeader OH WHERE OH.status IN ('Active', 'New') AND OH.offerType='o'" )
+        println('OfferDetailService - weekAdjustVolumes - OfferID:'+ohList.size)
         for (oh in ohList) {
             for (od in oh.offerDetails) {
                 weekAdjustVolumes(od)
@@ -177,16 +178,21 @@ class OfferDetailService {
     def weekAdjustVolumes(OfferDetail aOD) {
         def weekListSize = 12
         def  opv = aOD.offerPlannedVolumes
-        for (int i=0; i< weekListSize-1; i++) {
-            //            println("AdjustVolumes, I: "+i)
-            if (i==0) {
-                aOD.fromStock = aOD.fromStock + opv[0].volume
+        println('OfferDetailService - weekAdjustVolumes - OfferID:'+aOD.offerHeader.id+" OfferDetail: "+aOD.id)
+        if (opv[weekListSize-1] != null) {
+            for (int i=0; i< weekListSize-1; i++) {
+                //            println("AdjustVolumes, I: "+i)
+                if (i==0) {
+                    aOD.fromStock = aOD.fromStock + opv[0].volume
+                }
+                opv[i].volume = opv[i+1].volume
+                opv[i].save(flush:true, failOnError:true)
             }
-            opv[i].volume = opv[i+1].volume
-            opv[i].save(flush:true, failOnError:true)
+            opv[weekListSize-1].volume = 0
+            opv[weekListSize-1].save(flush:true, failOnError:true)
+        } else {
+            println("!!!!!! OfferDetailService - weekAdjustVolumes - missing planned volumes of Offer: "+aOD.offerHeader.id+" OfferDetail: "+aOD.id)
         }
-        opv[weekListSize-1].volume = 0
-        opv[weekListSize-1].save(flush:true, failOnError:true)
     }
     
     def VolumeChange addOfferVolume(OfferDetail aOD, ProdBuffer aPB, Double newVolume) {
@@ -284,11 +290,11 @@ class OfferDetailService {
         }
         aPB.volumeAvailable = aPB.volumeAvailable + usedVolume
         aPB.volumeOffered = aPB.volumeOffered - usedVolume
-   }
+    }
  
     def newOfferedVolume(Double aVol, OfferDetail aOD, ProdBuffer aPB) {
         unAllocateVolumeFromBuffer(aOD, aPB)
-            logService.logOfferDetailVolumes('SRVC','newOfferedVolume','After unAllocate',aOD)
+        logService.logOfferDetailVolumes('SRVC','newOfferedVolume','After unAllocate',aOD)
         allocateVolumeFromBuffer(aVol, aOD, aPB)
         aPB.save(failOnError: true, flush:true)
         aOD.save(failOnError: true, flush:true)
