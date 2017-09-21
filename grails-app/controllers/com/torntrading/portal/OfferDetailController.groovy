@@ -242,14 +242,7 @@ class OfferDetailController {
         String status =  od.offerHeader.status 
         if ((status == 'Sold') || (status == 'Rejected')) {
             transactionStatus.setRollbackOnly()
-            flash.message = 'Offer can not be changed (Sold/Rejected)'
-//            redirect controller: "offerDetail", action:"edit", id:params.id
-            return
-/*        } else {
-            transactionStatus.setRollbackOnly()
-            flash.message = 'Today I dont allow you!'
-            redirect controller: "offerDetail", action:"edit", id:params.id
-*/           
+            return render(status: 400, text:"Offer can not be changed (Sold/Rejected)") 
         }
         def boolean ckb = params.ckbWeeklyVolumes.toBoolean()
         od.useWeeklyVolumes = ckb

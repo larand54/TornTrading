@@ -75,11 +75,12 @@
         </table>
     </fieldset>
 
+   <g:if test="${offerDetail.offerHeader?.status in ['Active','New']}">
     <label for="ckbWeeklyVolumes">
         <g:message message="Specify volumes weekly"/>
     </label>
     <g:checkBox id="${offerDetail.id}" class="useWeeklyVolumes" name="ckbWeeklyVolumes" value="${offerDetail?.useWeeklyVolumes}" />
-
+   </g:if>
 
     <g:if test="${offerDetail?.useWeeklyVolumes}">
         <table>

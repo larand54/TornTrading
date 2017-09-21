@@ -4,6 +4,14 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'offerDetail.label', default: 'OfferDetail')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
+        <style type="text/css">
+            #alert {
+                color: red;
+                font-size: 1.0em;
+                font-weight: bold;
+                vertical-align: bottom
+            }
+         </style>    
         
         <script>
             $(document).ready(function(){
@@ -11,8 +19,14 @@
                     $.ajax({
                         url: '${g.createLink( controller:'offerDetail', action:'useWeeklyVolumes' )}',
                         data: {ckbWeeklyVolumes:this.checked, id:this.id},
-                        type: 'get'
-                    }).success( function ( data ) { $( '#nono' ).html( data );     });
+                        type: 'get',
+                        success: function ( data ) { $( '#nono' ).html( data );     },
+                        error: function (jqXHR) {document.querySelector('#alert').innerHTML = jqXHR.responseText;
+                                const timeoutID = window.setTimeout(() => {
+                                messageBox.innerHTML = '';
+                                window.clearTimeout(timeoutID);
+                        }, 3000);}
+                    });
                 });
             });
         </script>
@@ -70,7 +84,7 @@
             <div id="edit-offerDetail" class="content scaffold-edit" role="main">
                 <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
+                <div id="alert" class="message" role="status">${flash.message}</div>
             </g:if>
             <g:hasErrors bean="${this.offerDetail}">
                 <ul class="errors" role="alert">
