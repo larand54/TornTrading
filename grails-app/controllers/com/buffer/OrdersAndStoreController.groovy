@@ -38,6 +38,7 @@ class OrdersAndStoreController {
 
             redirect(uri:'/')
         }
+        println("OrdersAndStoreController - list - params"+params)
         params.max = Math.min(max ?: 24, 100)
         def offerDetails = null//OfferDetail.list()
 
@@ -76,11 +77,15 @@ class OrdersAndStoreController {
     }
     
     def availableProducts() {
-        System.out.println(params)
+        System.out.println("OrdersAndStoreController - availableProducts - params"+params)
         def offerDetails = null 
         def List<ProdBuffer> prodBuffer = getBufferList()
-        render(template:"AvailableProductData", model:[prodBuffer: prodBuffer, offerDetails:offerDetails])
-        render(template:"ListOffers", model:[offerDetails: offerDetails])
+        //        render(model:[prodBuffer: prodBuffer, offerDetails:offerDetails])
+        if (params.sort != null) {
+            redirect controller: "ordersAndStore", action: "list" , model:[prodBuffer: prodBuffer, selectedMill:true]
+        } else {
+            render(template:"AvailableProductData", model:[prodBuffer: prodBuffer, offerDetails:offerDetails])
+        }
     }
     def listOffers(){
         /*        if (SpringSecurityUtils.ifAnyGranted( "ROLE_ADMIN, ROLE_SALES, ROLE_SUPPLIER")) {
@@ -139,13 +144,14 @@ class OrdersAndStoreController {
         def mill = (us != null) ? us.supplierName :''
         def roles = springSecurityService.getPrincipal().getAuthorities()
         
-        def prodBuffer = ProdBuffer.findAllByStatus('Active', [sort:params.sort, order:params.order])
         def List<ProdBuffer> myList
         def List<ProdBuffer> tempList
         if ((params.sawMill != null) && (params.sawMill != '')) {
-            tempList = prodBuffer.findAll({it.sawMill==params.sawMill}) 
+            tempList = ProdBuffer.createCriteria().list(params) {eq ( "sawMill", params.sawMill ) && eq ( "status", 'Active' )}
+            //            tempList = ProdBuffer.findAllBySawMill(params.sawMill, [sort:params.sort, order:params.order]) 
+            println("OrdersAndStoreController - getBufferList - "+tempList)
         } else {
-            tempList = prodBuffer  
+            tempList = ProdBuffer.findAllByStatus('Active', [sort:params.sort, order:params.order])
         }
         for(def role in roles){ if(role.getAuthority() == "ROLE_ADMIN") {
                 myList = tempList
@@ -156,7 +162,8 @@ class OrdersAndStoreController {
             }else if(role.getAuthority() == "ROLE_SUPPLIER") {
                 tempList.findAll{println('OrdersAndStoreController, getBufferList(SUPPLIER), it.sawMill: '+it.sawMill)}
                 tempList.findAll{println('OrdersAndStoreController, getBufferList(SUPPLIER), found: '+(mill==it.sawMill))}
-                myList = tempList.findAll{mill == it.sawMill}
+                myList = ProdBuffer.createCriteria().list(params) {eq ( "sawMill", mill ) && eq ( "status", 'Active' )}
+                //                myList = tempList.findAll{mill == it.sawMill}
                 //        println('OrdersAndStoreController, getBufferList(SUPPLIER), it.sawMill: '+it.sawMill)
                 break
             }
@@ -180,6 +187,7 @@ class OrdersAndStoreController {
     def int createTheStockNotes(String wood, String mill) {
         int count = 0
         def List<ProdBuffer> products = ProdBuffer.createCriteria().list( params ) {eq ( "sawMill", "${mill}" ) && eq ( "species", "${wood}" ) &&  eq ("status", "Active")}//findAll(status=='Active',species==params('species'))
+        println("OrdersAndStoreController - createTheStockNotes - mill: "+mill+" wood: "+wood+" products: "+products)
         if (!products.empty) {
             def OfferHeader ofh = new OfferHeader(termsOfDelivery: 'CIP', volumeUnit: 'AM3', currency: 'SEK', sawMill:mill).save(failOnError: true)
             ofh.offerType='s'
@@ -199,8 +207,11 @@ class OrdersAndStoreController {
         if (params.sawMill != null) {
             int count
             int total=0
+            int noOfSelectedSawMills = 0
             ArrayList<String> species = params.list("species")
             if (isCollectionOrArray(params.sawMill)) {
+                //            println("OrdersAndStoreController - createStockNote - IsCollectionOrArray - params.sawMill: "+params.sawMill)
+                noOfSelectedSawMills = params.sawMill.length 
                 for (sm in params.sawMill){
                     int mc=0
                     for (mill in params.Mills) {
@@ -212,17 +223,24 @@ class OrdersAndStoreController {
                     }
                 }
             } else {
+                //            println("OrdersAndStoreController - createStockNote - IsNOT!!!!CollectionOrArray - params.sawMill: "+params.sawMill+" params.Mills: "+params.Mills)
                 int mc=0
-                if (params.sawMill==params.Mills) {
-                    String wood = species[mc]
-                    total = total + createTheStockNotes(wood, params.sawMill)
-                    mc = 1
+                noOfSelectedSawMills = 1
+                for (mill in params.Mills) {
+                    if (params.sawMill == mill) {
+                        String wood = species[mc]
+                        println(">>>>>>>>>>> MC: "+mc+" Species[MC]: "+ species[mc])
+                        total = total + createTheStockNotes(wood, params.sawMill)
+                    }
+                    mc++
                 }
             }
             if (total <= 0) {
                 transactionStatus.setRollbackOnly()
                 flash.message = "No product found within criteria so no Stocknote created" 
                 println("OrderAndStore, Create Stocknote, No product found!")
+            } else if (total < noOfSelectedSawMills) {
+                flash.message = "Just ${total} of ${noOfSelectedSawMills} selected stocknotes was created!"
             } else {
                 def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
                 flash.message = "${total} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 

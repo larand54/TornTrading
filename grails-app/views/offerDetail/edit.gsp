@@ -7,7 +7,7 @@
         <style type="text/css">
             #alert {
                 color: red;
-                font-size: 1.0em;
+                font-size: 0.7em;
                 font-weight: bold;
                 vertical-align: bottom
             }
@@ -21,9 +21,9 @@
                         data: {ckbWeeklyVolumes:this.checked, id:this.id},
                         type: 'get',
                         success: function ( data ) { $( '#nono' ).html( data );     },
-                        error: function (jqXHR) {document.querySelector('#alert').innerHTML = jqXHR.responseText;
-                                const timeoutID = window.setTimeout(() => {
-                                messageBox.innerHTML = '';
+                        error: function (jqXHR) {const alert = document.querySelector('#alert').innerHTML = jqXHR.responseText;
+                                const timeoutID = window.setTimeout(function() {
+                                alert.innerHTML = '';
                                 window.clearTimeout(timeoutID);
                         }, 3000);}
                     });
@@ -49,12 +49,18 @@
                     $.ajax({
                         url: '${g.createLink( controller:'offerDetail', action:'updatePrice' )}',
                         data: {adjustPrice:this.value, id:this.id},
-                        type: 'get'
-                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
+                        type: 'get',
+                        success: function ( data ) { $( '#updatePrice' ).html( data );},
+                        error: function (jqXHR) {const alert = document.querySelector('#alert');
+                        alert.innerHTML = jqXHR.responseText;
+                        const timeoutID = window.setTimeout(function() {
+                        alert.innerHTML = '';
+                        window.clearTimeout(timeoutID);
+                        }, 5000);}
+                    });
                 });
             });
         </script>
-
         <script>
             $(document).ready(function(){
                 $( document ).on('change', '.volumeOffered', function ( event ){ 

@@ -49,9 +49,9 @@
                 <g:sortableColumn property="kd" title='KD(%)' />
                 <g:sortableColumn property="currency" title='Cur' />
                 <g:sortableColumn property="priceFSC" title='FSC' />
-                <g:sortableColumn property="priceFSC" title='PEFC' />
-                <g:sortableColumn property="priceFSC" title='CW' />
-                <g:sortableColumn property="priceFSC" title='UC' />
+                <g:sortableColumn property="pricePEFC" title='PEFC' />
+                <g:sortableColumn property="priceCW" title='CW' />
+                <g:sortableColumn property="priceUC" title='UC' />
                 <g:sortableColumn property="volumeInStock" title='InStock' />
                 <g:sortableColumn property="volumeOnOrder" title='Sold' />
                 <g:sortableColumn property="volumeOffered" title='Offer' />

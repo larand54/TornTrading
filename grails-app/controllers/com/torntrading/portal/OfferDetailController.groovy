@@ -16,8 +16,14 @@ class OfferDetailController {
     
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+
     def updatePrice() {
         println("OfferDetailController.updatePrice, params: "+params)
+        
+        if(!params.adjustPrice.isNumber()) {
+            println('params.adjustPrice not a number')
+            return render(status: 400, text:"AdjustPrice not numeric - use '.' not ','")   
+        }
         def OfferDetail od
         if (params.id != null){
             od = OfferDetail.get(params.id)
@@ -53,7 +59,9 @@ class OfferDetailController {
             } else {} 
             od.save(flush: true, failOnError: true)
             //      render template: "OfferDData", model: [offerDetail:od] 
-            render { div ( od.endPrice ) }
+            def adjustedPrice = od.endPrice/od.volumeOffered/(1.0+od.offerHeader.agentFee/100)
+            render { div ( id: "updatePrice", od.endPrice) }
+            
         
         }
     }

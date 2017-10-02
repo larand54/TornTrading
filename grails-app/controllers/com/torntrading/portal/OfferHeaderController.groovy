@@ -52,7 +52,7 @@ class OfferHeaderController {
             oh.country = customer.countryName
             oh.city = customer.cityName
         }
-        oh.save()
+        oh.save(flush:true, failOnError:true)
         render oh as JSON
     }
     

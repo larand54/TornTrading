@@ -16,7 +16,7 @@
         </table>
     </fieldset>
     <fieldset>
-        <legend>Prices</legend>
+        <legend>Prices <span id="alert"></span></legend>
 
         <table>
             <colgroup>
@@ -44,6 +44,10 @@
                 <td>EndPrice:</td>
                 <td>  
                     <div id="updatePrice">    ${offerDetail.endPrice} </div>
+                </td>
+                <td>Adjusted price/m3:</td>
+                <td>  
+                    <div id="updatePrice">    ${AdjustedPrice} </div>
                 </td>
 
 
@@ -74,9 +78,9 @@
             </tr>
         </table>
     </fieldset>
-
+<label for="ckbWeeklyVolumes"><span id="alert"></span>
    <g:if test="${offerDetail.offerHeader?.status in ['Active','New']}">
-    <label for="ckbWeeklyVolumes">
+       
         <g:message message="Specify volumes weekly"/>
     </label>
     <g:checkBox id="${offerDetail.id}" class="useWeeklyVolumes" name="ckbWeeklyVolumes" value="${offerDetail?.useWeeklyVolumes}" />

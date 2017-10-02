@@ -44,7 +44,7 @@ class OfferHeader {
 	status		column: "status",          sqltype:	"char", length: 11
 	offerType	column: "offerType",       sqltype:	"char", length: 1
 	dateCreated	column: "dateCreated",     defaultValue: newDate()
-        company          column: 'company',        sqltype: 'char', length: 50
+        company          column: 'company',        sqltype: 'char', length: 100
         country          column: 'country',        sqltype: 'char', length: 20
         city                                       sqltype: 'char', length: 50
         contactPerson                              sqltype: 'char', length: 50
@@ -57,7 +57,7 @@ class OfferHeader {
 		sawMill		size: 0..80
 		currency	size: 0..3
 		volumeUnit	size: 0..6
-                company size: 0..50
+                company size: 0..100
                 country size: 0..50
                 city size: 0..50
                 contactPerson size: 0..50
