@@ -14,8 +14,8 @@ class PriceTagLib {
     
     def endPriceM3 = {attrs, body ->
         OfferDetail od = attrs.offerDetail
-        BigDecimal endPriceM3 = od.endPrice / (od.volumeOffered?od.volumeOffered:1)
-        endPriceM3 = Math.round(endPriceM3 * 100) / 100
-        out << endPriceM3
+        BigDecimal endPricePM3 = od.endPrice / (od.volumeOffered?od.volumeOffered:1)
+        endPricePM3 = Math.round(endPricePM3+0.5) 
+        out << endPricePM3
     }
 }
