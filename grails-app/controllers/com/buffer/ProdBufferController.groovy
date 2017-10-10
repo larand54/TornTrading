@@ -62,6 +62,15 @@ class ProdBufferController {
             ///                render(view:"/orders_and_Store/list")
         }
     }
+    
+    def edit_2() {
+        println("edit_2 - parms: "+params)
+        def prodBuffer = ProdBuffer.get(params.id)
+        def suppliers = Supplier.list()
+        def plannedVolumes = prodBuffer.plannedVolumes
+        println(">>> PlannedVolumes: "+plannedVolumes)
+        respond prodBuffer, model:[ plannedVolumes: plannedVolumes, sawMills:suppliers]
+    }
 
     def edit(ProdBuffer prodBuffer) {
         def suppliers = Supplier.list()
@@ -136,7 +145,6 @@ class ProdBufferController {
 
         pvl[1].volume = params.vol2.toDouble()
         pvl[1].initialVolume = pvl[1].volume
-        println("XXXX volume: "+pvl[1].volume)
         pvl[1].save(failOnError:true)
 
         pvl[2].volume = params.vol3.toDouble()

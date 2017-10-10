@@ -46,7 +46,10 @@ class ProdBuffer {
     Double availW10
     Double[] volList
 
-    static transients = ['volList']
+    static transients = ['volList','shortLength','shortDimension']
+
+    public String getShortLength() { length.substring(0, Math.min(length.length(), 10)); }
+    public String getShortDim() { dimension.substring(0, Math.min(dimension.length(), 10)); }
     SortedSet plannedVolumes
     static hasMany = [plannedVolumes: PlannedVolume]
     static mapping	= {
@@ -90,6 +93,7 @@ class ProdBuffer {
         availW10        column: "Period10"
         
     }
+
     static constraints = {
         status(inList:["Active","Finished","Cancelled"])
         species(inList:["Redwood", "Whitewood"])

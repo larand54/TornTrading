@@ -13,6 +13,12 @@ import grails.plugin.springsecurity.annotation.Secured
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
 
+    class OfferHeaderResult {
+        int status
+        String msg
+        OfferHeader ofh
+    }
+ 
 @Secured(['ROLE_ADMIN','ROLE_SALES', 'ROLE_SUPPLIER'])
 class OrdersAndStoreController {
     def springSecurityService
@@ -53,10 +59,21 @@ class OrdersAndStoreController {
         prodBufferService.checkWeekStatus()
         //        prodBufferService.updateAvailableVolumes(getBufferList()) // För att testa funktionen
         def List<String> millList = getMills()
-        def List<ProdBuffer> pbl = getBufferList()
-        def List<ProdBuffer> prodBuffer = pbl
-        // Paging def prodBuffer = getPaginatedList(pbl, max, params.offset?.toInteger())
-        respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+        def List<ProdBuffer> prodBuffer = getBufferList()
+        // Paging def prodBuffer = getPaginatedList(prodBuffer, max, params.offset?.toInteger())
+        def filters = [sawMill: params.sawMill, sort: params.sort, order: params.order]
+        println("Filters: "+filters)
+        println("ProdBuffer: "+prodBuffer)
+        def model = [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:true, prodBufferCount: ProdBuffer.count(), filters:filters]
+        if (request.xhr) {
+            println("AJAX-Request!!!")
+            render(template:"Grid_Products", model:model)
+//            render(template:"Grid_Products", model:[prodBuffer: prodBuffer, offerDetails:offerDetails, filters:filters])
+        } else {
+
+ //           respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+            [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+        }
     }
     
     def getPaginatedList(list, max, offset) {
@@ -77,6 +94,9 @@ class OrdersAndStoreController {
     }
     
     def availableProducts() {
+        if (request.xhr) {
+            println("-----AJAX-Request!!!")
+        }
         System.out.println("OrdersAndStoreController - availableProducts - params"+params)
         def offerDetails = null 
         def List<ProdBuffer> prodBuffer = getBufferList()
@@ -141,34 +161,27 @@ class OrdersAndStoreController {
         def User user
         user = springSecurityService.isLoggedIn() ? springSecurityService.getCurrentUser() : null
         def us = user.getUserSettings()
-        def mill = (us != null) ? us.supplierName :''
         def roles = springSecurityService.getPrincipal().getAuthorities()
         
-        def List<ProdBuffer> myList
-        def List<ProdBuffer> tempList
-        if ((params.sawMill != null) && (params.sawMill != '')) {
-            tempList = ProdBuffer.createCriteria().list(params) {eq ( "sawMill", params.sawMill ) && eq ( "status", 'Active' )}
-            //            tempList = ProdBuffer.findAllBySawMill(params.sawMill, [sort:params.sort, order:params.order]) 
-            println("OrdersAndStoreController - getBufferList - "+tempList)
-        } else {
-            tempList = ProdBuffer.findAllByStatus('Active', [sort:params.sort, order:params.order])
-        }
+//        def List<ProdBuffer> tempList
+        def mill = params.sawMill?params.sawMill:''
+        println("MILL From params: "+mill)
         for(def role in roles){ if(role.getAuthority() == "ROLE_ADMIN") {
-                myList = tempList
-                break
             }else if(role.getAuthority() == "ROLE_SALES") {
-                myList = tempList
-                break
             }else if(role.getAuthority() == "ROLE_SUPPLIER") {
-                tempList.findAll{println('OrdersAndStoreController, getBufferList(SUPPLIER), it.sawMill: '+it.sawMill)}
-                tempList.findAll{println('OrdersAndStoreController, getBufferList(SUPPLIER), found: '+(mill==it.sawMill))}
-                myList = ProdBuffer.createCriteria().list(params) {eq ( "sawMill", mill ) && eq ( "status", 'Active' )}
-                //                myList = tempList.findAll{mill == it.sawMill}
-                //        println('OrdersAndStoreController, getBufferList(SUPPLIER), it.sawMill: '+it.sawMill)
-                break
+                mill = (us != null) ? us.supplierName :''
             }
         }
-        return myList
+        println("MILL: "+mill)
+        def c = ProdBuffer.createCriteria()
+        def tempList = c.list {
+            if (mill) eq("sawMill", mill) and {eq ( "status", 'Active' )}
+//            maxResults(10)
+            if (params.sort){
+                order(params.sort, params.order)
+            }
+        }
+        return tempList
     }
     
     def List<ProdBuffer> getProductsFromMill(String aMill) {
@@ -254,17 +267,21 @@ class OrdersAndStoreController {
             
         }
     }    
-    
-    def createOffer(String offerType){
-        if(params.toOffer==null) {
-            flash.message = "No product selected!" 
-            redirect action:"list", method:"GET" 
-            return
-        }
+   def createOffer(String offerType){
+        println(">>> CreateOffer - Params:"+params)
         int count=0
-        def ofh = createOfferHeader()
+            println("#####params.id:"+params.list('id[]'))
+            println("#####params.id:"+params.'id[]')
+        def prodList = params.list('id[]' )
+        println("##### ProdList: "+prodList)
+        def OfferHeaderResult ofhr = createOfferHeader()
+        println("OfferHeaderResult.status: "+ofhr.status)
+        if (ofhr.status != 0) {
+            return render(status: 400, text:ofhr.msg)
+        }
+        def ofh = ofhr.ofh
         if (ofh != null) {
-            for( n in params.list('toOffer')) {
+            for( n in prodList) {
                 if (n.isInteger()) {
                     int value = n as Integer
                     createOfferDetail(ofh, value, offerType)
@@ -273,7 +290,8 @@ class OrdersAndStoreController {
             }
             def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
             flash.message = "${count} " +  "${message(code:'offerRequested.label')}" + "User Id: ${user.id}" 
-            redirect(controller:"offerHeader", action: 'edit', id: ofh.id)
+            render ofh.id
+            //            redirect(controller:"offerHeader", action: 'edit', id: ofh.id)
         } else {
             //flash.message = "Could not create offer due to systemerror" 
             redirect action:"list", method:"GET"
@@ -357,8 +375,9 @@ class OrdersAndStoreController {
         return ofd
     }
     
-    def OfferHeader createOfferHeader() {
+    def OfferHeaderResult createOfferHeader() {
         // Check all is same sawmill and grab sawmill name and id
+        def OfferHeaderResult result = new OfferHeaderResult(status: -99, ofh: null)
         def ProdBuffer pb
         def String currency = null
         def String nextCurrency = null
@@ -369,10 +388,11 @@ class OrdersAndStoreController {
         def Integer millId=null
         def Integer nextMillId=null
         def int error = 0
-        for( n in params.list('toOffer')) {
+        int count=0
+        def prodList = params.list('id[]')  
+        for( n in prodList) {
             if (n.isInteger()) {
                 int id = n as Integer
-                int clientNo
                 pb = ProdBuffer.get(id)
                 
                 nextMill = pb.sawMill
@@ -380,22 +400,25 @@ class OrdersAndStoreController {
                 nextCurrency = pb.currency
                 
                 if (( species != null) && (nextSpecies != species)) {
-                    flash.message='Could not create offer due to Mixed wood!'
+                    println("Mixed wood")
+                    result.msg ='Could not create offer due to Mixed wood!'
                     error = id
-                    return null
+                    result.status = -1
+                    return result 
                 }
 
                 
                 if (( mill != null) && (nextMill != mill)) {
-                    flash.message='Could not create offer due to Mixed sawmills!'
-                    error = id
-                    return null
+                    result.msg = 'Could not create offer due to Mixed sawmills!'
+                    result.status = -2
+                    return result 
                 }
                 
                 if (( mill != null) && (nextCurrency != currency)) {
-                    flash.message='Could not create offer due to Mixed currency!'
+                    result.msg = 'Could not create offer due to Mixed currency!'
                     error = id
-                    return null
+                    result.status = -3
+                    return result 
                 }
                 
                 
@@ -403,8 +426,9 @@ class OrdersAndStoreController {
                 mill = nextMill
                 currency = nextCurrency
                 if (checkCertPrices(pb) == 0) {
-                    flash.message = "No prices are set! Can not create offer!" 
-                    return null            
+                    result.msg = "No prices are set! Can not create offer!" 
+                    result.status = -4
+                    return result 
                 }
                      
                 //createOfferFromBuffer(value)
@@ -413,7 +437,10 @@ class OrdersAndStoreController {
         def Supplier supplier = Supplier.findBySearchName(mill)
         def int clientNo = supplier.clientNo
         def OfferHeader ofh = new OfferHeader(sawMill: mill, species: pb.species, termsOfDelivery: 'CIP', volumeUnit: pb.volumeUnit, currency: pb.currency).save(failOnError: true)
-        return ofh
+        result.ofh = ofh
+        result.status = 0
+        result.msg = 'OfferHeader created ${ofh.id}'
+        return result
     }
     
     def deleteProducts() {

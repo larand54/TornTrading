@@ -10,33 +10,121 @@
             }
         </style>
 <!---->
-        <style type="text/css">
-            table {
-            display: block;
-            overflow-x: auto;
-            overflow-y: scroll;
-            height: 30em;
-        </style>
 
         <style>
             .offers {
-            color: #ff0000
+                color: #ff0000;
+            }
+            
+            #prodID {
+                color: #ff0000;
             }
             #deletep{
                 background-image: url(../images/skin/database_delete.png);
             }
+            
+            #gridProducts {
+                white-space: nowrap;
+            }
         </style>
         
         <script type="text/javascript">
-            function availableProducts(){
-            $.ajax({
-                    url:'${g.createLink( controller:'ordersAndStore', action:'availableProducts' )}',
-                    data: [sawMill],
-                    type: 'get'
-                }).success( function ( data ) { $( '#divToUpdate' ).html( data ); });
-            }
+        </script>
 
+        <script type="text/javascript">
+        </script>
+        
+        <script type="text/javascript">            
+            $(document).ready(function() {
+            // Setup - add a text input to each footer cell
+                $('#gridProducts tfoot th').each( function () {
+                    var title = $(this).text();
+                    if (title=='Tag') {
+                        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+                    } else {
+                        $(this).html('');
+                    }
+                });
+ 
+                // DataTable
+                var table = $('#gridProducts').DataTable({
+                    "scrollY": "600px",
+                    "scrollX": "1000px",
+                    "scrollCollapse": true,
+                    "paging": false,
+                    "searching": true,
+                    "fixedColumns": false,
+                    "dom": '<"top"i>rt<"bottom"lp><"clear">',
+                    "select": true /*,
+  ,"columnDefs": [
+    { "width": "10%", "targets":  1}
+  ]
 
+                   "buttons": [
+                        {
+                            text: 'Create offer from selected products',
+                            action: function ( e, dt, node, config ) {
+                                alert( 'Button activated' );
+                            }
+                        }
+
+                    ]  */             
+                });
+
+    
+                // Apply the search
+                table.columns().every( function () {
+                    var that = this;
+ 
+                    $( 'input', this.footer() ).on( 'keyup change', function () {
+                        if ( that.search() !== this.value ) {
+                            that
+                            .search( this.value )
+                            .draw();
+                        }
+                    } );
+        
+        
+                } );
+                $( '#sawMill').on( 'change', function() {
+                    table
+                    .columns( 2 )
+                    .search( this.value )
+                    .draw();
+                });
+        
+                $( '#createOffer').on( 'click', function() {
+           
+                    var data = table
+                        .rows({selected:true})
+                        .data();
+ 
+                    if (data.length < 1 ) {
+                        alert('No products selected!');
+                        return true;
+                    }
+                    var arr = [];
+                    $.each(table.rows('.selected').data(), function() {
+                        var str = this[1];
+                        console.log(str);
+                        var firstIndex = str.indexOf('>')+1;
+                        var lastIndex = str.lastIndexOf('<');
+                        str = str.substring(firstIndex,lastIndex);
+                        alert(Number(str));
+                        arr.push(str);
+                    });
+                    alert('Data:'+arr);
+                    $.ajax({
+                        url: '${g.createLink( controller:'ordersAndStore', action:'createOffer' )}',
+                        data: {id:arr},
+                        type: 'get',
+                        success: function ( data ) {window.location = "${createLink(controller:'offerHeader',action:'edit')}"+"/"+data},
+                        error: function (jqXHR) {alert(jqXHR.responseText)}
+                    });
+                });
+            });
+        </script> 
+        <script type="text/javascript">
             $( document ).ready( function() {
                 $( document ).on('click', '.offers', function ( event ){
                     $.ajax({
@@ -65,29 +153,30 @@
                 <g:if test="${flash.message}">
                     <div class="message" role="status">${flash.message}</div>
                 </g:if>
+                <div class="filters">
                 <g:form action="createOffer">
                 <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                     <div id="selectMill">
                         Select mill:
-                        <g:if test="selectedMill">
-                            <g:select name="sawMill" from="${millList}" value="" onchange="availableProducts(sawMill)" noSelection = "${['':'All']}" />
-                        </g:if>                        
-                        <g:else>
-                            <g:select name="sawMill" from="${millList}" value="All" onchange="availableProducts(sawMill)" optionValue="All" optionKey="All"/>
-                        </g:else>
+                        <g:select class="selected" name="sawMill" from="${millList}" value="${filters?.sawMill}"  noSelection = "${['':'All']}" optionValue="" optionKey=""/>
                     </div>
                 </sec:ifAnyGranted>
-                    <g:render template="AvailableProductData" model="[prodBuffer:prodBuffer]"/>
+                <div id="grid">
+                    <g:render template="Grid_Products" model="model"/>
+                </div>
 <!--                    <div class="pagination">
                         <g:paginate total="${prodBufferCount ?: 0}" max="24"/> 
                     </div>
+                    
 -->
                     <sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SALES"> 
                         <fieldset class="buttons">
-                            <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />
+<!--                            <input class="save" type="submit" value="${message(code: 'offer.create.from.buffer.label', default: 'Create')}" />-->
+                            <input class="save" type="button" id="createOffer" value="Create offer from selected products"/>
                         </fieldset>
                     </sec:ifAnyGranted>    
                 </g:form>
+                </div>
             </div>
         </div>
 
@@ -95,13 +184,5 @@
         <div id="offerList"></div>
 
         </div>
-<!--        <script type="text/javascript">
-
-            $( document ).ready( function() {
-                fxheaderInit('products',200,1,29);
-                fxheader();
-            });
-        </script>
--->
     </body>
 </html>
