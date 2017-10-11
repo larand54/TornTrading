@@ -52,7 +52,9 @@
                         type: 'get',
                         success: function ( data ) { $( '#updatePrice' ).html( data );},
                         error: function (jqXHR) {const alert = document.querySelector('#alert');
-                        alert.innerHTML = jqXHR.responseText;
+                        var msg = jqXHR.responseText;
+                        if (msg==null) msg = 'Error on input!'
+                        alert.innerHTML = msg;
                         const timeoutID = window.setTimeout(function() {
                         alert.innerHTML = '';
                         window.clearTimeout(timeoutID);
@@ -70,8 +72,7 @@
                         type: 'get',
                         success:function ( data ) { $( '#updatePrice' ).html( data );     }), 
                         error: alert('!!! E R R O R !!!');
-                        });
-//                    }).success( function ( data ) { $( '#updatePrice' ).html( data );     });
+                    });
                 });
             });
         </script>
