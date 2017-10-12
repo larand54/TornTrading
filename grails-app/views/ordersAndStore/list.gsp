@@ -26,12 +26,28 @@
             #gridProducts {
                 white-space: nowrap;
             }
+            .shrink {
+                width: 50px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                cursor: pointer;
+            }
         </style>
         
         <script type="text/javascript">
         </script>
 
         <script type="text/javascript">
+            // Stoppa event orsakat av att någon trycker ENTER (Behövs ej men låter koden vara kvar ifall!)
+            $(document).ready(function() {
+                $(window).keydown(function(event){
+                    if(event.keyCode == 13) {
+                        event.preventDefault();
+                        return false;
+                    }
+                 });
+            });
         </script>
         
         <script type="text/javascript">            
@@ -110,16 +126,17 @@
                         var firstIndex = str.indexOf('>')+1;
                         var lastIndex = str.lastIndexOf('<');
                         str = str.substring(firstIndex,lastIndex);
-                        alert(Number(str));
                         arr.push(str);
                     });
-                    alert('Data:'+arr);
                     $.ajax({
                         url: '${g.createLink( controller:'ordersAndStore', action:'createOffer' )}',
                         data: {id:arr},
                         type: 'get',
                         success: function ( data ) {window.location = "${createLink(controller:'offerHeader',action:'edit')}"+"/"+data},
-                        error: function (jqXHR) {alert(jqXHR.responseText)}
+                        error: function (jqXHR) {
+                            alert(jqXHR.responseText);
+                            window.location = "${createLink(controller:'ordersAndStore',action:'list')}";
+                        }
                     });
                 });
             });
