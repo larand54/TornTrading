@@ -10,6 +10,7 @@ class OfferDetailService {
     def logService
 
     def Double getVolumeChangeFromForm(OfferDetail aOD, Double aNewVolume) {
+        println("OfferedVolume: ${aOD.volumeOffered} newVolume: ${aNewVolume}")
         if ((aNewVolume > 0.0001) || (aOD.volumeOffered > 0.0001)){
             double diff = aNewVolume - aOD.volumeOffered
             if (Math.abs(diff) > 0.0001) {
@@ -196,6 +197,7 @@ class OfferDetailService {
     }
     
     def VolumeChange addOfferVolume(OfferDetail aOD, ProdBuffer aPB, Double newVolume) {
+        println(" addOfferVolume - newVolume: " + newVolume + "aPB.volumeAvailable: " + aPB.volumeAvailable)
         def Double volumeChange = getVolumeChangeFromForm(aOD, newVolume)
         println(" addOfferVolume - Before check " + volumeChange)
         if (Math.abs(volumeChange) > 0.0) {

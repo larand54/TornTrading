@@ -19,10 +19,11 @@ class OfferDetailController {
 
     def updatePrice() {
         println("OfferDetailController.updatePrice, params: "+params)
-        
+        params.adjustPrice = params.adjustPrice.replace(',','.')
+        println('AdjustPrice: '+params.adjustPrice)
         if(!params.adjustPrice.isNumber()) {
             println('params.adjustPrice not a number')
-            return render(status: 400, text:"AdjustPrice not numeric - use '.' not ','")   
+            return render(status: 400, text:"AdjustPrice not numeric!")   
         }
         def OfferDetail od
         if (params.id != null){
@@ -32,8 +33,14 @@ class OfferDetailController {
         if ((status == 'Sold') || (status == 'Rejected')) {
             transactionStatus.setRollbackOnly()
             flash.message = 'Offer can not be changed (Sold/Rejected)'
-            redirect controller: "offerDetail", action:"edit", id:params.id
-            return
+            if (request.xhr) {
+                println("AJAX-Request!!!")
+                redirect controller: "offerDetail", action:"edit", id:params.id
+                return render(status: 400, text:'')
+            } else {
+                redirect controller: "offerDetail", action:"edit", id:params.id
+                return 
+            }
 
         } else {
             if (params.availableCert) {
@@ -68,6 +75,7 @@ class OfferDetailController {
     
     def boolean changeVolumeOffered(OfferDetail od, Double newVolume) {
         def Double volumeChange = offerDetailService.getVolumeChangeFromForm(od, newVolume)
+        println('Volume change: '+ volumeChange)
         ProdBuffer pb = ProdBuffer.findById(od.millOfferID)
         if (Math.abs(volumeChange) > 0.0) {
             if (offerDetailService.okToAddVolume(pb, volumeChange)) {
@@ -151,9 +159,10 @@ class OfferDetailController {
         }
 
         if (offerDetail.hasErrors()) {
+        println("Update - has errors - Params: "+params)
             transactionStatus.setRollbackOnly()
             redirect controller: "offerDetail", action:"edit", id:params.id
-            return
+            return   
         }
         String status =  offerDetail.offerHeader.status 
         if ((status == 'Sold') || (status == 'Rejected')) {
@@ -189,8 +198,11 @@ class OfferDetailController {
                 return                            
             }
         } else {
-            VolumeChange vc = offerDetailService.addOfferVolume(offerDetail, pb, params.volumeOffered.toDouble())
-            if (vc.allowed){
+            def volOff = params.volumeOffered.toDouble()
+            if (volOff <= pb.volumeAvailable) {
+                println("offerDetailController - volumeOffered: "+offerDetail.volumeOffered)
+                VolumeChange vc = offerDetailService.addOfferVolume(offerDetail, pb, params.volumeOffered.toDouble())
+                println("offerDetailController - volumeChanged: "+vc.volume)
             } else {
                 transactionStatus.setRollbackOnly()
                 flash.message = 'Offer not updated! Volume set to high!'

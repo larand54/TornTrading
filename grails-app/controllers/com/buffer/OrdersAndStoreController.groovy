@@ -270,12 +270,8 @@ class OrdersAndStoreController {
    def createOffer(String offerType){
         println(">>> CreateOffer - Params:"+params)
         int count=0
-            println("#####params.id:"+params.list('id[]'))
-            println("#####params.id:"+params.'id[]')
         def prodList = params.list('id[]' )
-        println("##### ProdList: "+prodList)
         def OfferHeaderResult ofhr = createOfferHeader()
-        println("OfferHeaderResult.status: "+ofhr.status)
         if (ofhr.status != 0) {
             return render(status: 400, text:ofhr.msg)
         }
