@@ -29,11 +29,12 @@
     <legend>Contact info</legend>
     <table style="width:100%">
         <tr>
-            <td>
-                Company: <g:select id="${offerHeader.id}" class="company" name="company" from="${customers}"
-                value="${offerHeader?.company}" required="Y" noSelection = "${['':'All']}"/></td>
-            </td>
+            <td>Select company: <g:select id="${offerHeader.id}" class="company" name="company-name" from="${customers}"
+                value="${offerHeader?.company}" noSelection = "${['':'Select company']}"/></td></td>
             <div id="updateCompany">
+            <td>
+                Company: <g:field class="elements" id="company" type="text" name="company" value="${offerHeader?.company}" size="50"/>
+            </td>
             <td>
                 country: <g:field class="elements" id="country" type="text" name="country" value="${offerHeader?.country}" size="50"/>
             </td>

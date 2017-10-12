@@ -19,6 +19,7 @@
                         data: {companyName:this.value, id:this.id},
                         type: 'get'
                     }).success( function ( data ) { 
+                        $("#company").val(data.company);    
                         $("#city").val(data.city);    
                         $("#country").val(data.country);    
                     });

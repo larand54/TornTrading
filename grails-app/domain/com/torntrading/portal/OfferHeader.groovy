@@ -102,8 +102,10 @@ class OfferHeader {
     def beforeUpdate() {
         if(company != null && company != '') {
             def customer = Customer.findByName(this.company)
-            this.country = customer.countryName
-            this.city = customer.cityName
+            if (customer != null) {
+                this.country = customer.countryName
+                this.city = customer.cityName
+            }
         }
     }
     
