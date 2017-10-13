@@ -59,6 +59,12 @@ span.normal {
             #pv_header1 {
               background-color: #d5d5d5;  
             }
+            .odd {
+                background-color "dddddd;
+            }
+            .even {
+                background-color "eeeeee;
+            }
         </style>    
     </head>
     <body>

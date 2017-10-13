@@ -1,8 +1,11 @@
-package torntrading.portal
+package com.torntrading.portal
 
-import grails.test.mixin.TestFor
-import spock.lang.Specification
+import grails.testing.mixin.integration.Integration
+import grails.gorm.transactions.*
+import spock.lang.*
 
+@Integration
+@Rollback
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
@@ -15,8 +18,9 @@ class ProdBufferServiceSpec extends Specification {
     def cleanup() {
     }
 
-    void "test something"() {
+    void "testCheckWeekStatus"() {
         expect:"fix me"
+//            checkWeekStatus()
             true == false
     }
 }

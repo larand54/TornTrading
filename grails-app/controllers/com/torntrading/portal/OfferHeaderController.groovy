@@ -71,7 +71,13 @@ class OfferHeaderController {
             offerList = offerList.findAll({it.sawMill == params.sawMill})
         }
         if (params.wood != null && params.wood !='') {
-            offerList = offerList.findAll({it.species == params.wood})
+            offerList = offerList.findAll({ 
+                if (it.mixedWood != null) {
+                    it.mixedWood.contains(params.wood)
+                } else {
+                    it.species.contains(params.wood)
+                }
+            })
         }  
         if (params.creator != null && params.creator !='') {
             offerList = offerList.findAll({User.get(it.createdBy).username == params.creator})

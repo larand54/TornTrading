@@ -1,4 +1,4 @@
-package com.torntrading.portal
+package com.torntrading.security
 
 import grails.test.mixin.*
 import spock.lang.*

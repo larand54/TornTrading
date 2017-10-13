@@ -27,6 +27,36 @@ class OfferHeader {
     Date                validUntil
     String              creatorsName
 //    String              getCreatorsName() {User.get(createdBy).username}
+    static transients = ['prod1','prod2','prod3','prod4','mixedWood']
+    
+    public String getProd1() { 
+        (offerDetails[0]!=null)? offerDetails[0].dimension : ''
+    }
+    public String getProd2() { 
+        (offerDetails[1]!=null)? offerDetails[1].dimension : ''
+    }
+    public String getProd3() { 
+        (offerDetails[2]!=null)? offerDetails[2].dimension : ''
+    }
+    public String getProd4() { 
+        (offerDetails[3]!=null)? offerDetails[3].dimension : ''
+    }
+    
+    public String getMixedWood() {
+        def List<String> woods = new ArrayList<String>() 
+        offerDetails.each {
+            woods.add(it.species) 
+        }
+        def String result
+        woods = woods.unique()
+        if (woods.size > 1) {
+            result = woods[0] + '/' + woods[1]
+        } else {
+            result = woods[0]
+        }
+        return result
+    }
+
 
     static hasMany =[offerDetails: OfferDetail]
     def beforeInsert() {
