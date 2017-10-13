@@ -36,6 +36,10 @@ span.normal {
 #sum_right {
                 text-align: right; 
             }
+            
+#header_date{
+    text-align: right; 
+}
 
 #is_center {
                 background-color: #dddddd;
@@ -60,11 +64,10 @@ span.normal {
             <h1><g:message code="default.offer.report.title" args="[offerHeader.sawMill, offerHeader.species]" /></h1>
 -->
     <rendering:inlinePng bytes="${imageBytes}" class="logotype"/>
-            <table> 
+            <table type="100%"> 
                 <colgroup>
                     <col width="15%"/>
-                    <col width="35%"/>
-                    <col width="45%"/>
+                    <col width="80%"/>
                     <col width="5%"/>  
                 </colgroup>
                 <thead>
@@ -73,17 +76,8 @@ span.normal {
                 <tr>    
                     <td><h1>Oferta</h1></td>
                     <td><h1>${offerHeader.sawMill}</h1></td>
-                    <g:if test="${offerHeader.species} == 'Redwood'">
-                        <td><h1>Sosna</h1></td>
-                    </g:if>
-                    <g:elseif test="${offerHeader.species} == 'Whitewood'">
-                        <td><h1>Swierk</h1></td>
-                    </g:elseif>
-                    <g:else>
-                        <td><h1>${offerHeader.species}</h1></td>
-                    </g:else>
                     
-                    <td><h3><g:formatDate format="yyyy-MM-dd" date="${offerHeader.dateCreated}"/></h3></td>
+                    <td><h3><g:formatDate id="header_date" format="yyyy-MM-dd" date="${offerHeader.dateCreated}"/></h3></td>
                 </tr>
                 </tbody>
             </table>

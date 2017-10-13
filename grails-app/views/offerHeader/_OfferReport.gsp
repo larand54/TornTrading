@@ -37,6 +37,10 @@ span.normal {
                 text-align: right; 
             }
 
+#header_date{
+    text-align: right; 
+}
+
 #is_center {
                 background-color: #dddddd;
                 text-align: center; 
@@ -64,8 +68,7 @@ span.normal {
             <table> 
                 <colgroup>
                     <col width="15%"/>
-                    <col width="35%"/>
-                    <col width="45%"/>
+                    <col width="80%"/>
                     <col width="5%"/>  
                 </colgroup>
                 <thead>
@@ -75,9 +78,8 @@ span.normal {
                     
                         <td><h1>Offer</h1></td>
                         <td><h1>${offerHeader.sawMill}</h1></td>
-                        <td><h1>${offerHeader.species}</h1></td>
                     
-                    <td><h3><g:formatDate format="yyyy-MM-dd" date="${offerHeader.dateCreated}"/></h3></td>
+                    <td><h3><g:formatDate id="header_date" format="yyyy-MM-dd" date="${offerHeader.dateCreated}"/></h3></td>
                 </tr>
                 </tbody>
             </table>

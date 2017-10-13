@@ -6,9 +6,10 @@
         </colgroup>
         <thead>
             <tr>
-                <th id="is_header1">Dimension</th>
+                <th id="is_header1">Dim</th>
                 <th id="is_header1">Length</th>
-                <th id="is_header1">Volume(m3)</th>
+                <th id="is_header1">Wood</th>
+                <th id="is_header1">Vol(m3)</th>
                 <th id="is_header1">KD(%)</th>
                 <th id="is_header1">Price m3</th>
                 <th id="is_header1">Grade</th>
@@ -21,6 +22,7 @@
                 <tr>
                     <td id="is_center">${od?.dimension}</td>
                     <td id="is_center">${od?.lengthDescr}</td>
+                    <td id="is_center">${od?.species}</td>
                     <td id="is_center">${od?.volumeOffered}</td>
                     <td id="is_center">${od?.kd}</td>
                     <td id="is_center"><g:endPriceM3 offerDetail="${od}"></g:endPriceM3></td>

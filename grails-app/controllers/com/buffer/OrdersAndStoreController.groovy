@@ -394,14 +394,6 @@ class OrdersAndStoreController {
                 nextMill = pb.sawMill
                 nextSpecies = pb.species
                 nextCurrency = pb.currency
-                
-                if (( species != null) && (nextSpecies != species)) {
-                    println("Mixed wood")
-                    result.msg ='Could not create offer due to Mixed wood!'
-                    error = id
-                    result.status = -1
-                    return result 
-                }
 
                 
                 if (( mill != null) && (nextMill != mill)) {
