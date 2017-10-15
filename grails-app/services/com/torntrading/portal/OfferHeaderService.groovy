@@ -34,12 +34,12 @@ class OfferHeaderService {
                 offerDetailService.addWeeklyOfferedVolumesAtActivation(od)
             } else {
                 offerDetailService.allocateVolumeFromBuffer(od.volumeOffered,od,pb)
-//                VolumeChange vc = offerDetailService.addOfferVolume(od, pb, od.volumeOffered*2) // This is the first reg of volume and as volumechange is calculated  as: Chagedvol = NewVol - Actual volume, we need to double the volume
+                //                VolumeChange vc = offerDetailService.addOfferVolume(od, pb, od.volumeOffered*2) // This is the first reg of volume and as volumechange is calculated  as: Chagedvol = NewVol - Actual volume, we need to double the volume
             }
-/*            if (vc.allowed) {
-                prodBufferService.addOfferVolume(pb, od, vc.volume)
+            /*            if (vc.allowed) {
+            prodBufferService.addOfferVolume(pb, od, vc.volume)
             } else 5/0
-*/
+             */
         }
     }
     
@@ -51,9 +51,11 @@ class OfferHeaderService {
     }
     
     def rejectOfferVolume(OfferHeader aOH) {
-        for (OfferDetail od in aOH.offerDetails) {
-            def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-            prodBufferService.rejectOffer(pb, od)  
+        if (aOH.status == 'Active') {
+            for (OfferDetail od in aOH.offerDetails) {
+                def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
+                prodBufferService.rejectOffer(pb, od)  
+            }
         }
     }
     
@@ -86,7 +88,7 @@ class OfferHeaderService {
         for (OfferDetail od in aOH.offerDetails) {
             if (od.useWeeklyVolumes) {
                 if (od.fromStock > 0.01) {
-println('##### OfferHeaderService - weeksOfDelivery-fromStock '+od.fromStock+'-'+currentWeek+':'+currentYear)
+                    println('##### OfferHeaderService - weeksOfDelivery-fromStock '+od.fromStock+'-'+currentWeek+':'+currentYear)
                     flw.addWeek(0,currentWeek,currentYear)  
                 }
                 for(OfferPlannedVolume opv in od.offerPlannedVolumes) {
@@ -94,15 +96,15 @@ println('##### OfferHeaderService - weeksOfDelivery-fromStock '+od.fromStock+'-'
                         int tempYw = yw + opv.week
                         int iWeek = prodBufferService.getWeekFromYearWeek(tempYw)
                         int iYear = prodBufferService.getYearFromYearWeek(tempYw)
-println('##### OfferHeaderService - weeksOfDelivery-tempYw '+tempYw)
-println('##### OfferHeaderService - weeksOfDelivery-iWeek '+iWeek)
-println('##### OfferHeaderService - weeksOfDelivery-iYear '+iYear)
+                        println('##### OfferHeaderService - weeksOfDelivery-tempYw '+tempYw)
+                        println('##### OfferHeaderService - weeksOfDelivery-iWeek '+iWeek)
+                        println('##### OfferHeaderService - weeksOfDelivery-iYear '+iYear)
                         flw.addWeek(opv.week,iWeek,iYear)
                     }
                 } 
             } else {
-println('##### OfferHeaderService - weeksOfDelivery-ELSE '+'-'+currentWeek+':'+currentYear)
-               flw.addWeek(0,currentWeek,currentYear) 
+                println('##### OfferHeaderService - weeksOfDelivery-ELSE '+'-'+currentWeek+':'+currentYear)
+                flw.addWeek(0,currentWeek,currentYear) 
             }    
         }
         return flw.toString()
