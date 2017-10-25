@@ -32,12 +32,23 @@ class OfferDetail {
     int                 millOfferID // id för sågverkserbjudande som offerten utgått från
     int                 requestID   // Om ej null, så anger den den förfrågan som offerten skapats från
     double              oldVolume   // Volym angiven före uppdatering
+    static transients = ["endPriceM3", "endPriceNoDecimal"]
+    public BigDecimal getEndPriceM3() {
+        def BigDecimal endPricem3 = (getCertPrice(choosedCert)?:0.0) 
+        def BigDecimal markupm3 = offerHeader.agentFee * 0.01 * endPricem3
+        endPricem3 = (endPricem3 + markupm3)
+        endPricem3 = endPricem3 + priceAdjust
+        endPricem3 = (endPricem3+0.4999).setScale(0, BigDecimal.ROUND_HALF_UP)
+    }
+    public BigDecimal getEndPriceNoDecimal() {
+        (endPrice+0.4999).setScale(0, BigDecimal.ROUND_HALF_UP) 
+    }
     
     SortedSet offerPlannedVolumes
     SortedSet availableVolumes
     static belongsTo = [offerHeader: OfferHeader]
     static hasMany = [offerPlannedVolumes: OfferPlannedVolume, availableVolumes: OfferWeeklyAvailableVolume]
-//    static transients = ['endPriceM3']
+    //    static transients = ['endPriceM3']
     def beforeInsert() {
         createdBy = getUserID()
         dateCreated = new Date()
@@ -67,20 +78,24 @@ class OfferDetail {
     }
     
     def beforeUpdate() {
-        println('OfferDetail-Domain1- OldVolume: '+oldVolume)
-        oldVolume =  getPersistentValue('volumeOffered')
-        println('OfferDetail-Domain2- OldVolume: '+oldVolume)
-        def oldCert = getPersistentValue('choosedCert')
-        def certList = getAvailableCert()
-        if (certList.size() == 1)       choosedCert = certList[0]
-        if (choosedCert == 'FSC')       endPrice = priceFSC
-        else if (choosedCert == 'PEFC') endPrice = pricePEFC
-        else if (choosedCert == 'UC')   endPrice = priceUC
-        else if (choosedCert == 'CW')   endPrice = priceCW
-        println("Choose cert UPDATE: "+choosedCert)
-        calculateEndPrice()
-//        oldVolume = volumeOffered
-        println("EndPrice at domain: "+endPrice)
+        if (offerHeader == null) {
+        } else {
+            println('OfferDetail-Domain1- OldVolume: '+oldVolume)
+            oldVolume =  getPersistentValue('volumeOffered')
+            println('OfferDetail-Domain2- OldVolume: '+oldVolume)
+            def oldCert = getPersistentValue('choosedCert')
+            def certList = getAvailableCert()
+            if (certList.size() == 1)       choosedCert = certList[0]
+            if (choosedCert == 'FSC')       endPrice = priceFSC
+            else if (choosedCert == 'PEFC') endPrice = pricePEFC
+            else if (choosedCert == 'UC')   endPrice = priceUC
+            else if (choosedCert == 'CW')   endPrice = priceCW
+            println("Choose cert UPDATE: "+choosedCert)
+            if (priceAdjust == null) {priceAdjust = new BigDecimal(0)}
+            calculateEndPrice()
+            //        oldVolume = volumeOffered
+            println("EndPrice at domain: "+endPrice)
+        }
     }
     
     def afterUpdate() {
@@ -107,45 +122,45 @@ class OfferDetail {
 
     }
     static constraints = {
-		sawMill		size: 0..80, nullable:true
-		dimension		size: 0..100
-		lengthDescr	size: 0..50
-		weekStart	size: 0..4
-		weekEnd		size: 0..4
-                kd size: 0..4
-		dimension()
-		lengthDescr()
-                kd()
-                grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)", "C24"])
-                species(inList:["Redwood", "Whitewood"])
-		volumeOffered()
-		weekStart()
-		weekEnd()
-		dateCreated()   
-                millOfferID     nullable:true
-                requestID       nullable:true
-                weekStart       nullable:true
-                weekEnd         nullable:true
-                volumeOffered   nullable:true
-                oldVolume       nullable:true
-                fromStock       nullable:true
-                kd              nullable:true
-                grade           nullable:true
-                priceAdjust     nullable:true
-                endPrice        nullable:true
-                priceFSC        nullable:true
-                pricePEFC       nullable:true
-                priceUC         nullable:true
-                priceCW         nullable:true
-                markup          nullable:true
-                lengthDescr     nullable:true
-                choosedCert     nullable:true
-                offerType       nullable:true
+        sawMill		size: 0..80, nullable:true
+        dimension		size: 0..100
+        lengthDescr	size: 0..50
+        weekStart	size: 0..4
+        weekEnd		size: 0..4
+        kd size: 0..4
+        dimension()
+        lengthDescr()
+        kd()
+        grade(inList:["SF(AB)", "O/S-V(AB)", "V(B)", "VI(C)", "VII(D)", "C24"])
+        species(inList:["Redwood", "Whitewood"])
+        volumeOffered()
+        weekStart()
+        weekEnd()
+        dateCreated()   
+        millOfferID     nullable:true
+        requestID       nullable:true
+        weekStart       nullable:true
+        weekEnd         nullable:true
+        volumeOffered   nullable:true
+        oldVolume       nullable:true
+        fromStock       nullable:true
+        kd              nullable:true
+        grade           nullable:true
+        priceAdjust     nullable:true
+        endPrice        nullable:true
+        priceFSC        nullable:true
+        pricePEFC       nullable:true
+        priceUC         nullable:true
+        priceCW         nullable:true
+        markup          nullable:true
+        lengthDescr     nullable:true
+        choosedCert     nullable:true
+        offerType       nullable:true
     }
     def int getUserID() {
         def user = springSecurityService.isLoggedIn() ?
-            springSecurityService.loadCurrentUser() :
-            null
+        springSecurityService.loadCurrentUser() :
+        null
         return user ? user.id: -1 //securityService.currentUser.id//
     }
     
@@ -160,16 +175,19 @@ class OfferDetail {
     }
     
     def getCertPrice(String cert) {
-       if (cert=='FSC') return priceFSC 
-       if (cert=='PEFC') return pricePEFC 
-       if (cert=='CW') return priceCW 
-       if (cert=='UC') return priceUC 
+        if (cert=='FSC') return priceFSC 
+        if (cert=='PEFC') return pricePEFC 
+        if (cert=='CW') return priceCW 
+        if (cert=='UC') return priceUC 
     }
     
     def calculateEndPrice() {
-            endPrice = (getCertPrice(choosedCert)?:0.0) + priceAdjust
-            endPrice = endPrice * volumeOffered
-            markup = offerHeader.agentFee * 0.01 * endPrice
-            endPrice = endPrice + markup
+        endPrice = (getCertPrice(choosedCert)?:0.0) 
+        markup = offerHeader.agentFee * 0.01 * endPrice
+        endPrice = (endPrice + markup)
+        endPrice = endPrice + priceAdjust
+        endPrice = endPrice * volumeOffered
+        markup = markup * volumeOffered
+        println('Markup: '+markup)
     }
 }

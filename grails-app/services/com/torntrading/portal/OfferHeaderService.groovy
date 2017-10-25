@@ -51,11 +51,9 @@ class OfferHeaderService {
     }
     
     def rejectOfferVolume(OfferHeader aOH) {
-        if (aOH.status == 'Active') {
-            for (OfferDetail od in aOH.offerDetails) {
-                def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
-                prodBufferService.rejectOffer(pb, od)  
-            }
+        for (OfferDetail od in aOH.offerDetails) {
+            def ProdBuffer pb = ProdBuffer.get(od.millOfferID)
+            prodBufferService.rejectOffer(pb, od)  
         }
     }
     
@@ -109,4 +107,76 @@ class OfferHeaderService {
         }
         return flw.toString()
     }
+    
+    def OfferDetail addProduct(Integer aProdID, aOfferID) {
+        println('OfferHeaderService - AddProduct - prodID: '+aProdID+' offerID: '+aOfferID)
+        def OH = OfferHeader.get(aOfferID)
+        createOfferDetail(OH, aProdID, 'o') 
+    }
+    
+    def OfferDetail createOfferDetail(OfferHeader ofh, int id, String offerType) {
+        def ProdBuffer pb
+        pb = ProdBuffer.get(id)
+        
+        def OfferDetail ofd
+        ofd = new OfferDetail(offerHeader: ofh)
+        try {
+            ofd.dateCreated = new Date()             // Varför behövs detta helt plötsligt? Har fungerat sedan start utan
+            offerType?ofd.offerType=offerType:null
+        
+            if (offerType=='s') {
+                ofd.volumeOffered = pb.volumeAvailable  
+            }
+            ofd.species = pb.species
+            ofd.grade = pb.grade
+            ofd.kd = pb.kd
+            ofd.sawMill = pb.sawMill
+            ofd.lengthDescr = pb.length
+            ofd.priceFSC = pb.priceFSC
+            ofd.pricePEFC = pb.pricePEFC
+            ofd.priceUC = pb.priceUC
+            ofd.priceCW = pb.priceCW
+            ofd.endPrice = 0.0
+            int count=0
+            String cert
+            BigDecimal price
+            if (pb.priceFSC?pb.priceFSC:0 > 0) {
+                count = count + 1
+                price = pb.priceFSC
+                cert = 'FSC'
+            }
+            if (pb.pricePEFC?pb.pricePEFC:0 > 0) {
+                count = count + 1
+                price = pb.pricePEFC
+                cert = 'PEFC'
+            }
+            if (pb.priceUC?pb.priceUC:0 > 0) {
+                count = count + 1
+                price = pb.priceUC
+                cert = 'UC'
+            }
+            if (pb.priceCW?pb.priceCW:0 > 0) {
+                count = count + 1
+                price = pb.priceCW
+                cert = 'CW'
+            }
+        
+            price = price?price:0.0
+            ofd.endPrice = price
+            ofd.choosedCert = cert
+            ofd.markup = ofd.endPrice * 0.01 * ofh.agentFee
+            ofd.dimension = pb.dimension?:''
+            ofd.weekStart = pb.weekStart
+            ofd.millOfferID = id
+            ofd.offerType = offerType
+            ofd.save(failOnError: true)
+        } catch(e) {
+            println("EXCEPTION!! OfferHeaderService - createOfferDetail - OfferDetail could not be created! Reason: "+e.getMessage())
+//            println("EXCEPTION!! Stacktrace: "+e.getStackTrace())
+            println("EXCEPTION!! "+e.printStackTrace())
+            ofd = null
+        } finally {}
+        return ofd
+    }
+    
 }

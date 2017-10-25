@@ -67,6 +67,7 @@ class OfferHeader {
         termsOfDelivery = 'CIP'
     }
     static mapping	= {
+        offerDetails cascade: "all-delete-orphan"
         offerDetails sort: "sawMill"
 	sawMill 	column: "sawMill",         sqltype:	"char", length: 80
 	currency 	column: "currency",        sqltype:	"char", length: 3

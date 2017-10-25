@@ -54,6 +54,7 @@ span.normal {
             }
 #of_detail1 {
                 background-color: #dddddd;
+                text-align: right; 
             }
 
 </style>    

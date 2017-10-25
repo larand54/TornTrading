@@ -8,6 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import com.buffer.OrdersAndStoreController
 import com.torntrading.portal.PlannedVolume
 import com.torntrading.legacy.*
+import com.torntrading.portal.OfferHeader
 
 @Transactional(readOnly = true)
 @Secured(['ROLE_ADMIN','ROLE_USER','ROLE_SALES','ROLE_SUPPLIER'])
@@ -121,6 +122,16 @@ class ProdBufferController {
         }
     }
 
+    def selectProduct() {
+        def OfferHeader OH = OfferHeader.get(params.id)
+        def mill = OH.sawMill
+        def prodBuffer = ProdBuffer.findAllBySawMill(mill)
+        println("ProdBufferController - selectProduct - products: "+ prodBuffer)
+ //       respond (prodBuffer,  model: [OH:OH])
+ //   render(view: "selectProduct", model: [prodBuffer:prodBuffer, OH:OH])
+    render(view: "List", model: [prodBuffer:prodBuffer])
+
+    }
     
     def validateInput() {
         flash.Message = 'Test'

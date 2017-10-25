@@ -27,6 +27,20 @@
             });
         </script>
         
+        <script>
+            $(document).ready(function(){
+                $('.add-button').on('click', function(event){                
+                    event.preventDefault();  //1
+                    var addTarget = $(this).prop('value'); //2  
+                    $.ajax({
+                        url: '${g.createLink( controller:'offerHeader', action:'showAvailableProducts' )}',
+                        data: {id:this.value},
+                        type: 'get'
+                    }).success( function ( data ) { $( '#ProductsForOffer' ).html( data );     });
+                });
+            });
+        </script>
+        
     </head>
     <body>
         <g:render template="/menue"/>
@@ -60,27 +74,34 @@
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
                 </fieldset>
             </g:form>
+            <g:if test="${offerHeader.offerDetails != null}">
             <fieldset class="form">
-                <legend>Products</legend>
-
+                <legend>Products on offer</legend>
                 <table style="width:100%">
                     <thead>
                         <tr>
-                            <g:sortableColumn property="${offerHeader.offerDetails?.species}" title='Wood' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.dimension}" title='Dimension' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.lengthDescr}" title='Length' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.volumeOffered}" title='Volume(m3)' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.kd}" title='KD(%)' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.grade}" title='Grade' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.choosedCert}" title='Cert' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.markup}" title='Agent fee' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.endPrice}" title='End price' />
-                            <g:sortableColumn property="${offerHeader.offerDetails?.endPrice}" title='Price m3' />
+                            <th>Del</th>
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.species}" title='Wood' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.dimension}" title='Dimension' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.lengthDescr}" title='Length' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.volumeOffered}" title='Volume(m3)' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.kd}" title='KD(%)' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.grade}" title='Grade' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.choosedCert}" title='Cert' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.markup}" title='Agent fee' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.endPrice}" title='End price' />
+                            <g:sortableColumn property="${offerHeader?.offerDetails?.endPrice}" title='Price m3' />
                         </tr>
                     </thead>
                     <tbody>
-                        <g:each in="${offerHeader.offerDetails.sort{it.dimension}}" status="i" var="od">
+                        <g:each in="${offerHeader.offerDetails?.sort{it.dimension}}" status="i" var="od">
                             <tr>
+                                <td>
+                                    <g:link action="deleteOfferDetail" controller="offerHeader" params="[offerDetailID: od.id, offerID: offerHeader.id ]"
+                                    onclick="return confirm('Are you sure?')">
+                                    X
+                                    </g:link>
+                                </td>
                                 <td>${od?.species}</td>
                                 <td><g:link class="edit" action="edit" resource="offerDetail" id="${od?.id}"> ${od.dimension?.encodeAsHTML()}</g:link></td>
                                 <td>${od?.lengthDescr}</td>
@@ -104,7 +125,11 @@
                         </div>
                     </tbody>
                 </table>
+                <button class="add-button" value="${offerHeader.id}" > Show available products</button>
+                <div id="ProductsForOffer">
+                </div>
             </fieldset>
+            </g:if>
         </div>
     </body>
 </html>

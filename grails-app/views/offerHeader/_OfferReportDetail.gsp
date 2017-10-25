@@ -28,7 +28,7 @@
                     <td id="is_center"><g:endPriceM3 offerDetail="${od}"></g:endPriceM3></td>
                     <td id="is_center">${od?.grade}</td>
                     <td id="is_center">${od?.choosedCert}</td>
-                    <td id="of_detail1">${od?.endPrice}</td>
+                    <td id="of_detail1">${od?.endPriceNoDecimal}</td>
                 </tr>
             </g:each>
         </tbody>

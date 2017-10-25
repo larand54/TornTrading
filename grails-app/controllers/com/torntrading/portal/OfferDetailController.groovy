@@ -67,7 +67,8 @@ class OfferDetailController {
             od.save(flush: true, failOnError: true)
             //      render template: "OfferDData", model: [offerDetail:od] 
             def adjustedPrice = od.endPrice/od.volumeOffered/(1.0+od.offerHeader.agentFee/100)
-            render { div ( id: "updatePrice", od.endPrice) }
+            render { div ( id: "updatePrice", od.endPriceM3) }
+//            render template: "endPrice", model:[od:od]
             
         
         }
@@ -235,6 +236,7 @@ class OfferDetailController {
             return
         }
 
+        offerDetailService.deleteOfferDetail(offerDetail)
         offerDetail.delete flush:true
 
         request.withFormat {

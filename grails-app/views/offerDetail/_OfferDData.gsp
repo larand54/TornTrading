@@ -41,16 +41,10 @@
                 <td> UC: ${offerDetail.priceUC}</td>
                 <td> CW: ${offerDetail.priceCW}</td>
                 <td> PEFC: ${offerDetail.pricePEFC}</td>
-                <td>EndPrice:</td>
+                <td>Price/m3:</td>
                 <td>  
-                    <div id="updatePrice">    ${offerDetail.endPrice} </div>
+                    <div id="updatePrice">    ${offerDetail.endPriceM3} </div>
                 </td>
-                <td>Adjusted price/m3:</td>
-                <td>  
-                    <div id="updatePrice">    ${AdjustedPrice} </div>
-                </td>
-
-
             </tr>
         </table>
     </fieldset>

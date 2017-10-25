@@ -159,9 +159,10 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
     }
     
     def rejectOffer(ProdBuffer aPB, OfferDetail aOD) {
+        println("ProdBufferService - rejectOffer - BEFORE - Rejected: Volume offered: "+aPB.volumeOffered+" volumeAvailabel: "+aPB.volumeAvailable)
         aPB.volumeOffered = aPB.volumeOffered - aOD.volumeOffered
         aPB.volumeAvailable = aPB.volumeAvailable + aOD.volumeOffered
-        println("Rejected: Volume offered: "+aPB.volumeOffered+" volumeAvailabel: "+aPB.volumeAvailable)
+        println("ProdBufferService - rejectOffer - After - Rejected: Volume offered: "+aPB.volumeOffered+" volumeAvailabel: "+aPB.volumeAvailable)
         aPB.save(flush:true, failOnError:true)
         if (aOD.useWeeklyVolumes) {
             restorePlannedOfferVolumesToBuffer(aPB, aOD)

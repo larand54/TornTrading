@@ -301,4 +301,28 @@ class OfferDetailService {
         aPB.save(failOnError: true, flush:true)
         aOD.save(failOnError: true, flush:true)
     }
+    
+    def boolean deleteOfferDetail(OfferDetail aOd, OfferHeader aOh) {
+        boolean ok = true
+        try {
+            if ((aOh.status == 'Active') && (aOd.volumeOffered > 0)) {
+                def ProdBuffer pb = ProdBuffer.get(aOd.millOfferID)
+                if (pb != null) {
+                    unAllocateVolumeFromBuffer(aOd, pb)
+                } else {
+                    show('Cannot find the product this offer belongs to!'+ aOd.id)
+                    ok = false
+                    exit
+                }
+            }
+            println("OfferDetailService - deleteOfferDetail - Remove")
+            aOh.removeFromOfferDetails(aOd)
+            aOd.delete(flush:true, failOnError: true)
+            return ok
+        } catch(Exception e) {
+            println("EXCEPTION!! OfferDetailService - deleteOfferDetail - Product ${aOd.millOfferID} could not be deleted! Reason: "+e.getMessage())
+            ok = false  
+        } finally {}
+        return ok
+    }
 }

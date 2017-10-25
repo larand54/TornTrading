@@ -8,6 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import com.torntrading.security.*
 import grails.converters.JSON
 import com.torntrading.legacy.Customer
+import com.buffer.ProdBuffer
 
 @Secured(['ROLE_ADMIN','ROLE_SALES'])
 @Transactional(readOnly = true)
@@ -17,6 +18,7 @@ class OfferHeaderController {
     def prodBufferService
     def springSecurityService
     def assetResourceLocator
+    def offerDetailService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     
 
@@ -160,7 +162,7 @@ class OfferHeaderController {
 
     def edit(OfferHeader offerHeader) {
         def customers = getCustomers()
-        respond offerHeader, model: [customers:customers]
+        respond offerHeader, model: [customers:customers, showProducts:false]
     }
 
     @Transactional
@@ -177,6 +179,7 @@ class OfferHeaderController {
             respond offerHeader.errors, view:'edit', model: [customers:getCustomers()]
             return
         }
+        
         println("OfferHeader: status: "+offerHeader.status)
         
         def String oldStatus = offerHeader.getPersistentValue('status')
@@ -236,7 +239,8 @@ class OfferHeaderController {
         }
 
         if (params.status == 'Rejected' && oldStatus in ['Active', 'New']) {
-          offerHeaderService.rejectOfferVolume(offerHeader)  
+          if (oldStatus=='Active')
+            offerHeaderService.rejectOfferVolume(offerHeader)  
         } else if (params.status == 'Rejected') {
             transactionStatus.setRollbackOnly()
             flash.message = 'Status not Active - status can not be set Rejected!'
@@ -342,11 +346,7 @@ class OfferHeaderController {
                 return
             }
 
-//            if (!offerHeader.weekOfDelivery.startsWith('Week')) {
-//                offerHeader.weekOfDelivery = 'Week ' + offerHeader.weekOfDelivery
-//            }
         }
-        //offerHeader.weekOfDelivery = offerHeader.weekOfDelivery.replace("Week", "Tydzien")
         def currentUser = springSecurityService.currentUser
         def us = currentUser.userSettings
         if (offerHeader.freight == null) {
@@ -355,12 +355,49 @@ class OfferHeaderController {
             return
         }
         println(">>> Offerheader: "+offerHeader.sawMill)
-//        render(template: "/offerHeader/OfferReport", model: [offerHeader: offerHeader])
         renderPdf(template: "/offerHeader/OfferReport_polish", model: [offerHeader: offerHeader, us:us,imageBytes: file],   filename: "offert_polish-"+params.id+".pdf")
-//        notFound()
     }
     
-        def initiate() {
+    def showAvailableProducts() {
+        println('OfferHeaderController - showAvailableProducts - params: '+params)
+        def OH = OfferHeader.get(params.id)
+        def List<ProdBuffer> products = ProdBuffer.findAllBySawMill(OH.sawMill,[sort:"dimension"])
+        println('OfferHeaderController - showAvailableProducts - sawMills: '+products)
+//        render products as JSON
+        render (template:"Grid_Products_for_offer", model:[offerHeader: OH, products:products])
+        return    
+    }
+    
+    def addProduct() {
+        def ofd = offerHeaderService.addProduct(params.prodID.toInteger(), params.offerID.toInteger())
+        if (ofd != null) 
+            flash.message = 'Product '+ params.prodID + ' added to offer: ' + params.offerID
+        else 
+            flash.message = 'Product '+ params.prodID + ' not added!!!'
+       redirect controller: "offerHeader", action: "edit", id: "${params.offerID}" 
+    }
+    
+    def deleteOfferDetail() {
+        def OfferDetail od = OfferDetail.get(params.offerDetailID)
+        def OfferHeader OH = OfferHeader.get(params.offerID)
+        if ((OH.status == 'Rejected') || (OH.status == 'Sold')) {
+            flash.message = 'Offer detail can not be deleted when status is Rejected or Sold'
+            redirect controller: "offerHeader", action: "edit", id: "${OH.id}"
+//            respond OH, view:'edit', model: [customers:getCustomers()]
+            return
+        }
+        if (offerDetailService.deleteOfferDetail(od, OH)) {
+            flash.message = 'Offer detail '+params.offerID+' deleted!'
+        } else {
+            flash.message = 'Offer detail '+params.offerID+' could not be deleted!'            
+        }
+        redirect controller: "offerHeader", action: "edit", id: "${OH.id}"
+//        respond OH, view:'edit', model: [customers:getCustomers()]
+        return
+    }
+        
+    
+    def initiate() {
         println "%%%%%%% REFRESH %%%%%%%%"
         def offers = getOfferList()
         for (offer in offers) {

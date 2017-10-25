@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value='Orders och Lager' />
+        <g:set var="entityName" value='Product buffer' />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
         <style>
             #selectMill {
