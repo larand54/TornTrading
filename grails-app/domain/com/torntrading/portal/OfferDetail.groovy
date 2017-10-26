@@ -119,6 +119,8 @@ class OfferDetail {
         kd               column: 'kd',             sqltype: 'char', length: 4
         oldVolume       column: 'oldVolume',       sqlType:     'float' 
         fromStock       column: 'from_stock',      sqlType:     'float' 
+        offerPlannedVolumes cascade: "all-delete-orphan"
+        offerAvailableVolumes cascade: "all-delete-orphan"
 
     }
     static constraints = {

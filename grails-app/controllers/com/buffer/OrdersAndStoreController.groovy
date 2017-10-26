@@ -458,7 +458,11 @@ class OrdersAndStoreController {
             def status = od.offerHeader.status
             if (status != 'New') {
                 statusOk = false
-                flash.message= "Deletion abanded due to connected offers"
+                if (od.offerType == 's') {
+                    flash.message= "Deletion abanded due to connected stocknote: ${od.offerHeader.id}"
+                } else {
+                    flash.message= "Deletion abanded due to connected offer: ${od.offerHeader.id}"
+                }
                 break
             }
         }
