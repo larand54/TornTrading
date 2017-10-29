@@ -10,7 +10,7 @@ class DailyCheckService {
         println('>>>>>>>> DailyCheckService - Check offers - Time:' + new Date().toLocaleString())
         def cr = OfferHeader.createCriteria()
         def tempList = cr.list {
-             lt("validUntil", new Date()) and {'in' ( "status", ['Active','New'] )}
+             lt("validUntil", new Date().clearTime()) and {'in' ( "status", ['Active','New'] )}
         }
         tempList.each {
             println(it.validUntil.toLocaleString())
