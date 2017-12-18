@@ -27,25 +27,9 @@ class OrdersAndStoreController {
     def sqlService
     
     def changedSelection() {
-        println("ChangedSelection: ")
         def mill = params.sawMill?params.sawMill:''
-            session.setAttribute('sawMill', mill)
-            println('Set Session.sawMill: '+session.getAttribute('sawMill'))
-        def offerDetails = null//OfferDetail.list()
-        def List<String> millList = getMills()
-        def List<ProdBuffer> prodBuffer = getBufferList()
-        // Paging def prodBuffer = getPaginatedList(prodBuffer, max, params.offset?.toInteger())
-        def filters = [sawMill: session.getAttribute('sawMill'), sort: params.sort, order: params.order]
-        def model = [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:true, prodBufferCount: ProdBuffer.count(), filters:filters]
-        if (request.xhr) {
-            println("AJAX-Request!!!")
-            render(template:"Grid_Products", model:model)
-//            render(template:"Grid_Products", model:[prodBuffer: prodBuffer, offerDetails:offerDetails, filters:filters])
-        } else {
-
- //           respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
-            [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
-        }
+        session.setAttribute('sawMill', mill)
+        render 'OK'
     }
 
     def boolean userOk() {
