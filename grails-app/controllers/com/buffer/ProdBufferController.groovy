@@ -290,6 +290,22 @@ class ProdBufferController {
         println('!!!!!! Available volume: '+vol)
         redirect(action:"edit",id:params.id)
     }
+
+    def fixAvailableVolumes() {
+        if (params.id) {
+            println("Fixing available volume for product: ${params.id}")
+            def pb = ProdBuffer.get(params.id)
+            prodBufferService.updateAvailableVolumes(pb)
+        } else {
+            println("Fix all products")
+            def products = ProdBuffer.list()
+            for (pb in products) {
+               println("Fixing available volume for product: ${pb.id}")
+               prodBufferService.updateAvailableVolumes(pb)
+            }
+        }
+        render("Available volumes now fixed!")
+    }
 }
 
 

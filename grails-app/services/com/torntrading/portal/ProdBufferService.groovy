@@ -68,12 +68,10 @@ class ProdBufferService {
     // vi lagrar bara 12 värden och vid veckobyte skiftas den 1:a bort och vi vet ej vad som var lagrat där tidigare
     // Vi löser detta genom att lagra upp initialvärdena i InStocks-initialvärde vid veckobyte
     def updateAvailableVolumes(ProdBuffer aPB) {
-        def Double av = aPB.volumeInitial      // Skall var det initiala värdet
+        def Double av = aPB.volumeInStock      // Skall var det initiala värdet
         av = av + getTotalPlannedVolume(aPB)   // skall vara de initiala värdena men efter veckoskift blir de osäkra då det kan tillkomma nya värden
         def Double toffv = getTotalOfferVolume(aPB)
         def Double tordv = getTotalOrderVolume(aPB)
-        av = av - toffv
-        av = av - tordv
         aPB.volumeAvailable = av
         aPB.volumeOffered = toffv
         aPB.volumeOnOrder = tordv
@@ -257,7 +255,7 @@ println("RestoreVolumeToBuffer InStock2: "+aPB.volumeInStock)
         if (aPB.status =='Active') {
             def plannedList = aPB.plannedVolumes
             for (pv in plannedList) {
-                plannedTotal = plannedTotal + pv.initialVolume
+                plannedTotal = plannedTotal + pv.volume
             }
         }
         return plannedTotal

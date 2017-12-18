@@ -9,6 +9,7 @@ import com.torntrading.legacy.Supplier
 import com.torntrading.portal.OfferDetail
 import com.torntrading.portal.OfferHeader
 import com.torntrading.portal.OfferWeeklyAvailableVolume
+import com.torntrading.portal.SqlService
 import grails.plugin.springsecurity.annotation.Secured
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
@@ -23,6 +24,29 @@ import grails.transaction.Transactional
 class OrdersAndStoreController {
     def springSecurityService
     def prodBufferService
+    def sqlService
+    
+    def changedSelection() {
+        println("ChangedSelection: ")
+        def mill = params.sawMill?params.sawMill:''
+            session.setAttribute('sawMill', mill)
+            println('Set Session.sawMill: '+session.getAttribute('sawMill'))
+        def offerDetails = null//OfferDetail.list()
+        def List<String> millList = getMills()
+        def List<ProdBuffer> prodBuffer = getBufferList()
+        // Paging def prodBuffer = getPaginatedList(prodBuffer, max, params.offset?.toInteger())
+        def filters = [sawMill: session.getAttribute('sawMill'), sort: params.sort, order: params.order]
+        def model = [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:true, prodBufferCount: ProdBuffer.count(), filters:filters]
+        if (request.xhr) {
+            println("AJAX-Request!!!")
+            render(template:"Grid_Products", model:model)
+//            render(template:"Grid_Products", model:[prodBuffer: prodBuffer, offerDetails:offerDetails, filters:filters])
+        } else {
+
+ //           respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+            [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+        }
+    }
 
     def boolean userOk() {
         def User user
@@ -61,7 +85,7 @@ class OrdersAndStoreController {
         def List<String> millList = getMills()
         def List<ProdBuffer> prodBuffer = getBufferList()
         // Paging def prodBuffer = getPaginatedList(prodBuffer, max, params.offset?.toInteger())
-        def filters = [sawMill: params.sawMill, sort: params.sort, order: params.order]
+        def filters = [sawMill: session.getAttribute('sawMill'), sort: params.sort, order: params.order]
         println("Filters: "+filters)
         println("ProdBuffer: "+prodBuffer)
         def model = [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:true, prodBufferCount: ProdBuffer.count(), filters:filters]
@@ -72,7 +96,7 @@ class OrdersAndStoreController {
         } else {
 
  //           respond prodBuffer, model: [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
-            [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count()]
+            [prodBuffer: prodBuffer, offerDetails: offerDetails, millList: millList, selectedMill:false, prodBufferCount: ProdBuffer.count(), filters:filters]
         }
     }
     
@@ -163,9 +187,9 @@ class OrdersAndStoreController {
         def us = user.getUserSettings()
         def roles = springSecurityService.getPrincipal().getAuthorities()
         
-//        def List<ProdBuffer> tempList
-        def mill = params.sawMill?params.sawMill:''
-        println("MILL From params: "+mill)
+//        def mill = params.sawMill?params.sawMill:''
+//        println("MILL From params: "+mill)
+        def mill
         for(def role in roles){ if(role.getAuthority() == "ROLE_ADMIN") {
             }else if(role.getAuthority() == "ROLE_SALES") {
             }else if(role.getAuthority() == "ROLE_SUPPLIER") {
@@ -507,5 +531,8 @@ class OrdersAndStoreController {
             prodBufferService.updateAvailableVolumes(p)
         }
         redirect action:"list", method:"GET"
+    }
+    def test () {
+        render sqlService.sp()
     }
 }

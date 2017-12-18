@@ -71,7 +71,8 @@
                     "searching": true,
                     "fixedColumns": false,
                     "dom": '<"top"i>rt<"bottom"lp><"clear">',
-                    "select": true /*,
+                    "select": true
+/*,
   ,"columnDefs": [
     { "width": "10%", "targets":  1}
   ]
@@ -84,10 +85,12 @@
                             }
                         }
 
-                    ]  */             
+                    ]  
+*/             
                 });
 
-    
+                table.columns(2).search( "${session.sawMill}" ).draw();
+                
                 // Apply the search
                 table.columns().every( function () {
                     var that = this;
@@ -103,12 +106,18 @@
         
                 } );
                 $( '#sawMill').on( 'change', function() {
+                    $.ajax({
+                        url: '${g.createLink( controller:'ordersAndStore', action:'changedSelection' )}',
+                        data: {sawMill:this.value},
+                        type: 'get'
+                    });
                     table
                     .columns( 2 )
                     .search( this.value )
                     .draw();
                 });
-        
+
+
                 $( '#createOffer').on( 'click', function() {
            
                     var data = table
@@ -151,7 +160,10 @@
                     }).success( function ( data ) { $( '#offerList' ).html( data );     });
                 });
             });
-
+        </script>    
+        <script type="text/javascript">
+            $( document ).ready( function() {
+            });
         </script>    
     </head>
     <body>

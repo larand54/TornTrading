@@ -25,6 +25,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
         [pattern: '/registrationCode/**',        access: 'ROLE_ADMIN'],
       	[pattern: '/quickrequest/**',      access: ['permitAll']],
       	[pattern: '/appInfo',      access: ['ROLE_ADMIN']],
+      	[pattern: '/fixAvailableVolumes',      access: ['ROLE_ADMIN']],
         [pattern: '/console/**',   access: ['ROLE_ADMIN']],
         [pattern: '/static/console/**', access:    ['ROLE_ADMIN']], // Grails 3.x
       	[pattern: '/under_construction',      access: ['permitAll']]
