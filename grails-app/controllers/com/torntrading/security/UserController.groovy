@@ -145,7 +145,7 @@ class UserController {
             return
         }
 
-        user.us.supplierName = params.sawMill?params.sawMill:user.us.supplierName
+        user.us.supplierName = params.sawMill?params.sawMill:(user.us.supplierName?:'noSupplier')
         user.us.currency = params.currency?params.currency:user.us.currency
         user.us.name = params.uName?params.uName:user.us.name
         user.us.company = params.uCompany?params.uCompany:user.us.company

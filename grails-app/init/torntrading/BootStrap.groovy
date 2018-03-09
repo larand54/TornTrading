@@ -11,6 +11,11 @@ import com.torntrading.security.UserSettings
 class BootStrap {
     def prodBufferService
     def init = { servletContext ->
+
+        // An important user, he has no roles.
+        def nobody = User.findByUsername('Nobody')?:new User(username: 'Nobody', password: 'okSxvEmCnQaBMO3EE6Nn5R4Z9WIHIk').save(failOnError:true)
+        def nbus = UserSettings.findByUser(nobody)?:new UserSettings(user:nobody, supplierName:'none').save(failOnError:true)
+        
 	if (Environment.current == Environment.DEVELOPMENT) {
             Locale defLocale = new Locale("en", "GB");
             Locale.setDefault(defLocale);

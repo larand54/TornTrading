@@ -109,10 +109,18 @@ class OfferHeaderController {
     }
     
     def List<String> getCreatorList() {
+        def User user
         def offerList = OfferHeader.createCriteria().list( params ) { eq ( "offerType", "o" )}
         def List<String> creators = new ArrayList<String>()
         for (offer in offerList) {
-            creators.add(User.get(offer.createdBy).username)
+            user = User.get(offer.createdBy)
+            if (user==null) { 
+                creators.add(User.findByUsername('Nobody').username) 
+                offer.createdBy = User.findByUsername('Nobody').id
+                offer.creatorsName = User.get(offer.createdBy).username
+            } else {
+                creators.add(User.get(offer.createdBy).username)
+            }
         }
         creators.unique()
         return creators
